@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ActivityType {
+  PROJECT
+  CERTIFICATE
+  EDUCATION
+  WORK
+  TEACHING
+  COMPETITION
+  ACHIEVEMENT
+  EVENT
+  PHOTO
+  OTHER
+}
+
+enum DatePrecision {
+  YEAR
+  MONTH
+  DAY
+}
+
+model Profile {
+  id Int @id @default(autoincrement())
+
+  fullName String
+
+  headlineEn String?
+  headlineKm String?
+
+  bioEn String? @db.Text
+  bioKm String? @db.Text
+
+  email    String?
+  phone    String?
+  telegram String?
+  github   String?
+  linkedin String?
+
+  locationEn String?
+  locationKm String?
+
+  profileImage String?
+  cvFile       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("profiles")
+}
+
+model Activity {
+  id Int @id @default(autoincrement())
+
+  slug String @unique
+
+  type ActivityType
+
+  titleEn String
+  titleKm String?
+
+  summaryEn String? @db.Text
+  summaryKm String? @db.Text
+
+  descriptionEn String? @db.Text
+  descriptionKm String? @db.Text
+
+  activityDate  DateTime
+  datePrecision DatePrecision @default(DAY)
+
+  coverImage String?
+
+  locationEn String?
+  locationKm String?
+
+  organizationEn String?
+  organizationKm String?
+
+  featured  Boolean @default(false)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([activityDate])
+  @@index([type])
+  @@index([published])
+  @@map("activities")
+}
