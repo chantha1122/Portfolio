@@ -8,6 +8,13 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/AdminUser'
 export type * from './models/Profile'
 export type * from './models/Activity'
+export type * from './models/ActivityMedia'
+export type * from './models/Skill'
+export type * from './models/Tool'
+export type * from './models/ContactMessage'
+export type * from './models/Comment'
+export type * from './models/Like'
 export type * from './commonInputTypes'

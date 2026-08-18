@@ -51,8 +51,15 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  AdminUser: 'AdminUser',
   Profile: 'Profile',
-  Activity: 'Activity'
+  Activity: 'Activity',
+  ActivityMedia: 'ActivityMedia',
+  Skill: 'Skill',
+  Tool: 'Tool',
+  ContactMessage: 'ContactMessage',
+  Comment: 'Comment',
+  Like: 'Like'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -71,21 +78,46 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AdminUserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
+
+
 export const ProfileScalarFieldEnum = {
   id: 'id',
+  profileKey: 'profileKey',
   fullName: 'fullName',
   headlineEn: 'headlineEn',
   headlineKm: 'headlineKm',
+  shortBioEn: 'shortBioEn',
+  shortBioKm: 'shortBioKm',
   bioEn: 'bioEn',
   bioKm: 'bioKm',
+  currentRoleEn: 'currentRoleEn',
+  currentRoleKm: 'currentRoleKm',
+  currentFocusEn: 'currentFocusEn',
+  currentFocusKm: 'currentFocusKm',
+  yearsExperience: 'yearsExperience',
   email: 'email',
   phone: 'phone',
   telegram: 'telegram',
   github: 'github',
   linkedin: 'linkedin',
+  facebook: 'facebook',
+  instagram: 'instagram',
+  youtube: 'youtube',
   locationEn: 'locationEn',
   locationKm: 'locationKm',
   profileImage: 'profileImage',
+  badgeImage: 'badgeImage',
   cvFile: 'cvFile',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -105,19 +137,110 @@ export const ActivityScalarFieldEnum = {
   descriptionEn: 'descriptionEn',
   descriptionKm: 'descriptionKm',
   activityDate: 'activityDate',
+  endDate: 'endDate',
   datePrecision: 'datePrecision',
+  isCurrent: 'isCurrent',
   coverImage: 'coverImage',
   locationEn: 'locationEn',
   locationKm: 'locationKm',
   organizationEn: 'organizationEn',
   organizationKm: 'organizationKm',
+  externalUrl: 'externalUrl',
+  githubUrl: 'githubUrl',
+  demoUrl: 'demoUrl',
+  credentialId: 'credentialId',
+  technologies: 'technologies',
   featured: 'featured',
   published: 'published',
+  sortOrder: 'sortOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
+
+
+export const ActivityMediaScalarFieldEnum = {
+  id: 'id',
+  activityId: 'activityId',
+  fileUrl: 'fileUrl',
+  type: 'type',
+  captionEn: 'captionEn',
+  captionKm: 'captionKm',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityMediaScalarFieldEnum = (typeof ActivityMediaScalarFieldEnum)[keyof typeof ActivityMediaScalarFieldEnum]
+
+
+export const SkillScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  categoryEn: 'categoryEn',
+  categoryKm: 'categoryKm',
+  level: 'level',
+  icon: 'icon',
+  published: 'published',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SkillScalarFieldEnum = (typeof SkillScalarFieldEnum)[keyof typeof SkillScalarFieldEnum]
+
+
+export const ToolScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  icon: 'icon',
+  url: 'url',
+  published: 'published',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ToolScalarFieldEnum = (typeof ToolScalarFieldEnum)[keyof typeof ToolScalarFieldEnum]
+
+
+export const ContactMessageScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  subject: 'subject',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContactMessageScalarFieldEnum = (typeof ContactMessageScalarFieldEnum)[keyof typeof ContactMessageScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  activityId: 'activityId',
+  name: 'name',
+  email: 'email',
+  message: 'message',
+  isApproved: 'isApproved',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
+
+
+export const LikeScalarFieldEnum = {
+  id: 'id',
+  activityId: 'activityId',
+  visitorKey: 'visitorKey',
+  createdAt: 'createdAt'
+} as const
+
+export type LikeScalarFieldEnum = (typeof LikeScalarFieldEnum)[keyof typeof LikeScalarFieldEnum]
 
 
 export const SortOrder = {

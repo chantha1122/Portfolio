@@ -28,27 +28,41 @@ export type AggregateProfile = {
 
 export type ProfileAvgAggregateOutputType = {
   id: number | null
+  yearsExperience: number | null
 }
 
 export type ProfileSumAggregateOutputType = {
   id: number | null
+  yearsExperience: number | null
 }
 
 export type ProfileMinAggregateOutputType = {
   id: number | null
+  profileKey: string | null
   fullName: string | null
   headlineEn: string | null
   headlineKm: string | null
+  shortBioEn: string | null
+  shortBioKm: string | null
   bioEn: string | null
   bioKm: string | null
+  currentRoleEn: string | null
+  currentRoleKm: string | null
+  currentFocusEn: string | null
+  currentFocusKm: string | null
+  yearsExperience: number | null
   email: string | null
   phone: string | null
   telegram: string | null
   github: string | null
   linkedin: string | null
+  facebook: string | null
+  instagram: string | null
+  youtube: string | null
   locationEn: string | null
   locationKm: string | null
   profileImage: string | null
+  badgeImage: string | null
   cvFile: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -56,19 +70,31 @@ export type ProfileMinAggregateOutputType = {
 
 export type ProfileMaxAggregateOutputType = {
   id: number | null
+  profileKey: string | null
   fullName: string | null
   headlineEn: string | null
   headlineKm: string | null
+  shortBioEn: string | null
+  shortBioKm: string | null
   bioEn: string | null
   bioKm: string | null
+  currentRoleEn: string | null
+  currentRoleKm: string | null
+  currentFocusEn: string | null
+  currentFocusKm: string | null
+  yearsExperience: number | null
   email: string | null
   phone: string | null
   telegram: string | null
   github: string | null
   linkedin: string | null
+  facebook: string | null
+  instagram: string | null
+  youtube: string | null
   locationEn: string | null
   locationKm: string | null
   profileImage: string | null
+  badgeImage: string | null
   cvFile: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -76,19 +102,31 @@ export type ProfileMaxAggregateOutputType = {
 
 export type ProfileCountAggregateOutputType = {
   id: number
+  profileKey: number
   fullName: number
   headlineEn: number
   headlineKm: number
+  shortBioEn: number
+  shortBioKm: number
   bioEn: number
   bioKm: number
+  currentRoleEn: number
+  currentRoleKm: number
+  currentFocusEn: number
+  currentFocusKm: number
+  yearsExperience: number
   email: number
   phone: number
   telegram: number
   github: number
   linkedin: number
+  facebook: number
+  instagram: number
+  youtube: number
   locationEn: number
   locationKm: number
   profileImage: number
+  badgeImage: number
   cvFile: number
   createdAt: number
   updatedAt: number
@@ -98,27 +136,41 @@ export type ProfileCountAggregateOutputType = {
 
 export type ProfileAvgAggregateInputType = {
   id?: true
+  yearsExperience?: true
 }
 
 export type ProfileSumAggregateInputType = {
   id?: true
+  yearsExperience?: true
 }
 
 export type ProfileMinAggregateInputType = {
   id?: true
+  profileKey?: true
   fullName?: true
   headlineEn?: true
   headlineKm?: true
+  shortBioEn?: true
+  shortBioKm?: true
   bioEn?: true
   bioKm?: true
+  currentRoleEn?: true
+  currentRoleKm?: true
+  currentFocusEn?: true
+  currentFocusKm?: true
+  yearsExperience?: true
   email?: true
   phone?: true
   telegram?: true
   github?: true
   linkedin?: true
+  facebook?: true
+  instagram?: true
+  youtube?: true
   locationEn?: true
   locationKm?: true
   profileImage?: true
+  badgeImage?: true
   cvFile?: true
   createdAt?: true
   updatedAt?: true
@@ -126,19 +178,31 @@ export type ProfileMinAggregateInputType = {
 
 export type ProfileMaxAggregateInputType = {
   id?: true
+  profileKey?: true
   fullName?: true
   headlineEn?: true
   headlineKm?: true
+  shortBioEn?: true
+  shortBioKm?: true
   bioEn?: true
   bioKm?: true
+  currentRoleEn?: true
+  currentRoleKm?: true
+  currentFocusEn?: true
+  currentFocusKm?: true
+  yearsExperience?: true
   email?: true
   phone?: true
   telegram?: true
   github?: true
   linkedin?: true
+  facebook?: true
+  instagram?: true
+  youtube?: true
   locationEn?: true
   locationKm?: true
   profileImage?: true
+  badgeImage?: true
   cvFile?: true
   createdAt?: true
   updatedAt?: true
@@ -146,19 +210,31 @@ export type ProfileMaxAggregateInputType = {
 
 export type ProfileCountAggregateInputType = {
   id?: true
+  profileKey?: true
   fullName?: true
   headlineEn?: true
   headlineKm?: true
+  shortBioEn?: true
+  shortBioKm?: true
   bioEn?: true
   bioKm?: true
+  currentRoleEn?: true
+  currentRoleKm?: true
+  currentFocusEn?: true
+  currentFocusKm?: true
+  yearsExperience?: true
   email?: true
   phone?: true
   telegram?: true
   github?: true
   linkedin?: true
+  facebook?: true
+  instagram?: true
+  youtube?: true
   locationEn?: true
   locationKm?: true
   profileImage?: true
+  badgeImage?: true
   cvFile?: true
   createdAt?: true
   updatedAt?: true
@@ -253,19 +329,31 @@ export type ProfileGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type ProfileGroupByOutputType = {
   id: number
+  profileKey: string
   fullName: string
   headlineEn: string | null
   headlineKm: string | null
+  shortBioEn: string | null
+  shortBioKm: string | null
   bioEn: string | null
   bioKm: string | null
+  currentRoleEn: string | null
+  currentRoleKm: string | null
+  currentFocusEn: string | null
+  currentFocusKm: string | null
+  yearsExperience: number
   email: string | null
   phone: string | null
   telegram: string | null
   github: string | null
   linkedin: string | null
+  facebook: string | null
+  instagram: string | null
+  youtube: string | null
   locationEn: string | null
   locationKm: string | null
   profileImage: string | null
+  badgeImage: string | null
   cvFile: string | null
   createdAt: Date
   updatedAt: Date
@@ -296,19 +384,31 @@ export type ProfileWhereInput = {
   OR?: Prisma.ProfileWhereInput[]
   NOT?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
   id?: Prisma.IntFilter<"Profile"> | number
+  profileKey?: Prisma.StringFilter<"Profile"> | string
   fullName?: Prisma.StringFilter<"Profile"> | string
   headlineEn?: Prisma.StringNullableFilter<"Profile"> | string | null
   headlineKm?: Prisma.StringNullableFilter<"Profile"> | string | null
+  shortBioEn?: Prisma.StringNullableFilter<"Profile"> | string | null
+  shortBioKm?: Prisma.StringNullableFilter<"Profile"> | string | null
   bioEn?: Prisma.StringNullableFilter<"Profile"> | string | null
   bioKm?: Prisma.StringNullableFilter<"Profile"> | string | null
+  currentRoleEn?: Prisma.StringNullableFilter<"Profile"> | string | null
+  currentRoleKm?: Prisma.StringNullableFilter<"Profile"> | string | null
+  currentFocusEn?: Prisma.StringNullableFilter<"Profile"> | string | null
+  currentFocusKm?: Prisma.StringNullableFilter<"Profile"> | string | null
+  yearsExperience?: Prisma.IntFilter<"Profile"> | number
   email?: Prisma.StringNullableFilter<"Profile"> | string | null
   phone?: Prisma.StringNullableFilter<"Profile"> | string | null
   telegram?: Prisma.StringNullableFilter<"Profile"> | string | null
   github?: Prisma.StringNullableFilter<"Profile"> | string | null
   linkedin?: Prisma.StringNullableFilter<"Profile"> | string | null
+  facebook?: Prisma.StringNullableFilter<"Profile"> | string | null
+  instagram?: Prisma.StringNullableFilter<"Profile"> | string | null
+  youtube?: Prisma.StringNullableFilter<"Profile"> | string | null
   locationEn?: Prisma.StringNullableFilter<"Profile"> | string | null
   locationKm?: Prisma.StringNullableFilter<"Profile"> | string | null
   profileImage?: Prisma.StringNullableFilter<"Profile"> | string | null
+  badgeImage?: Prisma.StringNullableFilter<"Profile"> | string | null
   cvFile?: Prisma.StringNullableFilter<"Profile"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
@@ -316,19 +416,31 @@ export type ProfileWhereInput = {
 
 export type ProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  profileKey?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   headlineEn?: Prisma.SortOrderInput | Prisma.SortOrder
   headlineKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortBioEn?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortBioKm?: Prisma.SortOrderInput | Prisma.SortOrder
   bioEn?: Prisma.SortOrderInput | Prisma.SortOrder
   bioKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentRoleEn?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentRoleKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentFocusEn?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentFocusKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  yearsExperience?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   telegram?: Prisma.SortOrderInput | Prisma.SortOrder
   github?: Prisma.SortOrderInput | Prisma.SortOrder
   linkedin?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebook?: Prisma.SortOrderInput | Prisma.SortOrder
+  instagram?: Prisma.SortOrderInput | Prisma.SortOrder
+  youtube?: Prisma.SortOrderInput | Prisma.SortOrder
   locationEn?: Prisma.SortOrderInput | Prisma.SortOrder
   locationKm?: Prisma.SortOrderInput | Prisma.SortOrder
   profileImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  badgeImage?: Prisma.SortOrderInput | Prisma.SortOrder
   cvFile?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -336,42 +448,66 @@ export type ProfileOrderByWithRelationInput = {
 
 export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  profileKey?: string
   AND?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
   OR?: Prisma.ProfileWhereInput[]
   NOT?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
   fullName?: Prisma.StringFilter<"Profile"> | string
   headlineEn?: Prisma.StringNullableFilter<"Profile"> | string | null
   headlineKm?: Prisma.StringNullableFilter<"Profile"> | string | null
+  shortBioEn?: Prisma.StringNullableFilter<"Profile"> | string | null
+  shortBioKm?: Prisma.StringNullableFilter<"Profile"> | string | null
   bioEn?: Prisma.StringNullableFilter<"Profile"> | string | null
   bioKm?: Prisma.StringNullableFilter<"Profile"> | string | null
+  currentRoleEn?: Prisma.StringNullableFilter<"Profile"> | string | null
+  currentRoleKm?: Prisma.StringNullableFilter<"Profile"> | string | null
+  currentFocusEn?: Prisma.StringNullableFilter<"Profile"> | string | null
+  currentFocusKm?: Prisma.StringNullableFilter<"Profile"> | string | null
+  yearsExperience?: Prisma.IntFilter<"Profile"> | number
   email?: Prisma.StringNullableFilter<"Profile"> | string | null
   phone?: Prisma.StringNullableFilter<"Profile"> | string | null
   telegram?: Prisma.StringNullableFilter<"Profile"> | string | null
   github?: Prisma.StringNullableFilter<"Profile"> | string | null
   linkedin?: Prisma.StringNullableFilter<"Profile"> | string | null
+  facebook?: Prisma.StringNullableFilter<"Profile"> | string | null
+  instagram?: Prisma.StringNullableFilter<"Profile"> | string | null
+  youtube?: Prisma.StringNullableFilter<"Profile"> | string | null
   locationEn?: Prisma.StringNullableFilter<"Profile"> | string | null
   locationKm?: Prisma.StringNullableFilter<"Profile"> | string | null
   profileImage?: Prisma.StringNullableFilter<"Profile"> | string | null
+  badgeImage?: Prisma.StringNullableFilter<"Profile"> | string | null
   cvFile?: Prisma.StringNullableFilter<"Profile"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
-}, "id">
+}, "id" | "profileKey">
 
 export type ProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  profileKey?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   headlineEn?: Prisma.SortOrderInput | Prisma.SortOrder
   headlineKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortBioEn?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortBioKm?: Prisma.SortOrderInput | Prisma.SortOrder
   bioEn?: Prisma.SortOrderInput | Prisma.SortOrder
   bioKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentRoleEn?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentRoleKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentFocusEn?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentFocusKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  yearsExperience?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   telegram?: Prisma.SortOrderInput | Prisma.SortOrder
   github?: Prisma.SortOrderInput | Prisma.SortOrder
   linkedin?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebook?: Prisma.SortOrderInput | Prisma.SortOrder
+  instagram?: Prisma.SortOrderInput | Prisma.SortOrder
+  youtube?: Prisma.SortOrderInput | Prisma.SortOrder
   locationEn?: Prisma.SortOrderInput | Prisma.SortOrder
   locationKm?: Prisma.SortOrderInput | Prisma.SortOrder
   profileImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  badgeImage?: Prisma.SortOrderInput | Prisma.SortOrder
   cvFile?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -387,38 +523,62 @@ export type ProfileScalarWhereWithAggregatesInput = {
   OR?: Prisma.ProfileScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProfileScalarWhereWithAggregatesInput | Prisma.ProfileScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Profile"> | number
+  profileKey?: Prisma.StringWithAggregatesFilter<"Profile"> | string
   fullName?: Prisma.StringWithAggregatesFilter<"Profile"> | string
   headlineEn?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   headlineKm?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  shortBioEn?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  shortBioKm?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   bioEn?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   bioKm?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  currentRoleEn?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  currentRoleKm?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  currentFocusEn?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  currentFocusKm?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  yearsExperience?: Prisma.IntWithAggregatesFilter<"Profile"> | number
   email?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   telegram?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   github?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   linkedin?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  facebook?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  instagram?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  youtube?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   locationEn?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   locationKm?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   profileImage?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  badgeImage?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   cvFile?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Profile"> | Date | string
 }
 
 export type ProfileCreateInput = {
+  profileKey?: string
   fullName: string
   headlineEn?: string | null
   headlineKm?: string | null
+  shortBioEn?: string | null
+  shortBioKm?: string | null
   bioEn?: string | null
   bioKm?: string | null
+  currentRoleEn?: string | null
+  currentRoleKm?: string | null
+  currentFocusEn?: string | null
+  currentFocusKm?: string | null
+  yearsExperience?: number
   email?: string | null
   phone?: string | null
   telegram?: string | null
   github?: string | null
   linkedin?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  youtube?: string | null
   locationEn?: string | null
   locationKm?: string | null
   profileImage?: string | null
+  badgeImage?: string | null
   cvFile?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -426,38 +586,62 @@ export type ProfileCreateInput = {
 
 export type ProfileUncheckedCreateInput = {
   id?: number
+  profileKey?: string
   fullName: string
   headlineEn?: string | null
   headlineKm?: string | null
+  shortBioEn?: string | null
+  shortBioKm?: string | null
   bioEn?: string | null
   bioKm?: string | null
+  currentRoleEn?: string | null
+  currentRoleKm?: string | null
+  currentFocusEn?: string | null
+  currentFocusKm?: string | null
+  yearsExperience?: number
   email?: string | null
   phone?: string | null
   telegram?: string | null
   github?: string | null
   linkedin?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  youtube?: string | null
   locationEn?: string | null
   locationKm?: string | null
   profileImage?: string | null
+  badgeImage?: string | null
   cvFile?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ProfileUpdateInput = {
+  profileKey?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   headlineEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headlineKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortBioEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortBioKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bioEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bioKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentRoleEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentRoleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentFocusEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentFocusKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   github?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  youtube?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  badgeImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cvFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -465,19 +649,31 @@ export type ProfileUpdateInput = {
 
 export type ProfileUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  profileKey?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   headlineEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headlineKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortBioEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortBioKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bioEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bioKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentRoleEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentRoleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentFocusEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentFocusKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   github?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  youtube?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  badgeImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cvFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -485,38 +681,62 @@ export type ProfileUncheckedUpdateInput = {
 
 export type ProfileCreateManyInput = {
   id?: number
+  profileKey?: string
   fullName: string
   headlineEn?: string | null
   headlineKm?: string | null
+  shortBioEn?: string | null
+  shortBioKm?: string | null
   bioEn?: string | null
   bioKm?: string | null
+  currentRoleEn?: string | null
+  currentRoleKm?: string | null
+  currentFocusEn?: string | null
+  currentFocusKm?: string | null
+  yearsExperience?: number
   email?: string | null
   phone?: string | null
   telegram?: string | null
   github?: string | null
   linkedin?: string | null
+  facebook?: string | null
+  instagram?: string | null
+  youtube?: string | null
   locationEn?: string | null
   locationKm?: string | null
   profileImage?: string | null
+  badgeImage?: string | null
   cvFile?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ProfileUpdateManyMutationInput = {
+  profileKey?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   headlineEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headlineKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortBioEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortBioKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bioEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bioKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentRoleEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentRoleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentFocusEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentFocusKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   github?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  youtube?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  badgeImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cvFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -524,19 +744,31 @@ export type ProfileUpdateManyMutationInput = {
 
 export type ProfileUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  profileKey?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   headlineEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   headlineKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortBioEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortBioKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bioEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bioKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentRoleEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentRoleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentFocusEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentFocusKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   github?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  youtube?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  badgeImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cvFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -544,19 +776,31 @@ export type ProfileUncheckedUpdateManyInput = {
 
 export type ProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  profileKey?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   headlineEn?: Prisma.SortOrder
   headlineKm?: Prisma.SortOrder
+  shortBioEn?: Prisma.SortOrder
+  shortBioKm?: Prisma.SortOrder
   bioEn?: Prisma.SortOrder
   bioKm?: Prisma.SortOrder
+  currentRoleEn?: Prisma.SortOrder
+  currentRoleKm?: Prisma.SortOrder
+  currentFocusEn?: Prisma.SortOrder
+  currentFocusKm?: Prisma.SortOrder
+  yearsExperience?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   telegram?: Prisma.SortOrder
   github?: Prisma.SortOrder
   linkedin?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
+  youtube?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   profileImage?: Prisma.SortOrder
+  badgeImage?: Prisma.SortOrder
   cvFile?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -564,23 +808,36 @@ export type ProfileCountOrderByAggregateInput = {
 
 export type ProfileAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  yearsExperience?: Prisma.SortOrder
 }
 
 export type ProfileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  profileKey?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   headlineEn?: Prisma.SortOrder
   headlineKm?: Prisma.SortOrder
+  shortBioEn?: Prisma.SortOrder
+  shortBioKm?: Prisma.SortOrder
   bioEn?: Prisma.SortOrder
   bioKm?: Prisma.SortOrder
+  currentRoleEn?: Prisma.SortOrder
+  currentRoleKm?: Prisma.SortOrder
+  currentFocusEn?: Prisma.SortOrder
+  currentFocusKm?: Prisma.SortOrder
+  yearsExperience?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   telegram?: Prisma.SortOrder
   github?: Prisma.SortOrder
   linkedin?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
+  youtube?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   profileImage?: Prisma.SortOrder
+  badgeImage?: Prisma.SortOrder
   cvFile?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -588,19 +845,31 @@ export type ProfileMaxOrderByAggregateInput = {
 
 export type ProfileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  profileKey?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   headlineEn?: Prisma.SortOrder
   headlineKm?: Prisma.SortOrder
+  shortBioEn?: Prisma.SortOrder
+  shortBioKm?: Prisma.SortOrder
   bioEn?: Prisma.SortOrder
   bioKm?: Prisma.SortOrder
+  currentRoleEn?: Prisma.SortOrder
+  currentRoleKm?: Prisma.SortOrder
+  currentFocusEn?: Prisma.SortOrder
+  currentFocusKm?: Prisma.SortOrder
+  yearsExperience?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   telegram?: Prisma.SortOrder
   github?: Prisma.SortOrder
   linkedin?: Prisma.SortOrder
+  facebook?: Prisma.SortOrder
+  instagram?: Prisma.SortOrder
+  youtube?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   profileImage?: Prisma.SortOrder
+  badgeImage?: Prisma.SortOrder
   cvFile?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -608,45 +877,42 @@ export type ProfileMinOrderByAggregateInput = {
 
 export type ProfileSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+  yearsExperience?: Prisma.SortOrder
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 
 
 export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  profileKey?: boolean
   fullName?: boolean
   headlineEn?: boolean
   headlineKm?: boolean
+  shortBioEn?: boolean
+  shortBioKm?: boolean
   bioEn?: boolean
   bioKm?: boolean
+  currentRoleEn?: boolean
+  currentRoleKm?: boolean
+  currentFocusEn?: boolean
+  currentFocusKm?: boolean
+  yearsExperience?: boolean
   email?: boolean
   phone?: boolean
   telegram?: boolean
   github?: boolean
   linkedin?: boolean
+  facebook?: boolean
+  instagram?: boolean
+  youtube?: boolean
   locationEn?: boolean
   locationKm?: boolean
   profileImage?: boolean
+  badgeImage?: boolean
   cvFile?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -654,19 +920,31 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  profileKey?: boolean
   fullName?: boolean
   headlineEn?: boolean
   headlineKm?: boolean
+  shortBioEn?: boolean
+  shortBioKm?: boolean
   bioEn?: boolean
   bioKm?: boolean
+  currentRoleEn?: boolean
+  currentRoleKm?: boolean
+  currentFocusEn?: boolean
+  currentFocusKm?: boolean
+  yearsExperience?: boolean
   email?: boolean
   phone?: boolean
   telegram?: boolean
   github?: boolean
   linkedin?: boolean
+  facebook?: boolean
+  instagram?: boolean
+  youtube?: boolean
   locationEn?: boolean
   locationKm?: boolean
   profileImage?: boolean
+  badgeImage?: boolean
   cvFile?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -674,19 +952,31 @@ export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  profileKey?: boolean
   fullName?: boolean
   headlineEn?: boolean
   headlineKm?: boolean
+  shortBioEn?: boolean
+  shortBioKm?: boolean
   bioEn?: boolean
   bioKm?: boolean
+  currentRoleEn?: boolean
+  currentRoleKm?: boolean
+  currentFocusEn?: boolean
+  currentFocusKm?: boolean
+  yearsExperience?: boolean
   email?: boolean
   phone?: boolean
   telegram?: boolean
   github?: boolean
   linkedin?: boolean
+  facebook?: boolean
+  instagram?: boolean
+  youtube?: boolean
   locationEn?: boolean
   locationKm?: boolean
   profileImage?: boolean
+  badgeImage?: boolean
   cvFile?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -694,44 +984,68 @@ export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type ProfileSelectScalar = {
   id?: boolean
+  profileKey?: boolean
   fullName?: boolean
   headlineEn?: boolean
   headlineKm?: boolean
+  shortBioEn?: boolean
+  shortBioKm?: boolean
   bioEn?: boolean
   bioKm?: boolean
+  currentRoleEn?: boolean
+  currentRoleKm?: boolean
+  currentFocusEn?: boolean
+  currentFocusKm?: boolean
+  yearsExperience?: boolean
   email?: boolean
   phone?: boolean
   telegram?: boolean
   github?: boolean
   linkedin?: boolean
+  facebook?: boolean
+  instagram?: boolean
+  youtube?: boolean
   locationEn?: boolean
   locationKm?: boolean
   profileImage?: boolean
+  badgeImage?: boolean
   cvFile?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "headlineEn" | "headlineKm" | "bioEn" | "bioKm" | "email" | "phone" | "telegram" | "github" | "linkedin" | "locationEn" | "locationKm" | "profileImage" | "cvFile" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileKey" | "fullName" | "headlineEn" | "headlineKm" | "shortBioEn" | "shortBioKm" | "bioEn" | "bioKm" | "currentRoleEn" | "currentRoleKm" | "currentFocusEn" | "currentFocusKm" | "yearsExperience" | "email" | "phone" | "telegram" | "github" | "linkedin" | "facebook" | "instagram" | "youtube" | "locationEn" | "locationKm" | "profileImage" | "badgeImage" | "cvFile" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
 
 export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Profile"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    profileKey: string
     fullName: string
     headlineEn: string | null
     headlineKm: string | null
+    shortBioEn: string | null
+    shortBioKm: string | null
     bioEn: string | null
     bioKm: string | null
+    currentRoleEn: string | null
+    currentRoleKm: string | null
+    currentFocusEn: string | null
+    currentFocusKm: string | null
+    yearsExperience: number
     email: string | null
     phone: string | null
     telegram: string | null
     github: string | null
     linkedin: string | null
+    facebook: string | null
+    instagram: string | null
+    youtube: string | null
     locationEn: string | null
     locationKm: string | null
     profileImage: string | null
+    badgeImage: string | null
     cvFile: string | null
     createdAt: Date
     updatedAt: Date
@@ -1159,19 +1473,31 @@ export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface ProfileFieldRefs {
   readonly id: Prisma.FieldRef<"Profile", 'Int'>
+  readonly profileKey: Prisma.FieldRef<"Profile", 'String'>
   readonly fullName: Prisma.FieldRef<"Profile", 'String'>
   readonly headlineEn: Prisma.FieldRef<"Profile", 'String'>
   readonly headlineKm: Prisma.FieldRef<"Profile", 'String'>
+  readonly shortBioEn: Prisma.FieldRef<"Profile", 'String'>
+  readonly shortBioKm: Prisma.FieldRef<"Profile", 'String'>
   readonly bioEn: Prisma.FieldRef<"Profile", 'String'>
   readonly bioKm: Prisma.FieldRef<"Profile", 'String'>
+  readonly currentRoleEn: Prisma.FieldRef<"Profile", 'String'>
+  readonly currentRoleKm: Prisma.FieldRef<"Profile", 'String'>
+  readonly currentFocusEn: Prisma.FieldRef<"Profile", 'String'>
+  readonly currentFocusKm: Prisma.FieldRef<"Profile", 'String'>
+  readonly yearsExperience: Prisma.FieldRef<"Profile", 'Int'>
   readonly email: Prisma.FieldRef<"Profile", 'String'>
   readonly phone: Prisma.FieldRef<"Profile", 'String'>
   readonly telegram: Prisma.FieldRef<"Profile", 'String'>
   readonly github: Prisma.FieldRef<"Profile", 'String'>
   readonly linkedin: Prisma.FieldRef<"Profile", 'String'>
+  readonly facebook: Prisma.FieldRef<"Profile", 'String'>
+  readonly instagram: Prisma.FieldRef<"Profile", 'String'>
+  readonly youtube: Prisma.FieldRef<"Profile", 'String'>
   readonly locationEn: Prisma.FieldRef<"Profile", 'String'>
   readonly locationKm: Prisma.FieldRef<"Profile", 'String'>
   readonly profileImage: Prisma.FieldRef<"Profile", 'String'>
+  readonly badgeImage: Prisma.FieldRef<"Profile", 'String'>
   readonly cvFile: Prisma.FieldRef<"Profile", 'String'>
   readonly createdAt: Prisma.FieldRef<"Profile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Profile", 'DateTime'>

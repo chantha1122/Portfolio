@@ -28,10 +28,12 @@ export type AggregateActivity = {
 
 export type ActivityAvgAggregateOutputType = {
   id: number | null
+  sortOrder: number | null
 }
 
 export type ActivitySumAggregateOutputType = {
   id: number | null
+  sortOrder: number | null
 }
 
 export type ActivityMinAggregateOutputType = {
@@ -45,14 +47,22 @@ export type ActivityMinAggregateOutputType = {
   descriptionEn: string | null
   descriptionKm: string | null
   activityDate: Date | null
+  endDate: Date | null
   datePrecision: $Enums.DatePrecision | null
+  isCurrent: boolean | null
   coverImage: string | null
   locationEn: string | null
   locationKm: string | null
   organizationEn: string | null
   organizationKm: string | null
+  externalUrl: string | null
+  githubUrl: string | null
+  demoUrl: string | null
+  credentialId: string | null
+  technologies: string | null
   featured: boolean | null
   published: boolean | null
+  sortOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,14 +78,22 @@ export type ActivityMaxAggregateOutputType = {
   descriptionEn: string | null
   descriptionKm: string | null
   activityDate: Date | null
+  endDate: Date | null
   datePrecision: $Enums.DatePrecision | null
+  isCurrent: boolean | null
   coverImage: string | null
   locationEn: string | null
   locationKm: string | null
   organizationEn: string | null
   organizationKm: string | null
+  externalUrl: string | null
+  githubUrl: string | null
+  demoUrl: string | null
+  credentialId: string | null
+  technologies: string | null
   featured: boolean | null
   published: boolean | null
+  sortOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -91,14 +109,22 @@ export type ActivityCountAggregateOutputType = {
   descriptionEn: number
   descriptionKm: number
   activityDate: number
+  endDate: number
   datePrecision: number
+  isCurrent: number
   coverImage: number
   locationEn: number
   locationKm: number
   organizationEn: number
   organizationKm: number
+  externalUrl: number
+  githubUrl: number
+  demoUrl: number
+  credentialId: number
+  technologies: number
   featured: number
   published: number
+  sortOrder: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -107,10 +133,12 @@ export type ActivityCountAggregateOutputType = {
 
 export type ActivityAvgAggregateInputType = {
   id?: true
+  sortOrder?: true
 }
 
 export type ActivitySumAggregateInputType = {
   id?: true
+  sortOrder?: true
 }
 
 export type ActivityMinAggregateInputType = {
@@ -124,14 +152,22 @@ export type ActivityMinAggregateInputType = {
   descriptionEn?: true
   descriptionKm?: true
   activityDate?: true
+  endDate?: true
   datePrecision?: true
+  isCurrent?: true
   coverImage?: true
   locationEn?: true
   locationKm?: true
   organizationEn?: true
   organizationKm?: true
+  externalUrl?: true
+  githubUrl?: true
+  demoUrl?: true
+  credentialId?: true
+  technologies?: true
   featured?: true
   published?: true
+  sortOrder?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -147,14 +183,22 @@ export type ActivityMaxAggregateInputType = {
   descriptionEn?: true
   descriptionKm?: true
   activityDate?: true
+  endDate?: true
   datePrecision?: true
+  isCurrent?: true
   coverImage?: true
   locationEn?: true
   locationKm?: true
   organizationEn?: true
   organizationKm?: true
+  externalUrl?: true
+  githubUrl?: true
+  demoUrl?: true
+  credentialId?: true
+  technologies?: true
   featured?: true
   published?: true
+  sortOrder?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -170,14 +214,22 @@ export type ActivityCountAggregateInputType = {
   descriptionEn?: true
   descriptionKm?: true
   activityDate?: true
+  endDate?: true
   datePrecision?: true
+  isCurrent?: true
   coverImage?: true
   locationEn?: true
   locationKm?: true
   organizationEn?: true
   organizationKm?: true
+  externalUrl?: true
+  githubUrl?: true
+  demoUrl?: true
+  credentialId?: true
+  technologies?: true
   featured?: true
   published?: true
+  sortOrder?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -280,14 +332,22 @@ export type ActivityGroupByOutputType = {
   descriptionEn: string | null
   descriptionKm: string | null
   activityDate: Date
+  endDate: Date | null
   datePrecision: $Enums.DatePrecision
+  isCurrent: boolean
   coverImage: string | null
   locationEn: string | null
   locationKm: string | null
   organizationEn: string | null
   organizationKm: string | null
+  externalUrl: string | null
+  githubUrl: string | null
+  demoUrl: string | null
+  credentialId: string | null
+  technologies: string | null
   featured: boolean
   published: boolean
+  sortOrder: number
   createdAt: Date
   updatedAt: Date
   _count: ActivityCountAggregateOutputType | null
@@ -326,16 +386,27 @@ export type ActivityWhereInput = {
   descriptionEn?: Prisma.StringNullableFilter<"Activity"> | string | null
   descriptionKm?: Prisma.StringNullableFilter<"Activity"> | string | null
   activityDate?: Prisma.DateTimeFilter<"Activity"> | Date | string
+  endDate?: Prisma.DateTimeNullableFilter<"Activity"> | Date | string | null
   datePrecision?: Prisma.EnumDatePrecisionFilter<"Activity"> | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFilter<"Activity"> | boolean
   coverImage?: Prisma.StringNullableFilter<"Activity"> | string | null
   locationEn?: Prisma.StringNullableFilter<"Activity"> | string | null
   locationKm?: Prisma.StringNullableFilter<"Activity"> | string | null
   organizationEn?: Prisma.StringNullableFilter<"Activity"> | string | null
   organizationKm?: Prisma.StringNullableFilter<"Activity"> | string | null
+  externalUrl?: Prisma.StringNullableFilter<"Activity"> | string | null
+  githubUrl?: Prisma.StringNullableFilter<"Activity"> | string | null
+  demoUrl?: Prisma.StringNullableFilter<"Activity"> | string | null
+  credentialId?: Prisma.StringNullableFilter<"Activity"> | string | null
+  technologies?: Prisma.StringNullableFilter<"Activity"> | string | null
   featured?: Prisma.BoolFilter<"Activity"> | boolean
   published?: Prisma.BoolFilter<"Activity"> | boolean
+  sortOrder?: Prisma.IntFilter<"Activity"> | number
   createdAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
+  media?: Prisma.ActivityMediaListRelationFilter
+  comments?: Prisma.CommentListRelationFilter
+  likes?: Prisma.LikeListRelationFilter
 }
 
 export type ActivityOrderByWithRelationInput = {
@@ -349,16 +420,27 @@ export type ActivityOrderByWithRelationInput = {
   descriptionEn?: Prisma.SortOrderInput | Prisma.SortOrder
   descriptionKm?: Prisma.SortOrderInput | Prisma.SortOrder
   activityDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   datePrecision?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   locationEn?: Prisma.SortOrderInput | Prisma.SortOrder
   locationKm?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationEn?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  demoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  credentialId?: Prisma.SortOrderInput | Prisma.SortOrder
+  technologies?: Prisma.SortOrderInput | Prisma.SortOrder
   featured?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  media?: Prisma.ActivityMediaOrderByRelationAggregateInput
+  comments?: Prisma.CommentOrderByRelationAggregateInput
+  likes?: Prisma.LikeOrderByRelationAggregateInput
 }
 
 export type ActivityWhereUniqueInput = Prisma.AtLeast<{
@@ -375,16 +457,27 @@ export type ActivityWhereUniqueInput = Prisma.AtLeast<{
   descriptionEn?: Prisma.StringNullableFilter<"Activity"> | string | null
   descriptionKm?: Prisma.StringNullableFilter<"Activity"> | string | null
   activityDate?: Prisma.DateTimeFilter<"Activity"> | Date | string
+  endDate?: Prisma.DateTimeNullableFilter<"Activity"> | Date | string | null
   datePrecision?: Prisma.EnumDatePrecisionFilter<"Activity"> | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFilter<"Activity"> | boolean
   coverImage?: Prisma.StringNullableFilter<"Activity"> | string | null
   locationEn?: Prisma.StringNullableFilter<"Activity"> | string | null
   locationKm?: Prisma.StringNullableFilter<"Activity"> | string | null
   organizationEn?: Prisma.StringNullableFilter<"Activity"> | string | null
   organizationKm?: Prisma.StringNullableFilter<"Activity"> | string | null
+  externalUrl?: Prisma.StringNullableFilter<"Activity"> | string | null
+  githubUrl?: Prisma.StringNullableFilter<"Activity"> | string | null
+  demoUrl?: Prisma.StringNullableFilter<"Activity"> | string | null
+  credentialId?: Prisma.StringNullableFilter<"Activity"> | string | null
+  technologies?: Prisma.StringNullableFilter<"Activity"> | string | null
   featured?: Prisma.BoolFilter<"Activity"> | boolean
   published?: Prisma.BoolFilter<"Activity"> | boolean
+  sortOrder?: Prisma.IntFilter<"Activity"> | number
   createdAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
+  media?: Prisma.ActivityMediaListRelationFilter
+  comments?: Prisma.CommentListRelationFilter
+  likes?: Prisma.LikeListRelationFilter
 }, "id" | "slug">
 
 export type ActivityOrderByWithAggregationInput = {
@@ -398,14 +491,22 @@ export type ActivityOrderByWithAggregationInput = {
   descriptionEn?: Prisma.SortOrderInput | Prisma.SortOrder
   descriptionKm?: Prisma.SortOrderInput | Prisma.SortOrder
   activityDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   datePrecision?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   locationEn?: Prisma.SortOrderInput | Prisma.SortOrder
   locationKm?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationEn?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationKm?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  demoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  credentialId?: Prisma.SortOrderInput | Prisma.SortOrder
+  technologies?: Prisma.SortOrderInput | Prisma.SortOrder
   featured?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ActivityCountOrderByAggregateInput
@@ -429,14 +530,22 @@ export type ActivityScalarWhereWithAggregatesInput = {
   descriptionEn?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   descriptionKm?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   activityDate?: Prisma.DateTimeWithAggregatesFilter<"Activity"> | Date | string
+  endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Activity"> | Date | string | null
   datePrecision?: Prisma.EnumDatePrecisionWithAggregatesFilter<"Activity"> | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolWithAggregatesFilter<"Activity"> | boolean
   coverImage?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   locationEn?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   locationKm?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   organizationEn?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   organizationKm?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
+  externalUrl?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
+  githubUrl?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
+  demoUrl?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
+  credentialId?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
+  technologies?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   featured?: Prisma.BoolWithAggregatesFilter<"Activity"> | boolean
   published?: Prisma.BoolWithAggregatesFilter<"Activity"> | boolean
+  sortOrder?: Prisma.IntWithAggregatesFilter<"Activity"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Activity"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Activity"> | Date | string
 }
@@ -451,16 +560,27 @@ export type ActivityCreateInput = {
   descriptionEn?: string | null
   descriptionKm?: string | null
   activityDate: Date | string
+  endDate?: Date | string | null
   datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
   coverImage?: string | null
   locationEn?: string | null
   locationKm?: string | null
   organizationEn?: string | null
   organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
   featured?: boolean
   published?: boolean
+  sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  media?: Prisma.ActivityMediaCreateNestedManyWithoutActivityInput
+  comments?: Prisma.CommentCreateNestedManyWithoutActivityInput
+  likes?: Prisma.LikeCreateNestedManyWithoutActivityInput
 }
 
 export type ActivityUncheckedCreateInput = {
@@ -474,16 +594,27 @@ export type ActivityUncheckedCreateInput = {
   descriptionEn?: string | null
   descriptionKm?: string | null
   activityDate: Date | string
+  endDate?: Date | string | null
   datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
   coverImage?: string | null
   locationEn?: string | null
   locationKm?: string | null
   organizationEn?: string | null
   organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
   featured?: boolean
   published?: boolean
+  sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  media?: Prisma.ActivityMediaUncheckedCreateNestedManyWithoutActivityInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutActivityInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutActivityInput
 }
 
 export type ActivityUpdateInput = {
@@ -496,16 +627,27 @@ export type ActivityUpdateInput = {
   descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  media?: Prisma.ActivityMediaUpdateManyWithoutActivityNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutActivityNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutActivityNestedInput
 }
 
 export type ActivityUncheckedUpdateInput = {
@@ -519,16 +661,27 @@ export type ActivityUncheckedUpdateInput = {
   descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  media?: Prisma.ActivityMediaUncheckedUpdateManyWithoutActivityNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutActivityNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutActivityNestedInput
 }
 
 export type ActivityCreateManyInput = {
@@ -542,14 +695,22 @@ export type ActivityCreateManyInput = {
   descriptionEn?: string | null
   descriptionKm?: string | null
   activityDate: Date | string
+  endDate?: Date | string | null
   datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
   coverImage?: string | null
   locationEn?: string | null
   locationKm?: string | null
   organizationEn?: string | null
   organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
   featured?: boolean
   published?: boolean
+  sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -564,14 +725,22 @@ export type ActivityUpdateManyMutationInput = {
   descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -587,14 +756,22 @@ export type ActivityUncheckedUpdateManyInput = {
   descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -610,20 +787,29 @@ export type ActivityCountOrderByAggregateInput = {
   descriptionEn?: Prisma.SortOrder
   descriptionKm?: Prisma.SortOrder
   activityDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
   datePrecision?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   organizationEn?: Prisma.SortOrder
   organizationKm?: Prisma.SortOrder
+  externalUrl?: Prisma.SortOrder
+  githubUrl?: Prisma.SortOrder
+  demoUrl?: Prisma.SortOrder
+  credentialId?: Prisma.SortOrder
+  technologies?: Prisma.SortOrder
   featured?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ActivityAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  sortOrder?: Prisma.SortOrder
 }
 
 export type ActivityMaxOrderByAggregateInput = {
@@ -637,14 +823,22 @@ export type ActivityMaxOrderByAggregateInput = {
   descriptionEn?: Prisma.SortOrder
   descriptionKm?: Prisma.SortOrder
   activityDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
   datePrecision?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   organizationEn?: Prisma.SortOrder
   organizationKm?: Prisma.SortOrder
+  externalUrl?: Prisma.SortOrder
+  githubUrl?: Prisma.SortOrder
+  demoUrl?: Prisma.SortOrder
+  credentialId?: Prisma.SortOrder
+  technologies?: Prisma.SortOrder
   featured?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -660,34 +854,575 @@ export type ActivityMinOrderByAggregateInput = {
   descriptionEn?: Prisma.SortOrder
   descriptionKm?: Prisma.SortOrder
   activityDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
   datePrecision?: Prisma.SortOrder
+  isCurrent?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   organizationEn?: Prisma.SortOrder
   organizationKm?: Prisma.SortOrder
+  externalUrl?: Prisma.SortOrder
+  githubUrl?: Prisma.SortOrder
+  demoUrl?: Prisma.SortOrder
+  credentialId?: Prisma.SortOrder
+  technologies?: Prisma.SortOrder
   featured?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ActivitySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  sortOrder?: Prisma.SortOrder
+}
+
+export type ActivityScalarRelationFilter = {
+  is?: Prisma.ActivityWhereInput
+  isNot?: Prisma.ActivityWhereInput
 }
 
 export type EnumActivityTypeFieldUpdateOperationsInput = {
   set?: $Enums.ActivityType
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type EnumDatePrecisionFieldUpdateOperationsInput = {
   set?: $Enums.DatePrecision
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
+export type ActivityCreateNestedOneWithoutMediaInput = {
+  create?: Prisma.XOR<Prisma.ActivityCreateWithoutMediaInput, Prisma.ActivityUncheckedCreateWithoutMediaInput>
+  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutMediaInput
+  connect?: Prisma.ActivityWhereUniqueInput
 }
 
+export type ActivityUpdateOneRequiredWithoutMediaNestedInput = {
+  create?: Prisma.XOR<Prisma.ActivityCreateWithoutMediaInput, Prisma.ActivityUncheckedCreateWithoutMediaInput>
+  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutMediaInput
+  upsert?: Prisma.ActivityUpsertWithoutMediaInput
+  connect?: Prisma.ActivityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ActivityUpdateToOneWithWhereWithoutMediaInput, Prisma.ActivityUpdateWithoutMediaInput>, Prisma.ActivityUncheckedUpdateWithoutMediaInput>
+}
+
+export type ActivityCreateNestedOneWithoutCommentsInput = {
+  create?: Prisma.XOR<Prisma.ActivityCreateWithoutCommentsInput, Prisma.ActivityUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutCommentsInput
+  connect?: Prisma.ActivityWhereUniqueInput
+}
+
+export type ActivityUpdateOneRequiredWithoutCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ActivityCreateWithoutCommentsInput, Prisma.ActivityUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutCommentsInput
+  upsert?: Prisma.ActivityUpsertWithoutCommentsInput
+  connect?: Prisma.ActivityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ActivityUpdateToOneWithWhereWithoutCommentsInput, Prisma.ActivityUpdateWithoutCommentsInput>, Prisma.ActivityUncheckedUpdateWithoutCommentsInput>
+}
+
+export type ActivityCreateNestedOneWithoutLikesInput = {
+  create?: Prisma.XOR<Prisma.ActivityCreateWithoutLikesInput, Prisma.ActivityUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutLikesInput
+  connect?: Prisma.ActivityWhereUniqueInput
+}
+
+export type ActivityUpdateOneRequiredWithoutLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.ActivityCreateWithoutLikesInput, Prisma.ActivityUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.ActivityCreateOrConnectWithoutLikesInput
+  upsert?: Prisma.ActivityUpsertWithoutLikesInput
+  connect?: Prisma.ActivityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ActivityUpdateToOneWithWhereWithoutLikesInput, Prisma.ActivityUpdateWithoutLikesInput>, Prisma.ActivityUncheckedUpdateWithoutLikesInput>
+}
+
+export type ActivityCreateWithoutMediaInput = {
+  slug: string
+  type: $Enums.ActivityType
+  titleEn: string
+  titleKm?: string | null
+  summaryEn?: string | null
+  summaryKm?: string | null
+  descriptionEn?: string | null
+  descriptionKm?: string | null
+  activityDate: Date | string
+  endDate?: Date | string | null
+  datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
+  coverImage?: string | null
+  locationEn?: string | null
+  locationKm?: string | null
+  organizationEn?: string | null
+  organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
+  featured?: boolean
+  published?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  comments?: Prisma.CommentCreateNestedManyWithoutActivityInput
+  likes?: Prisma.LikeCreateNestedManyWithoutActivityInput
+}
+
+export type ActivityUncheckedCreateWithoutMediaInput = {
+  id?: number
+  slug: string
+  type: $Enums.ActivityType
+  titleEn: string
+  titleKm?: string | null
+  summaryEn?: string | null
+  summaryKm?: string | null
+  descriptionEn?: string | null
+  descriptionKm?: string | null
+  activityDate: Date | string
+  endDate?: Date | string | null
+  datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
+  coverImage?: string | null
+  locationEn?: string | null
+  locationKm?: string | null
+  organizationEn?: string | null
+  organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
+  featured?: boolean
+  published?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutActivityInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutActivityInput
+}
+
+export type ActivityCreateOrConnectWithoutMediaInput = {
+  where: Prisma.ActivityWhereUniqueInput
+  create: Prisma.XOR<Prisma.ActivityCreateWithoutMediaInput, Prisma.ActivityUncheckedCreateWithoutMediaInput>
+}
+
+export type ActivityUpsertWithoutMediaInput = {
+  update: Prisma.XOR<Prisma.ActivityUpdateWithoutMediaInput, Prisma.ActivityUncheckedUpdateWithoutMediaInput>
+  create: Prisma.XOR<Prisma.ActivityCreateWithoutMediaInput, Prisma.ActivityUncheckedCreateWithoutMediaInput>
+  where?: Prisma.ActivityWhereInput
+}
+
+export type ActivityUpdateToOneWithWhereWithoutMediaInput = {
+  where?: Prisma.ActivityWhereInput
+  data: Prisma.XOR<Prisma.ActivityUpdateWithoutMediaInput, Prisma.ActivityUncheckedUpdateWithoutMediaInput>
+}
+
+export type ActivityUpdateWithoutMediaInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  comments?: Prisma.CommentUpdateManyWithoutActivityNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutActivityNestedInput
+}
+
+export type ActivityUncheckedUpdateWithoutMediaInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutActivityNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutActivityNestedInput
+}
+
+export type ActivityCreateWithoutCommentsInput = {
+  slug: string
+  type: $Enums.ActivityType
+  titleEn: string
+  titleKm?: string | null
+  summaryEn?: string | null
+  summaryKm?: string | null
+  descriptionEn?: string | null
+  descriptionKm?: string | null
+  activityDate: Date | string
+  endDate?: Date | string | null
+  datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
+  coverImage?: string | null
+  locationEn?: string | null
+  locationKm?: string | null
+  organizationEn?: string | null
+  organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
+  featured?: boolean
+  published?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  media?: Prisma.ActivityMediaCreateNestedManyWithoutActivityInput
+  likes?: Prisma.LikeCreateNestedManyWithoutActivityInput
+}
+
+export type ActivityUncheckedCreateWithoutCommentsInput = {
+  id?: number
+  slug: string
+  type: $Enums.ActivityType
+  titleEn: string
+  titleKm?: string | null
+  summaryEn?: string | null
+  summaryKm?: string | null
+  descriptionEn?: string | null
+  descriptionKm?: string | null
+  activityDate: Date | string
+  endDate?: Date | string | null
+  datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
+  coverImage?: string | null
+  locationEn?: string | null
+  locationKm?: string | null
+  organizationEn?: string | null
+  organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
+  featured?: boolean
+  published?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  media?: Prisma.ActivityMediaUncheckedCreateNestedManyWithoutActivityInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutActivityInput
+}
+
+export type ActivityCreateOrConnectWithoutCommentsInput = {
+  where: Prisma.ActivityWhereUniqueInput
+  create: Prisma.XOR<Prisma.ActivityCreateWithoutCommentsInput, Prisma.ActivityUncheckedCreateWithoutCommentsInput>
+}
+
+export type ActivityUpsertWithoutCommentsInput = {
+  update: Prisma.XOR<Prisma.ActivityUpdateWithoutCommentsInput, Prisma.ActivityUncheckedUpdateWithoutCommentsInput>
+  create: Prisma.XOR<Prisma.ActivityCreateWithoutCommentsInput, Prisma.ActivityUncheckedCreateWithoutCommentsInput>
+  where?: Prisma.ActivityWhereInput
+}
+
+export type ActivityUpdateToOneWithWhereWithoutCommentsInput = {
+  where?: Prisma.ActivityWhereInput
+  data: Prisma.XOR<Prisma.ActivityUpdateWithoutCommentsInput, Prisma.ActivityUncheckedUpdateWithoutCommentsInput>
+}
+
+export type ActivityUpdateWithoutCommentsInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  media?: Prisma.ActivityMediaUpdateManyWithoutActivityNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutActivityNestedInput
+}
+
+export type ActivityUncheckedUpdateWithoutCommentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  media?: Prisma.ActivityMediaUncheckedUpdateManyWithoutActivityNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutActivityNestedInput
+}
+
+export type ActivityCreateWithoutLikesInput = {
+  slug: string
+  type: $Enums.ActivityType
+  titleEn: string
+  titleKm?: string | null
+  summaryEn?: string | null
+  summaryKm?: string | null
+  descriptionEn?: string | null
+  descriptionKm?: string | null
+  activityDate: Date | string
+  endDate?: Date | string | null
+  datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
+  coverImage?: string | null
+  locationEn?: string | null
+  locationKm?: string | null
+  organizationEn?: string | null
+  organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
+  featured?: boolean
+  published?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  media?: Prisma.ActivityMediaCreateNestedManyWithoutActivityInput
+  comments?: Prisma.CommentCreateNestedManyWithoutActivityInput
+}
+
+export type ActivityUncheckedCreateWithoutLikesInput = {
+  id?: number
+  slug: string
+  type: $Enums.ActivityType
+  titleEn: string
+  titleKm?: string | null
+  summaryEn?: string | null
+  summaryKm?: string | null
+  descriptionEn?: string | null
+  descriptionKm?: string | null
+  activityDate: Date | string
+  endDate?: Date | string | null
+  datePrecision?: $Enums.DatePrecision
+  isCurrent?: boolean
+  coverImage?: string | null
+  locationEn?: string | null
+  locationKm?: string | null
+  organizationEn?: string | null
+  organizationKm?: string | null
+  externalUrl?: string | null
+  githubUrl?: string | null
+  demoUrl?: string | null
+  credentialId?: string | null
+  technologies?: string | null
+  featured?: boolean
+  published?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  media?: Prisma.ActivityMediaUncheckedCreateNestedManyWithoutActivityInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutActivityInput
+}
+
+export type ActivityCreateOrConnectWithoutLikesInput = {
+  where: Prisma.ActivityWhereUniqueInput
+  create: Prisma.XOR<Prisma.ActivityCreateWithoutLikesInput, Prisma.ActivityUncheckedCreateWithoutLikesInput>
+}
+
+export type ActivityUpsertWithoutLikesInput = {
+  update: Prisma.XOR<Prisma.ActivityUpdateWithoutLikesInput, Prisma.ActivityUncheckedUpdateWithoutLikesInput>
+  create: Prisma.XOR<Prisma.ActivityCreateWithoutLikesInput, Prisma.ActivityUncheckedCreateWithoutLikesInput>
+  where?: Prisma.ActivityWhereInput
+}
+
+export type ActivityUpdateToOneWithWhereWithoutLikesInput = {
+  where?: Prisma.ActivityWhereInput
+  data: Prisma.XOR<Prisma.ActivityUpdateWithoutLikesInput, Prisma.ActivityUncheckedUpdateWithoutLikesInput>
+}
+
+export type ActivityUpdateWithoutLikesInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  media?: Prisma.ActivityMediaUpdateManyWithoutActivityNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutActivityNestedInput
+}
+
+export type ActivityUncheckedUpdateWithoutLikesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+  titleEn?: Prisma.StringFieldUpdateOperationsInput | string
+  titleKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summaryKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  descriptionKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  datePrecision?: Prisma.EnumDatePrecisionFieldUpdateOperationsInput | $Enums.DatePrecision
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  demoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  credentialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  technologies?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  media?: Prisma.ActivityMediaUncheckedUpdateManyWithoutActivityNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutActivityNestedInput
+}
+
+
+/**
+ * Count Type ActivityCountOutputType
+ */
+
+export type ActivityCountOutputType = {
+  media: number
+  comments: number
+  likes: number
+}
+
+export type ActivityCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  media?: boolean | ActivityCountOutputTypeCountMediaArgs
+  comments?: boolean | ActivityCountOutputTypeCountCommentsArgs
+  likes?: boolean | ActivityCountOutputTypeCountLikesArgs
+}
+
+/**
+ * ActivityCountOutputType without action
+ */
+export type ActivityCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActivityCountOutputType
+   */
+  select?: Prisma.ActivityCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ActivityCountOutputType without action
+ */
+export type ActivityCountOutputTypeCountMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ActivityMediaWhereInput
+}
+
+/**
+ * ActivityCountOutputType without action
+ */
+export type ActivityCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommentWhereInput
+}
+
+/**
+ * ActivityCountOutputType without action
+ */
+export type ActivityCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LikeWhereInput
+}
 
 
 export type ActivitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -701,16 +1436,28 @@ export type ActivitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   descriptionEn?: boolean
   descriptionKm?: boolean
   activityDate?: boolean
+  endDate?: boolean
   datePrecision?: boolean
+  isCurrent?: boolean
   coverImage?: boolean
   locationEn?: boolean
   locationKm?: boolean
   organizationEn?: boolean
   organizationKm?: boolean
+  externalUrl?: boolean
+  githubUrl?: boolean
+  demoUrl?: boolean
+  credentialId?: boolean
+  technologies?: boolean
   featured?: boolean
   published?: boolean
+  sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  media?: boolean | Prisma.Activity$mediaArgs<ExtArgs>
+  comments?: boolean | Prisma.Activity$commentsArgs<ExtArgs>
+  likes?: boolean | Prisma.Activity$likesArgs<ExtArgs>
+  _count?: boolean | Prisma.ActivityCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["activity"]>
 
 export type ActivitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -724,14 +1471,22 @@ export type ActivitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   descriptionEn?: boolean
   descriptionKm?: boolean
   activityDate?: boolean
+  endDate?: boolean
   datePrecision?: boolean
+  isCurrent?: boolean
   coverImage?: boolean
   locationEn?: boolean
   locationKm?: boolean
   organizationEn?: boolean
   organizationKm?: boolean
+  externalUrl?: boolean
+  githubUrl?: boolean
+  demoUrl?: boolean
+  credentialId?: boolean
+  technologies?: boolean
   featured?: boolean
   published?: boolean
+  sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["activity"]>
@@ -747,14 +1502,22 @@ export type ActivitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   descriptionEn?: boolean
   descriptionKm?: boolean
   activityDate?: boolean
+  endDate?: boolean
   datePrecision?: boolean
+  isCurrent?: boolean
   coverImage?: boolean
   locationEn?: boolean
   locationKm?: boolean
   organizationEn?: boolean
   organizationKm?: boolean
+  externalUrl?: boolean
+  githubUrl?: boolean
+  demoUrl?: boolean
+  credentialId?: boolean
+  technologies?: boolean
   featured?: boolean
   published?: boolean
+  sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["activity"]>
@@ -770,23 +1533,43 @@ export type ActivitySelectScalar = {
   descriptionEn?: boolean
   descriptionKm?: boolean
   activityDate?: boolean
+  endDate?: boolean
   datePrecision?: boolean
+  isCurrent?: boolean
   coverImage?: boolean
   locationEn?: boolean
   locationKm?: boolean
   organizationEn?: boolean
   organizationKm?: boolean
+  externalUrl?: boolean
+  githubUrl?: boolean
+  demoUrl?: boolean
+  credentialId?: boolean
+  technologies?: boolean
   featured?: boolean
   published?: boolean
+  sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "type" | "titleEn" | "titleKm" | "summaryEn" | "summaryKm" | "descriptionEn" | "descriptionKm" | "activityDate" | "datePrecision" | "coverImage" | "locationEn" | "locationKm" | "organizationEn" | "organizationKm" | "featured" | "published" | "createdAt" | "updatedAt", ExtArgs["result"]["activity"]>
+export type ActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "type" | "titleEn" | "titleKm" | "summaryEn" | "summaryKm" | "descriptionEn" | "descriptionKm" | "activityDate" | "endDate" | "datePrecision" | "isCurrent" | "coverImage" | "locationEn" | "locationKm" | "organizationEn" | "organizationKm" | "externalUrl" | "githubUrl" | "demoUrl" | "credentialId" | "technologies" | "featured" | "published" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["activity"]>
+export type ActivityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  media?: boolean | Prisma.Activity$mediaArgs<ExtArgs>
+  comments?: boolean | Prisma.Activity$commentsArgs<ExtArgs>
+  likes?: boolean | Prisma.Activity$likesArgs<ExtArgs>
+  _count?: boolean | Prisma.ActivityCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ActivityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ActivityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $ActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Activity"
-  objects: {}
+  objects: {
+    media: Prisma.$ActivityMediaPayload<ExtArgs>[]
+    comments: Prisma.$CommentPayload<ExtArgs>[]
+    likes: Prisma.$LikePayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     slug: string
@@ -798,14 +1581,22 @@ export type $ActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     descriptionEn: string | null
     descriptionKm: string | null
     activityDate: Date
+    endDate: Date | null
     datePrecision: $Enums.DatePrecision
+    isCurrent: boolean
     coverImage: string | null
     locationEn: string | null
     locationKm: string | null
     organizationEn: string | null
     organizationKm: string | null
+    externalUrl: string | null
+    githubUrl: string | null
+    demoUrl: string | null
+    credentialId: string | null
+    technologies: string | null
     featured: boolean
     published: boolean
+    sortOrder: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["activity"]>
@@ -1202,6 +1993,9 @@ readonly fields: ActivityFieldRefs;
  */
 export interface Prisma__ActivityClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  media<T extends Prisma.Activity$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  comments<T extends Prisma.Activity$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  likes<T extends Prisma.Activity$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1241,14 +2035,22 @@ export interface ActivityFieldRefs {
   readonly descriptionEn: Prisma.FieldRef<"Activity", 'String'>
   readonly descriptionKm: Prisma.FieldRef<"Activity", 'String'>
   readonly activityDate: Prisma.FieldRef<"Activity", 'DateTime'>
+  readonly endDate: Prisma.FieldRef<"Activity", 'DateTime'>
   readonly datePrecision: Prisma.FieldRef<"Activity", 'DatePrecision'>
+  readonly isCurrent: Prisma.FieldRef<"Activity", 'Boolean'>
   readonly coverImage: Prisma.FieldRef<"Activity", 'String'>
   readonly locationEn: Prisma.FieldRef<"Activity", 'String'>
   readonly locationKm: Prisma.FieldRef<"Activity", 'String'>
   readonly organizationEn: Prisma.FieldRef<"Activity", 'String'>
   readonly organizationKm: Prisma.FieldRef<"Activity", 'String'>
+  readonly externalUrl: Prisma.FieldRef<"Activity", 'String'>
+  readonly githubUrl: Prisma.FieldRef<"Activity", 'String'>
+  readonly demoUrl: Prisma.FieldRef<"Activity", 'String'>
+  readonly credentialId: Prisma.FieldRef<"Activity", 'String'>
+  readonly technologies: Prisma.FieldRef<"Activity", 'String'>
   readonly featured: Prisma.FieldRef<"Activity", 'Boolean'>
   readonly published: Prisma.FieldRef<"Activity", 'Boolean'>
+  readonly sortOrder: Prisma.FieldRef<"Activity", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Activity", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Activity", 'DateTime'>
 }
@@ -1268,6 +2070,10 @@ export type ActivityFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
+  /**
    * Filter, which Activity to fetch.
    */
   where: Prisma.ActivityWhereUniqueInput
@@ -1286,6 +2092,10 @@ export type ActivityFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
+  /**
    * Filter, which Activity to fetch.
    */
   where: Prisma.ActivityWhereUniqueInput
@@ -1303,6 +2113,10 @@ export type ActivityFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the Activity
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
   /**
    * Filter, which Activity to fetch.
    */
@@ -1352,6 +2166,10 @@ export type ActivityFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
+  /**
    * Filter, which Activity to fetch.
    */
   where?: Prisma.ActivityWhereInput
@@ -1399,6 +2217,10 @@ export type ActivityFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Activity
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
   /**
    * Filter, which Activities to fetch.
    */
@@ -1448,6 +2270,10 @@ export type ActivityCreateArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
+  /**
    * The data needed to create a Activity.
    */
   data: Prisma.XOR<Prisma.ActivityCreateInput, Prisma.ActivityUncheckedCreateInput>
@@ -1495,6 +2321,10 @@ export type ActivityUpdateArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Activity
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
   /**
    * The data needed to update a Activity.
    */
@@ -1562,6 +2392,10 @@ export type ActivityUpsertArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
+  /**
    * The filter to search for the Activity to update in case it exists.
    */
   where: Prisma.ActivityWhereUniqueInput
@@ -1588,6 +2422,10 @@ export type ActivityDeleteArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
+  /**
    * Filter which Activity to delete.
    */
   where: Prisma.ActivityWhereUniqueInput
@@ -1608,6 +2446,78 @@ export type ActivityDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * Activity.media
+ */
+export type Activity$mediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActivityMedia
+   */
+  select?: Prisma.ActivityMediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ActivityMedia
+   */
+  omit?: Prisma.ActivityMediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityMediaInclude<ExtArgs> | null
+  where?: Prisma.ActivityMediaWhereInput
+  orderBy?: Prisma.ActivityMediaOrderByWithRelationInput | Prisma.ActivityMediaOrderByWithRelationInput[]
+  cursor?: Prisma.ActivityMediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ActivityMediaScalarFieldEnum | Prisma.ActivityMediaScalarFieldEnum[]
+}
+
+/**
+ * Activity.comments
+ */
+export type Activity$commentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Comment
+   */
+  select?: Prisma.CommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Comment
+   */
+  omit?: Prisma.CommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommentInclude<ExtArgs> | null
+  where?: Prisma.CommentWhereInput
+  orderBy?: Prisma.CommentOrderByWithRelationInput | Prisma.CommentOrderByWithRelationInput[]
+  cursor?: Prisma.CommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommentScalarFieldEnum | Prisma.CommentScalarFieldEnum[]
+}
+
+/**
+ * Activity.likes
+ */
+export type Activity$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Like
+   */
+  select?: Prisma.LikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Like
+   */
+  omit?: Prisma.LikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LikeInclude<ExtArgs> | null
+  where?: Prisma.LikeWhereInput
+  orderBy?: Prisma.LikeOrderByWithRelationInput | Prisma.LikeOrderByWithRelationInput[]
+  cursor?: Prisma.LikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LikeScalarFieldEnum | Prisma.LikeScalarFieldEnum[]
+}
+
+/**
  * Activity without action
  */
 export type ActivityDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1619,4 +2529,8 @@ export type ActivityDefaultArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Activity
    */
   omit?: Prisma.ActivityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActivityInclude<ExtArgs> | null
 }

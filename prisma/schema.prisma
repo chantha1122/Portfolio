@@ -26,27 +26,89 @@ enum DatePrecision {
   DAY
 }
 
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum ToolCategory {
+  DEVELOPMENT
+  FRONTEND
+  BACKEND
+  DATABASE
+  AI_ML
+  DESIGN
+  DEVOPS
+  PRODUCTIVITY
+  OTHER
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+enum ContactMessageStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String   @db.Text
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
 model Profile {
-  id Int @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
+  profileKey String @unique @default("main")
 
   fullName String
 
   headlineEn String?
   headlineKm String?
 
+  shortBioEn String? @db.Text
+  shortBioKm String? @db.Text
+
   bioEn String? @db.Text
   bioKm String? @db.Text
+
+  currentRoleEn String?
+  currentRoleKm String?
+
+  currentFocusEn String? @db.Text
+  currentFocusKm String? @db.Text
+
+  yearsExperience Int @default(0)
 
   email    String?
   phone    String?
   telegram String?
+
   github   String?
   linkedin String?
+
+  facebook  String?
+  instagram String?
+  youtube   String?
 
   locationEn String?
   locationKm String?
 
   profileImage String?
+  badgeImage   String?
   cvFile       String?
 
   createdAt DateTime @default(now())
@@ -56,8 +118,7 @@ model Profile {
 }
 
 model Activity {
-  id Int @id @default(autoincrement())
-
+  id   Int    @id @default(autoincrement())
   slug String @unique
 
   type ActivityType
@@ -71,8 +132,12 @@ model Activity {
   descriptionEn String? @db.Text
   descriptionKm String? @db.Text
 
-  activityDate  DateTime
+  activityDate DateTime
+  endDate      DateTime?
+
   datePrecision DatePrecision @default(DAY)
+
+  isCurrent Boolean @default(false)
 
   coverImage String?
 
@@ -82,8 +147,22 @@ model Activity {
   organizationEn String?
   organizationKm String?
 
+  externalUrl String?
+  githubUrl   String?
+  demoUrl     String?
+
+  credentialId String?
+
+  technologies String? @db.Text
+
   featured  Boolean @default(false)
   published Boolean @default(true)
+
+  sortOrder Int @default(0)
+
+  media    ActivityMedia[]
+  comments Comment[]
+  likes    Like[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -91,5 +170,127 @@ model Activity {
   @@index([activityDate])
   @@index([type])
   @@index([published])
+  @@index([featured])
   @@map("activities")
+}
+
+model ActivityMedia {
+  id Int @id @default(autoincrement())
+
+  activityId Int
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  fileUrl String
+  type    MediaType @default(IMAGE)
+
+  captionEn String?
+  captionKm String?
+
+  sortOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([activityId])
+  @@map("activity_media")
+}
+
+model Skill {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  categoryEn String?
+  categoryKm String?
+
+  level SkillLevel @default(INTERMEDIATE)
+
+  icon String?
+
+  published Boolean @default(true)
+  sortOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published])
+  @@index([sortOrder])
+  @@map("skills")
+}
+
+model Tool {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  category ToolCategory @default(OTHER)
+
+  icon String?
+  url  String?
+
+  published Boolean @default(true)
+  sortOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([published])
+  @@index([sortOrder])
+  @@map("tools")
+}
+
+model ContactMessage {
+  id Int @id @default(autoincrement())
+
+  name  String
+  email String
+
+  subject String?
+  message String  @db.Text
+
+  status ContactMessageStatus @default(NEW)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+
+model Comment {
+  id Int @id @default(autoincrement())
+
+  activityId Int
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  name    String
+  email   String?
+  message String @db.Text
+
+  isApproved Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([activityId])
+  @@index([isApproved])
+  @@index([createdAt])
+  @@map("comments")
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+
+  activityId Int
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  visitorKey String
+
+  createdAt DateTime @default(now())
+
+  @@unique([activityId, visitorKey])
+  @@index([activityId])
+  @@map("likes")
 }

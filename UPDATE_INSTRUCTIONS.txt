@@ -1,0 +1,110 @@
+CHANTHA PORTFOLIO — COMPLETED UPDATE
+
+What this update completes
+--------------------------
+1. Fixes /dashboard redirect and restores the real localized dashboard overview.
+2. Makes the dashboard sidebar grouped, scrollable, consistent, and enables:
+   - Overview
+   - Profile
+   - Activities
+   - Projects
+   - Certificates
+   - Gallery
+   - Skills & Tools
+   - Experience
+   - Education
+   - Achievements
+   - Teaching & Mentoring
+   - Contact Messages
+   - Comment Moderation
+   - Settings / Change Password
+3. Expands Profile Management with:
+   - Short bio EN/KH
+   - Current role EN/KH
+   - Current focus EN/KH
+   - Years of experience
+   - Facebook / Instagram / YouTube
+   - Profile image / badge image / CV paths
+4. Adds Skills & Tools CRUD dashboard.
+5. Adds Gallery management using PHOTO activities.
+6. Adds Contact Message management (read/replied/archive/delete).
+7. Adds Change Password in Settings.
+8. Adds visitor interaction support for portfolio projects:
+   - Like / unlike
+   - Approved comment count and comment list
+   - Public comment submission (pending moderation by default)
+   - Share via native share API or clipboard fallback
+9. Adds dashboard Comment Moderation:
+   - Pending / Approved filter
+   - Approve
+   - Hide
+   - Delete
+10. Rebuilds the public portfolio from real PostgreSQL data using the requested violet/cyan futuristic style.
+11. Public website sections:
+   - Hero
+   - About Me in the reference-image style
+   - Achievements
+   - Tools
+   - Skills
+   - Experience
+   - Education
+   - Featured Projects
+   - Certificates
+   - Year-by-year Journey
+   - Teaching & Mentoring
+   - Gallery
+   - Get In Touch form
+   - Footer
+12. Includes a default futuristic profile badge image at:
+    public/images/profile-badge.png
+
+Required database update
+------------------------
+This version adds/updates Prisma models, including Comment and Like.
+Keep your existing .env file and make sure PostgreSQL/Docker is running.
+
+From the project root run:
+
+npx prisma migrate dev
+npx prisma generate
+
+Then clear Next.js cache on Windows CMD:
+
+rmdir /s /q .next
+
+Then type-check:
+
+npx tsc --noEmit
+
+Then start:
+
+npm run dev
+
+Recommended testing order
+-------------------------
+1. /en/dashboard
+2. /km/dashboard
+3. Profile save + success toast
+4. Skills & Tools create/edit/delete
+5. Activities / Projects / Certificates CRUD
+6. Experience / Education / Achievements / Teaching CRUD
+7. Gallery PHOTO CRUD
+8. Settings -> Change Password
+9. Public Get In Touch -> Dashboard Messages
+10. Public Project Like / Comment / Share
+11. Dashboard Comments -> approve comment -> refresh public page
+12. EN/KH and Dark/Light on dashboard + public website
+
+Important
+---------
+- Keep your existing .env file. It is intentionally NOT included in the clean updated ZIP.
+- Your existing database data is preserved by Prisma migrations.
+- The generated Prisma client must be regenerated after copying this update because Comment/Like are new models.
+- Public comments are NOT visible immediately. They are saved as pending and must be approved in Dashboard -> Comments.
+- Likes use an anonymous browser visitor key stored in localStorage to avoid duplicate likes from the same browser for the same item.
+- For Profile Image / Badge Image / CV, use a public path such as:
+  /images/profile-badge.png
+  /images/me.jpg
+  /files/chantha-cv.pdf
+  or a full public URL.
+- The default badge image can be replaced later by setting Badge Image in Profile Management.

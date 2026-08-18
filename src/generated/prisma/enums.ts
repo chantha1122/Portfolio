@@ -32,3 +32,47 @@ export const DatePrecision = {
 } as const
 
 export type DatePrecision = (typeof DatePrecision)[keyof typeof DatePrecision]
+
+
+export const SkillLevel = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED',
+  EXPERT: 'EXPERT'
+} as const
+
+export type SkillLevel = (typeof SkillLevel)[keyof typeof SkillLevel]
+
+
+export const ToolCategory = {
+  DEVELOPMENT: 'DEVELOPMENT',
+  FRONTEND: 'FRONTEND',
+  BACKEND: 'BACKEND',
+  DATABASE: 'DATABASE',
+  AI_ML: 'AI_ML',
+  DESIGN: 'DESIGN',
+  DEVOPS: 'DEVOPS',
+  PRODUCTIVITY: 'PRODUCTIVITY',
+  OTHER: 'OTHER'
+} as const
+
+export type ToolCategory = (typeof ToolCategory)[keyof typeof ToolCategory]
+
+
+export const MediaType = {
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO',
+  DOCUMENT: 'DOCUMENT'
+} as const
+
+export type MediaType = (typeof MediaType)[keyof typeof MediaType]
+
+
+export const ContactMessageStatus = {
+  NEW: 'NEW',
+  READ: 'READ',
+  REPLIED: 'REPLIED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type ContactMessageStatus = (typeof ContactMessageStatus)[keyof typeof ContactMessageStatus]
