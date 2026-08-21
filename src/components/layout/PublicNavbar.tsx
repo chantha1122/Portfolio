@@ -8,11 +8,19 @@ import ThemeSwitcher from "@/components/layout/ThemeSwitcher";
 
 const items = [
   ["#home", "Home", "ទំព័រដើម"],
+
   ["#about", "About", "អំពីខ្ញុំ"],
+
   ["#skills", "Skills", "ជំនាញ"],
+
   ["#experience", "Experience", "បទពិសោធន៍"],
+
   ["#projects", "Projects", "គម្រោង"],
-  ["#journey", "Journey", "ដំណើរ"],
+
+  ["#journey", "Journey", "កំណត់ត្រា"],
+
+  ["#gallery", "Gallery", "វិចិត្រសាល"],
+
   ["#contact", "Contact", "ទំនាក់ទំនង"],
 ] as const;
 
@@ -28,13 +36,21 @@ export default function PublicNavbar({ locale }: Props) {
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-6">
       <div className="portfolio-nav mx-auto max-w-[1240px] rounded-2xl px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          <a href="#home" onClick={() => setOpen(false)} className="group flex items-center gap-3">
+          <a
+            href="#home"
+            onClick={() => setOpen(false)}
+            className="group flex items-center gap-3"
+          >
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--portfolio-gradient)] font-display text-xl text-white shadow-[0_8px_28px_rgba(89,111,255,0.28)]">
               C
             </span>
             <div className="hidden sm:block">
-              <p className="font-display text-xl leading-none tracking-wide">CHANTHA</p>
-              <p className="font-body mt-1 text-[10px] text-[var(--portfolio-muted)]">Portfolio</p>
+              <p className="font-display text-xl leading-none tracking-wide">
+                CHANTHA
+              </p>
+              <p className="font-body mt-1 text-[10px] text-[var(--portfolio-muted)]">
+                Portfolio
+              </p>
             </div>
           </a>
 

@@ -1,4 +1,4 @@
-import ActivityManager from "@/components/dashboard/ActivityManager";
+import SpecializedContentManager from "@/components/dashboard/SpecializedContentManager";
 
 import { prisma } from "@/lib/db";
 
@@ -13,6 +13,8 @@ type Props = {
 export default async function ProjectsPage({ params }: Props) {
   const { locale } = await params;
 
+  const safeLocale: "en" | "km" = locale === "km" ? "km" : "en";
+
   const items = await prisma.activity.findMany({
     where: {
       type: "PROJECT",
@@ -22,23 +24,22 @@ export default async function ProjectsPage({ params }: Props) {
       {
         featured: "desc",
       },
+
       {
         activityDate: "desc",
+      },
+
+      {
+        sortOrder: "asc",
       },
     ],
   });
 
   return (
-    <ActivityManager
-      locale={locale === "km" ? "km" : "en"}
+    <SpecializedContentManager
+      locale={safeLocale}
+      kind="project"
       items={serializeActivities(items)}
-      lockedType="PROJECT"
-      title={locale === "km" ? "គម្រោង" : "Projects"}
-      description={
-        locale === "km"
-          ? "បន្ថែម និងគ្រប់គ្រងគម្រោងដែលអ្នកចង់បង្ហាញនៅក្នុងផលប័ត្រ។"
-          : "Add and manage the projects you want to showcase in your portfolio."
-      }
     />
   );
 }

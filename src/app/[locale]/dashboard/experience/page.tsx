@@ -1,4 +1,4 @@
-import ActivityManager from "@/components/dashboard/ActivityManager";
+import ExperienceManager from "@/components/dashboard/ExperienceManager";
 
 import { prisma } from "@/lib/db";
 
@@ -13,27 +13,38 @@ type Props = {
 export default async function ExperiencePage({ params }: Props) {
   const { locale } = await params;
 
+  const safeLocale: "en" | "km" = locale === "km" ? "km" : "en";
+
   const items = await prisma.activity.findMany({
     where: {
+      /*
+       * Experience only.
+       */
       type: "WORK",
     },
 
-    orderBy: {
-      activityDate: "desc",
-    },
+    orderBy: [
+      /*
+       * Current job first.
+       */
+      {
+        isCurrent: "desc",
+      },
+
+      /*
+       * Then newest experience.
+       */
+      {
+        activityDate: "desc",
+      },
+
+      {
+        sortOrder: "asc",
+      },
+    ],
   });
 
   return (
-    <ActivityManager
-      locale={locale === "km" ? "km" : "en"}
-      items={serializeActivities(items)}
-      lockedType="WORK"
-      title={locale === "km" ? "បទពិសោធន៍" : "Experience"}
-      description={
-        locale === "km"
-          ? "គ្រប់គ្រងបទពិសោធន៍ការងារ តួនាទី ស្ថាប័ន និងរយៈពេលការងារ។"
-          : "Manage your work experience, roles, organizations and employment periods."
-      }
-    />
+    <ExperienceManager locale={safeLocale} items={serializeActivities(items)} />
   );
 }

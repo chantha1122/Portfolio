@@ -1166,6 +1166,8 @@ export const ProfileScalarFieldEnum = {
   facebook: 'facebook',
   instagram: 'instagram',
   youtube: 'youtube',
+  githubUsername: 'githubUsername',
+  githubContributionImage: 'githubContributionImage',
   locationEn: 'locationEn',
   locationKm: 'locationKm',
   profileImage: 'profileImage',
@@ -1234,6 +1236,7 @@ export const SkillScalarFieldEnum = {
   level: 'level',
   icon: 'icon',
   published: 'published',
+  isCore: 'isCore',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

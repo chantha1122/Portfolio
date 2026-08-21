@@ -44,6 +44,7 @@ export type SkillMinAggregateOutputType = {
   level: $Enums.SkillLevel | null
   icon: string | null
   published: boolean | null
+  isCore: boolean | null
   sortOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,6 +58,7 @@ export type SkillMaxAggregateOutputType = {
   level: $Enums.SkillLevel | null
   icon: string | null
   published: boolean | null
+  isCore: boolean | null
   sortOrder: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -70,6 +72,7 @@ export type SkillCountAggregateOutputType = {
   level: number
   icon: number
   published: number
+  isCore: number
   sortOrder: number
   createdAt: number
   updatedAt: number
@@ -95,6 +98,7 @@ export type SkillMinAggregateInputType = {
   level?: true
   icon?: true
   published?: true
+  isCore?: true
   sortOrder?: true
   createdAt?: true
   updatedAt?: true
@@ -108,6 +112,7 @@ export type SkillMaxAggregateInputType = {
   level?: true
   icon?: true
   published?: true
+  isCore?: true
   sortOrder?: true
   createdAt?: true
   updatedAt?: true
@@ -121,6 +126,7 @@ export type SkillCountAggregateInputType = {
   level?: true
   icon?: true
   published?: true
+  isCore?: true
   sortOrder?: true
   createdAt?: true
   updatedAt?: true
@@ -221,6 +227,7 @@ export type SkillGroupByOutputType = {
   level: $Enums.SkillLevel
   icon: string | null
   published: boolean
+  isCore: boolean
   sortOrder: number
   createdAt: Date
   updatedAt: Date
@@ -257,6 +264,7 @@ export type SkillWhereInput = {
   level?: Prisma.EnumSkillLevelFilter<"Skill"> | $Enums.SkillLevel
   icon?: Prisma.StringNullableFilter<"Skill"> | string | null
   published?: Prisma.BoolFilter<"Skill"> | boolean
+  isCore?: Prisma.BoolFilter<"Skill"> | boolean
   sortOrder?: Prisma.IntFilter<"Skill"> | number
   createdAt?: Prisma.DateTimeFilter<"Skill"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Skill"> | Date | string
@@ -270,6 +278,7 @@ export type SkillOrderByWithRelationInput = {
   level?: Prisma.SortOrder
   icon?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
+  isCore?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -286,6 +295,7 @@ export type SkillWhereUniqueInput = Prisma.AtLeast<{
   level?: Prisma.EnumSkillLevelFilter<"Skill"> | $Enums.SkillLevel
   icon?: Prisma.StringNullableFilter<"Skill"> | string | null
   published?: Prisma.BoolFilter<"Skill"> | boolean
+  isCore?: Prisma.BoolFilter<"Skill"> | boolean
   sortOrder?: Prisma.IntFilter<"Skill"> | number
   createdAt?: Prisma.DateTimeFilter<"Skill"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Skill"> | Date | string
@@ -299,6 +309,7 @@ export type SkillOrderByWithAggregationInput = {
   level?: Prisma.SortOrder
   icon?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
+  isCore?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -320,6 +331,7 @@ export type SkillScalarWhereWithAggregatesInput = {
   level?: Prisma.EnumSkillLevelWithAggregatesFilter<"Skill"> | $Enums.SkillLevel
   icon?: Prisma.StringNullableWithAggregatesFilter<"Skill"> | string | null
   published?: Prisma.BoolWithAggregatesFilter<"Skill"> | boolean
+  isCore?: Prisma.BoolWithAggregatesFilter<"Skill"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"Skill"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Skill"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Skill"> | Date | string
@@ -332,6 +344,7 @@ export type SkillCreateInput = {
   level?: $Enums.SkillLevel
   icon?: string | null
   published?: boolean
+  isCore?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -345,6 +358,7 @@ export type SkillUncheckedCreateInput = {
   level?: $Enums.SkillLevel
   icon?: string | null
   published?: boolean
+  isCore?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -357,6 +371,7 @@ export type SkillUpdateInput = {
   level?: Prisma.EnumSkillLevelFieldUpdateOperationsInput | $Enums.SkillLevel
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCore?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -370,6 +385,7 @@ export type SkillUncheckedUpdateInput = {
   level?: Prisma.EnumSkillLevelFieldUpdateOperationsInput | $Enums.SkillLevel
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCore?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -383,6 +399,7 @@ export type SkillCreateManyInput = {
   level?: $Enums.SkillLevel
   icon?: string | null
   published?: boolean
+  isCore?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -395,6 +412,7 @@ export type SkillUpdateManyMutationInput = {
   level?: Prisma.EnumSkillLevelFieldUpdateOperationsInput | $Enums.SkillLevel
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCore?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -408,6 +426,7 @@ export type SkillUncheckedUpdateManyInput = {
   level?: Prisma.EnumSkillLevelFieldUpdateOperationsInput | $Enums.SkillLevel
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCore?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -421,6 +440,7 @@ export type SkillCountOrderByAggregateInput = {
   level?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  isCore?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -439,6 +459,7 @@ export type SkillMaxOrderByAggregateInput = {
   level?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  isCore?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -452,6 +473,7 @@ export type SkillMinOrderByAggregateInput = {
   level?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  isCore?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -476,6 +498,7 @@ export type SkillSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   level?: boolean
   icon?: boolean
   published?: boolean
+  isCore?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -489,6 +512,7 @@ export type SkillSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   level?: boolean
   icon?: boolean
   published?: boolean
+  isCore?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -502,6 +526,7 @@ export type SkillSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   level?: boolean
   icon?: boolean
   published?: boolean
+  isCore?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -515,12 +540,13 @@ export type SkillSelectScalar = {
   level?: boolean
   icon?: boolean
   published?: boolean
+  isCore?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SkillOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "categoryEn" | "categoryKm" | "level" | "icon" | "published" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["skill"]>
+export type SkillOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "categoryEn" | "categoryKm" | "level" | "icon" | "published" | "isCore" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["skill"]>
 
 export type $SkillPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Skill"
@@ -533,6 +559,7 @@ export type $SkillPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     level: $Enums.SkillLevel
     icon: string | null
     published: boolean
+    isCore: boolean
     sortOrder: number
     createdAt: Date
     updatedAt: Date
@@ -966,6 +993,7 @@ export interface SkillFieldRefs {
   readonly level: Prisma.FieldRef<"Skill", 'SkillLevel'>
   readonly icon: Prisma.FieldRef<"Skill", 'String'>
   readonly published: Prisma.FieldRef<"Skill", 'Boolean'>
+  readonly isCore: Prisma.FieldRef<"Skill", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"Skill", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Skill", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Skill", 'DateTime'>

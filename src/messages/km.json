@@ -113,47 +113,80 @@
     "title": "គ្រប់គ្រងប្រវត្តិរូប",
     "description": "គ្រប់គ្រងព័ត៌មានផ្ទាល់ខ្លួនដែលនឹងបង្ហាញនៅលើផលប័ត្រសាធារណៈរបស់អ្នក។",
     "administrator": "អ្នកគ្រប់គ្រង",
+
+    "tabPersonal": "ព័ត៌មានផ្ទាល់ខ្លួន",
+    "tabAbout": "អំពីខ្ញុំ",
+    "tabContact": "ទំនាក់ទំនង",
+    "tabMedia": "មេឌៀ",
+
     "basicInformation": "ព័ត៌មានមូលដ្ឋាន",
     "basicInformationDescription": "ឈ្មោះ និងចំណងជើងវិជ្ជាជីវៈរបស់អ្នក។",
+    "personalTabDescription": "គ្រប់គ្រងអត្តសញ្ញាណ ចំណងជើងវិជ្ជាជីវៈ និងតួនាទីដែលអ្នកកំពុងធ្វើបច្ចុប្បន្ន។",
+
     "fullName": "ឈ្មោះពេញ",
     "headlineEn": "ចំណងជើងវិជ្ជាជីវៈ — អង់គ្លេស",
     "headlineKm": "ចំណងជើងវិជ្ជាជីវៈ — ខ្មែរ",
+
+    "yearsExperience": "ឆ្នាំបទពិសោធន៍",
+    "yearsExperienceHelp": "ប្រើ 0 ប្រសិនបើអ្នកមិនទាន់ចង់បង្ហាញបទពិសោធន៍។",
+
+    "currentRole": "តួនាទីបច្ចុប្បន្ន",
+    "currentRoleEn": "តួនាទីបច្ចុប្បន្ន — អង់គ្លេស",
+    "currentRoleKm": "តួនាទីបច្ចុប្បន្ន — ខ្មែរ",
+    "currentRoleHelpTitle": "តួនាទីបច្ចុប្បន្ន",
+    "currentRoleHelp": "ជាការងារ ឬតួនាទីវិជ្ជាជីវៈដែលអ្នកកំពុងធ្វើឥឡូវនេះ ឧទាហរណ៍ Full-Stack Developer & AI Instructor។",
+
     "aboutMe": "អំពីខ្ញុំ",
     "aboutMeDescription": "សរសេរការណែនាំអំពីខ្លួនអ្នកជាភាសាអង់គ្លេស និងខ្មែរ។",
+    "aboutTabDescription": "គ្រប់គ្រងប្រវត្តិសង្ខេប អត្ថបទអំពីខ្ញុំ និងការផ្តោតបច្ចុប្បន្ន។",
+
+    "shortBioEn": "ប្រវត្តិសង្ខេប — អង់គ្លេស",
+    "shortBioKm": "ប្រវត្តិសង្ខេប — ខ្មែរ",
+
     "bioEn": "អំពីខ្ញុំ — អង់គ្លេស",
     "bioKm": "អំពីខ្ញុំ — ខ្មែរ",
+
+    "currentFocusEn": "ការផ្តោតបច្ចុប្បន្ន — អង់គ្លេស",
+    "currentFocusKm": "ការផ្តោតបច្ចុប្បន្ន — ខ្មែរ",
+    "currentFocusHelpTitle": "ការផ្តោតបច្ចុប្បន្ន",
+    "currentFocusHelp": "អ្វីដែលអ្នកកំពុងបង្កើត រៀន បង្រៀន ឬផ្តោតអភិវឌ្ឍនៅពេលនេះ។ វាខុសពីតួនាទីការងារ។",
+
     "contactInformation": "ព័ត៌មានទំនាក់ទំនង",
     "contactInformationDescription": "រក្សាព័ត៌មានទំនាក់ទំនង និងបណ្ដាញសង្គមឱ្យទាន់សម័យ។",
+
     "email": "អ៊ីមែល",
     "phone": "លេខទូរស័ព្ទ",
     "telegram": "តេឡេក្រាម",
     "github": "GitHub",
     "linkedin": "LinkedIn",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "youtube": "YouTube",
+
     "location": "ទីតាំង",
     "locationDescription": "បន្ថែមទីតាំងរបស់អ្នកជាភាសាទាំងពីរ។",
     "locationEn": "ទីតាំង — អង់គ្លេស",
     "locationKm": "ទីតាំង — ខ្មែរ",
+
+    "media": "មេឌៀប្រវត្តិរូប",
+    "mediaDescription": "បញ្ចូលរូបភាព និង CV ដែលប្រើនៅលើ Dashboard និង Portfolio។ អ្នកមិនចាំបាច់វាយ file path ដោយដៃទៀតទេ។",
+
+    "profilePhoto": "រូបប្រវត្តិរូប",
+    "profilePhotoDescription": "រូបសំខាន់របស់អ្នកដែលប្រើនៅ Dashboard និង Portfolio សាធារណៈ។",
+
+    "badgePortrait": "រូបសម្រាប់ About Badge",
+    "badgePortraitDescription": "រូបពិសេសដែលប្រើក្នុងកាត About Me បែប futuristic។",
+
+    "cvResume": "CV / ប្រវត្តិរូបសង្ខេប",
+    "cvDescription": "បញ្ចូលឯកសារ PDF ដែលអ្នកទស្សនាអាចមើល ឬទាញយកពី Portfolio។",
+
     "save": "រក្សាទុកប្រវត្តិរូប",
     "saving": "កំពុងរក្សាទុក...",
+    "saveHint": "កែព័ត៌មាននៅ tab ណាមួយហើយចុចរក្សាទុកម្តង។ ឯកសារមេឌៀនឹង upload ដោយស្វ័យប្រវត្តិ។",
+
     "toastSuccessTitle": "រក្សាទុកបានជោគជ័យ",
     "toastErrorTitle": "មិនអាចរក្សាទុកបាន",
     "saveSuccess": "បានធ្វើបច្ចុប្បន្នភាពប្រវត្តិរូបដោយជោគជ័យ។",
-    "saveError": "មិនអាចរក្សាទុកប្រវត្តិរូបបានទេ។ សូមពិនិត្យព័ត៌មាន ហើយព្យាយាមម្តងទៀត។",
-    "yearsExperience": "ឆ្នាំបទពិសោធន៍",
-    "currentRole": "តួនាទីបច្ចុប្បន្ន",
-    "currentRoleEn": "តួនាទីបច្ចុប្បន្ន — អង់គ្លេស",
-    "currentRoleKm": "តួនាទីបច្ចុប្បន្ន — ខ្មែរ",
-    "shortBioEn": "ប្រវត្តិសង្ខេប — អង់គ្លេស",
-    "shortBioKm": "ប្រវត្តិសង្ខេប — ខ្មែរ",
-    "currentFocusEn": "ការផ្តោតបច្ចុប្បន្ន — អង់គ្លេស",
-    "currentFocusKm": "ការផ្តោតបច្ចុប្បន្ន — ខ្មែរ",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "youtube": "YouTube",
-    "media": "មេឌៀប្រវត្តិរូប",
-    "mediaDescription": "ប្រើ URL ឬ path សាធារណៈសម្រាប់រូបប្រវត្តិរូប រូបកាត Badge និងឯកសារ CV។",
-    "profileImage": "URL / Path រូបប្រវត្តិរូប",
-    "badgeImage": "URL / Path រូប Badge",
-    "cvFile": "URL / Path ឯកសារ CV"
+    "saveError": "មិនអាចរក្សាទុកប្រវត្តិរូបបានទេ។ សូមពិនិត្យព័ត៌មាន ហើយព្យាយាមម្តងទៀត។"
   }
 }

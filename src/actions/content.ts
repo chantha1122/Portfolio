@@ -1,5 +1,9 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
+import { mkdir, unlink, writeFile } from "node:fs/promises";
+import path from "node:path";
+
 import { revalidatePath } from "next/cache";
 
 import { z } from "zod";
@@ -368,6 +372,94 @@ export async function deleteActivityAction(
 }
 
 /* =========================================================
+   SKILL / TOOL ICON UPLOAD HELPERS
+   ========================================================= */
+
+const SKILL_TOOL_ICON_MAX_BYTES = 3 * 1024 * 1024;
+
+const SKILL_TOOL_ICON_TYPES: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+};
+
+function getFile(formData: FormData, key: string): File | null {
+  const value = formData.get(key);
+
+  if (!value || typeof value === "string" || value.size === 0) {
+    return null;
+  }
+
+  return value;
+}
+
+function shouldRemoveFile(formData: FormData, key: string) {
+  return text(formData, key) === "1";
+}
+
+function skillToolIconDirectory() {
+  return path.join(process.cwd(), "public", "uploads", "skills-tools");
+}
+
+async function saveSkillToolIcon(file: File, prefix: "skill" | "tool") {
+  const extension = SKILL_TOOL_ICON_TYPES[file.type];
+
+  if (!extension) {
+    throw new Error("Please upload a JPG, PNG or WEBP image.");
+  }
+
+  if (file.size > SKILL_TOOL_ICON_MAX_BYTES) {
+    throw new Error("Icon image size must be 3 MB or smaller.");
+  }
+
+  const directory = skillToolIconDirectory();
+
+  await mkdir(directory, {
+    recursive: true,
+  });
+
+  const fileName = `${prefix}-${Date.now()}-${randomUUID().slice(0, 8)}.${extension}`;
+
+  const absolutePath = path.join(directory, fileName);
+
+  const bytes = Buffer.from(await file.arrayBuffer());
+
+  await writeFile(absolutePath, bytes);
+
+  return `/uploads/skills-tools/${fileName}`;
+}
+
+async function removeSkillToolIcon(filePath: string | null | undefined) {
+  if (!filePath || !filePath.startsWith("/uploads/skills-tools/")) {
+    return;
+  }
+
+  const fileName = path.basename(filePath);
+
+  const absolutePath = path.join(skillToolIconDirectory(), fileName);
+
+  try {
+    await unlink(absolutePath);
+  } catch {
+    // The old icon may already be deleted.
+  }
+}
+
+function revalidateSkillsTools() {
+  revalidatePath("/en/dashboard", "layout");
+
+  revalidatePath("/km/dashboard", "layout");
+
+  revalidatePath("/en/dashboard/skills");
+
+  revalidatePath("/km/dashboard/skills");
+
+  revalidatePath("/en");
+  revalidatePath("/km");
+}
+
+/* =========================================================
    SKILLS
    ========================================================= */
 
@@ -389,6 +481,10 @@ export async function saveSkillAction(
 
   const level = text(formData, "level");
 
+  const iconFile = getFile(formData, "iconFile");
+
+  const removeIcon = shouldRemoveFile(formData, "removeIcon");
+
   if (!name) {
     return {
       success: false,
@@ -403,29 +499,82 @@ export async function saveSkillAction(
     };
   }
 
-  const data = {
-    name,
+  const existing = id
+    ? await prisma.skill.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          icon: true,
+        },
+      })
+    : null;
 
-    categoryEn: nullableText(text(formData, "categoryEn")),
+  const isCore = formData.get("isCore") === "on";
 
-    categoryKm: nullableText(text(formData, "categoryKm")),
+  /*
+   * Maximum 4 Core Skills.
+   */
+  if (isCore) {
+    const otherCoreSkills = await prisma.skill.count({
+      where: {
+        isCore: true,
 
-    level: level as (typeof skillLevels)[number],
+        ...(id
+          ? {
+              id: {
+                not: id,
+              },
+            }
+          : {}),
+      },
+    });
 
-    icon: nullableText(text(formData, "icon")),
+    if (otherCoreSkills >= 4) {
+      return {
+        success: false,
+        message:
+          "You can select up to 4 Core Skills. Uncheck another Core Skill first.",
+      };
+    }
+  }
 
-    sortOrder: Number(text(formData, "sortOrder")) || 0,
+  let nextIcon = existing?.icon ?? nullableText(text(formData, "icon"));
 
-    published: formData.get("published") === "on",
-  };
+  let uploadedIcon: string | null = null;
 
   try {
+    if (removeIcon) {
+      nextIcon = null;
+    } else if (iconFile) {
+      uploadedIcon = await saveSkillToolIcon(iconFile, "skill");
+
+      nextIcon = uploadedIcon;
+    }
+
+    const data = {
+      name,
+
+      categoryEn: nullableText(text(formData, "categoryEn")),
+
+      categoryKm: nullableText(text(formData, "categoryKm")),
+
+      level: level as (typeof skillLevels)[number],
+
+      icon: nextIcon,
+
+      isCore,
+
+      sortOrder: Number(text(formData, "sortOrder")) || 0,
+
+      published: formData.get("published") === "on",
+    };
+
     if (id) {
       await prisma.skill.update({
         where: {
           id,
         },
-
         data,
       });
     } else {
@@ -434,24 +583,26 @@ export async function saveSkillAction(
       });
     }
 
-    revalidatePath("/en/dashboard", "layout");
+    if (existing?.icon && existing.icon !== nextIcon) {
+      await removeSkillToolIcon(existing.icon);
+    }
 
-    revalidatePath("/km/dashboard", "layout");
-
-    revalidatePath("/en");
-
-    revalidatePath("/km");
+    revalidateSkillsTools();
 
     return {
       success: true,
       message: id ? "Skill updated successfully." : "Skill added successfully.",
     };
   } catch (error) {
+    if (uploadedIcon) {
+      await removeSkillToolIcon(uploadedIcon);
+    }
+
     console.error("Skill save error:", error);
 
     return {
       success: false,
-      message: "Unable to save skill.",
+      message: error instanceof Error ? error.message : "Unable to save skill.",
     };
   }
 }
@@ -467,24 +618,32 @@ export async function deleteSkillAction(
   }
 
   try {
+    const skill = await prisma.skill.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        icon: true,
+      },
+    });
+
     await prisma.skill.delete({
       where: {
         id,
       },
     });
 
-    revalidatePath("/en/dashboard", "layout");
+    await removeSkillToolIcon(skill?.icon);
 
-    revalidatePath("/km/dashboard", "layout");
-
-    revalidatePath("/en");
-    revalidatePath("/km");
+    revalidateSkillsTools();
 
     return {
       success: true,
       message: "Skill deleted successfully.",
     };
-  } catch {
+  } catch (error) {
+    console.error("Skill delete error:", error);
+
     return {
       success: false,
       message: "Unable to delete skill.",
@@ -524,6 +683,10 @@ export async function saveToolAction(
 
   const category = text(formData, "category");
 
+  const iconFile = getFile(formData, "iconFile");
+
+  const removeIcon = shouldRemoveFile(formData, "removeIcon");
+
   if (!name) {
     return {
       success: false,
@@ -538,27 +701,49 @@ export async function saveToolAction(
     };
   }
 
-  const data = {
-    name,
+  const existing = id
+    ? await prisma.tool.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          icon: true,
+        },
+      })
+    : null;
 
-    category: category as (typeof toolCategories)[number],
+  let nextIcon = existing?.icon ?? nullableText(text(formData, "icon"));
 
-    icon: nullableText(text(formData, "icon")),
-
-    url: nullableText(text(formData, "url")),
-
-    sortOrder: Number(text(formData, "sortOrder")) || 0,
-
-    published: formData.get("published") === "on",
-  };
+  let uploadedIcon: string | null = null;
 
   try {
+    if (removeIcon) {
+      nextIcon = null;
+    } else if (iconFile) {
+      uploadedIcon = await saveSkillToolIcon(iconFile, "tool");
+
+      nextIcon = uploadedIcon;
+    }
+
+    const data = {
+      name,
+
+      category: category as (typeof toolCategories)[number],
+
+      icon: nextIcon,
+
+      url: nullableText(text(formData, "url")),
+
+      sortOrder: Number(text(formData, "sortOrder")) || 0,
+
+      published: formData.get("published") === "on",
+    };
+
     if (id) {
       await prisma.tool.update({
         where: {
           id,
         },
-
         data,
       });
     } else {
@@ -567,23 +752,26 @@ export async function saveToolAction(
       });
     }
 
-    revalidatePath("/en/dashboard", "layout");
+    if (existing?.icon && existing.icon !== nextIcon) {
+      await removeSkillToolIcon(existing.icon);
+    }
 
-    revalidatePath("/km/dashboard", "layout");
-
-    revalidatePath("/en");
-    revalidatePath("/km");
+    revalidateSkillsTools();
 
     return {
       success: true,
       message: id ? "Tool updated successfully." : "Tool added successfully.",
     };
   } catch (error) {
+    if (uploadedIcon) {
+      await removeSkillToolIcon(uploadedIcon);
+    }
+
     console.error("Tool save error:", error);
 
     return {
       success: false,
-      message: "Unable to save tool.",
+      message: error instanceof Error ? error.message : "Unable to save tool.",
     };
   }
 }
@@ -599,24 +787,32 @@ export async function deleteToolAction(
   }
 
   try {
+    const tool = await prisma.tool.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        icon: true,
+      },
+    });
+
     await prisma.tool.delete({
       where: {
         id,
       },
     });
 
-    revalidatePath("/en/dashboard", "layout");
+    await removeSkillToolIcon(tool?.icon);
 
-    revalidatePath("/km/dashboard", "layout");
-
-    revalidatePath("/en");
-    revalidatePath("/km");
+    revalidateSkillsTools();
 
     return {
       success: true,
       message: "Tool deleted successfully.",
     };
-  } catch {
+  } catch (error) {
+    console.error("Tool delete error:", error);
+
     return {
       success: false,
       message: "Unable to delete tool.",
@@ -711,13 +907,21 @@ export async function updateContactMessageStatusAction(
 
   try {
     await prisma.contactMessage.update({
-      where: { id },
-      data: { status },
+      where: {
+        id,
+      },
+
+      data: {
+        status,
+      },
     });
 
     revalidatePath("/en/dashboard/messages");
+
     revalidatePath("/km/dashboard/messages");
+
     revalidatePath("/en/dashboard");
+
     revalidatePath("/km/dashboard");
 
     return {
@@ -746,12 +950,17 @@ export async function deleteContactMessageAction(
 
   try {
     await prisma.contactMessage.delete({
-      where: { id },
+      where: {
+        id,
+      },
     });
 
     revalidatePath("/en/dashboard/messages");
+
     revalidatePath("/km/dashboard/messages");
+
     revalidatePath("/en/dashboard");
+
     revalidatePath("/km/dashboard");
 
     return {

@@ -1,4 +1,4 @@
-import ActivityManager from "@/components/dashboard/ActivityManager";
+import SpecializedContentManager from "@/components/dashboard/SpecializedContentManager";
 
 import { prisma } from "@/lib/db";
 
@@ -13,11 +13,20 @@ type Props = {
 export default async function ActivitiesPage({ params }: Props) {
   const { locale } = await params;
 
+  const safeLocale: "en" | "km" = locale === "km" ? "km" : "en";
+
   const items = await prisma.activity.findMany({
+    where: {
+      type: {
+        in: ["EVENT", "COMPETITION", "OTHER"],
+      },
+    },
+
     orderBy: [
       {
         activityDate: "desc",
       },
+
       {
         sortOrder: "asc",
       },
@@ -25,15 +34,10 @@ export default async function ActivitiesPage({ params }: Props) {
   });
 
   return (
-    <ActivityManager
-      locale={locale === "km" ? "km" : "en"}
+    <SpecializedContentManager
+      locale={safeLocale}
+      kind="activity"
       items={serializeActivities(items)}
-      title={locale === "km" ? "គ្រប់គ្រងសកម្មភាព" : "Activity Management"}
-      description={
-        locale === "km"
-          ? "គ្រប់គ្រងប្រវត្តិការងារ សកម្មភាព ព្រឹត្តិការណ៍ ការបង្រៀន និងមាតិកាផ្សេងៗរបស់អ្នក។"
-          : "Manage your work history, activities, events, teaching and other portfolio content."
-      }
     />
   );
 }

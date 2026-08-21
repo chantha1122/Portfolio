@@ -58,7 +58,7 @@ export default function AppToast({
         : "Error";
 
   return (
-    <div className="fixed right-4 top-[84px] z-[300] w-[calc(100%-32px)] max-w-[330px] sm:right-6">
+    <div className="fixed right-4 top-[12px] z-[300] w-[calc(100%-32px)] max-w-[330px] sm:right-6">
       <div className="animate-toast-in flex items-center gap-3 rounded-xl border border-black/[0.07] bg-white/95 p-3 shadow-[0_12px_35px_rgba(15,23,42,0.12)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-[#0d0f19]/95">
         <div
           className={cn(

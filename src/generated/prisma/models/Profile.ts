@@ -59,6 +59,8 @@ export type ProfileMinAggregateOutputType = {
   facebook: string | null
   instagram: string | null
   youtube: string | null
+  githubUsername: string | null
+  githubContributionImage: string | null
   locationEn: string | null
   locationKm: string | null
   profileImage: string | null
@@ -91,6 +93,8 @@ export type ProfileMaxAggregateOutputType = {
   facebook: string | null
   instagram: string | null
   youtube: string | null
+  githubUsername: string | null
+  githubContributionImage: string | null
   locationEn: string | null
   locationKm: string | null
   profileImage: string | null
@@ -123,6 +127,8 @@ export type ProfileCountAggregateOutputType = {
   facebook: number
   instagram: number
   youtube: number
+  githubUsername: number
+  githubContributionImage: number
   locationEn: number
   locationKm: number
   profileImage: number
@@ -167,6 +173,8 @@ export type ProfileMinAggregateInputType = {
   facebook?: true
   instagram?: true
   youtube?: true
+  githubUsername?: true
+  githubContributionImage?: true
   locationEn?: true
   locationKm?: true
   profileImage?: true
@@ -199,6 +207,8 @@ export type ProfileMaxAggregateInputType = {
   facebook?: true
   instagram?: true
   youtube?: true
+  githubUsername?: true
+  githubContributionImage?: true
   locationEn?: true
   locationKm?: true
   profileImage?: true
@@ -231,6 +241,8 @@ export type ProfileCountAggregateInputType = {
   facebook?: true
   instagram?: true
   youtube?: true
+  githubUsername?: true
+  githubContributionImage?: true
   locationEn?: true
   locationKm?: true
   profileImage?: true
@@ -350,6 +362,8 @@ export type ProfileGroupByOutputType = {
   facebook: string | null
   instagram: string | null
   youtube: string | null
+  githubUsername: string | null
+  githubContributionImage: string | null
   locationEn: string | null
   locationKm: string | null
   profileImage: string | null
@@ -405,6 +419,8 @@ export type ProfileWhereInput = {
   facebook?: Prisma.StringNullableFilter<"Profile"> | string | null
   instagram?: Prisma.StringNullableFilter<"Profile"> | string | null
   youtube?: Prisma.StringNullableFilter<"Profile"> | string | null
+  githubUsername?: Prisma.StringNullableFilter<"Profile"> | string | null
+  githubContributionImage?: Prisma.StringNullableFilter<"Profile"> | string | null
   locationEn?: Prisma.StringNullableFilter<"Profile"> | string | null
   locationKm?: Prisma.StringNullableFilter<"Profile"> | string | null
   profileImage?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -437,6 +453,8 @@ export type ProfileOrderByWithRelationInput = {
   facebook?: Prisma.SortOrderInput | Prisma.SortOrder
   instagram?: Prisma.SortOrderInput | Prisma.SortOrder
   youtube?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubUsername?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubContributionImage?: Prisma.SortOrderInput | Prisma.SortOrder
   locationEn?: Prisma.SortOrderInput | Prisma.SortOrder
   locationKm?: Prisma.SortOrderInput | Prisma.SortOrder
   profileImage?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -472,6 +490,8 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   facebook?: Prisma.StringNullableFilter<"Profile"> | string | null
   instagram?: Prisma.StringNullableFilter<"Profile"> | string | null
   youtube?: Prisma.StringNullableFilter<"Profile"> | string | null
+  githubUsername?: Prisma.StringNullableFilter<"Profile"> | string | null
+  githubContributionImage?: Prisma.StringNullableFilter<"Profile"> | string | null
   locationEn?: Prisma.StringNullableFilter<"Profile"> | string | null
   locationKm?: Prisma.StringNullableFilter<"Profile"> | string | null
   profileImage?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -504,6 +524,8 @@ export type ProfileOrderByWithAggregationInput = {
   facebook?: Prisma.SortOrderInput | Prisma.SortOrder
   instagram?: Prisma.SortOrderInput | Prisma.SortOrder
   youtube?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubUsername?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubContributionImage?: Prisma.SortOrderInput | Prisma.SortOrder
   locationEn?: Prisma.SortOrderInput | Prisma.SortOrder
   locationKm?: Prisma.SortOrderInput | Prisma.SortOrder
   profileImage?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -544,6 +566,8 @@ export type ProfileScalarWhereWithAggregatesInput = {
   facebook?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   instagram?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   youtube?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  githubUsername?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  githubContributionImage?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   locationEn?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   locationKm?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   profileImage?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
@@ -575,6 +599,8 @@ export type ProfileCreateInput = {
   facebook?: string | null
   instagram?: string | null
   youtube?: string | null
+  githubUsername?: string | null
+  githubContributionImage?: string | null
   locationEn?: string | null
   locationKm?: string | null
   profileImage?: string | null
@@ -607,6 +633,8 @@ export type ProfileUncheckedCreateInput = {
   facebook?: string | null
   instagram?: string | null
   youtube?: string | null
+  githubUsername?: string | null
+  githubContributionImage?: string | null
   locationEn?: string | null
   locationKm?: string | null
   profileImage?: string | null
@@ -638,6 +666,8 @@ export type ProfileUpdateInput = {
   facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   youtube?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubContributionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -670,6 +700,8 @@ export type ProfileUncheckedUpdateInput = {
   facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   youtube?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubContributionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -702,6 +734,8 @@ export type ProfileCreateManyInput = {
   facebook?: string | null
   instagram?: string | null
   youtube?: string | null
+  githubUsername?: string | null
+  githubContributionImage?: string | null
   locationEn?: string | null
   locationKm?: string | null
   profileImage?: string | null
@@ -733,6 +767,8 @@ export type ProfileUpdateManyMutationInput = {
   facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   youtube?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubContributionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -765,6 +801,8 @@ export type ProfileUncheckedUpdateManyInput = {
   facebook?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagram?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   youtube?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubContributionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationEn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locationKm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -797,6 +835,8 @@ export type ProfileCountOrderByAggregateInput = {
   facebook?: Prisma.SortOrder
   instagram?: Prisma.SortOrder
   youtube?: Prisma.SortOrder
+  githubUsername?: Prisma.SortOrder
+  githubContributionImage?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   profileImage?: Prisma.SortOrder
@@ -834,6 +874,8 @@ export type ProfileMaxOrderByAggregateInput = {
   facebook?: Prisma.SortOrder
   instagram?: Prisma.SortOrder
   youtube?: Prisma.SortOrder
+  githubUsername?: Prisma.SortOrder
+  githubContributionImage?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   profileImage?: Prisma.SortOrder
@@ -866,6 +908,8 @@ export type ProfileMinOrderByAggregateInput = {
   facebook?: Prisma.SortOrder
   instagram?: Prisma.SortOrder
   youtube?: Prisma.SortOrder
+  githubUsername?: Prisma.SortOrder
+  githubContributionImage?: Prisma.SortOrder
   locationEn?: Prisma.SortOrder
   locationKm?: Prisma.SortOrder
   profileImage?: Prisma.SortOrder
@@ -909,6 +953,8 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   facebook?: boolean
   instagram?: boolean
   youtube?: boolean
+  githubUsername?: boolean
+  githubContributionImage?: boolean
   locationEn?: boolean
   locationKm?: boolean
   profileImage?: boolean
@@ -941,6 +987,8 @@ export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   facebook?: boolean
   instagram?: boolean
   youtube?: boolean
+  githubUsername?: boolean
+  githubContributionImage?: boolean
   locationEn?: boolean
   locationKm?: boolean
   profileImage?: boolean
@@ -973,6 +1021,8 @@ export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   facebook?: boolean
   instagram?: boolean
   youtube?: boolean
+  githubUsername?: boolean
+  githubContributionImage?: boolean
   locationEn?: boolean
   locationKm?: boolean
   profileImage?: boolean
@@ -1005,6 +1055,8 @@ export type ProfileSelectScalar = {
   facebook?: boolean
   instagram?: boolean
   youtube?: boolean
+  githubUsername?: boolean
+  githubContributionImage?: boolean
   locationEn?: boolean
   locationKm?: boolean
   profileImage?: boolean
@@ -1014,7 +1066,7 @@ export type ProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileKey" | "fullName" | "headlineEn" | "headlineKm" | "shortBioEn" | "shortBioKm" | "bioEn" | "bioKm" | "currentRoleEn" | "currentRoleKm" | "currentFocusEn" | "currentFocusKm" | "yearsExperience" | "email" | "phone" | "telegram" | "github" | "linkedin" | "facebook" | "instagram" | "youtube" | "locationEn" | "locationKm" | "profileImage" | "badgeImage" | "cvFile" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileKey" | "fullName" | "headlineEn" | "headlineKm" | "shortBioEn" | "shortBioKm" | "bioEn" | "bioKm" | "currentRoleEn" | "currentRoleKm" | "currentFocusEn" | "currentFocusKm" | "yearsExperience" | "email" | "phone" | "telegram" | "github" | "linkedin" | "facebook" | "instagram" | "youtube" | "githubUsername" | "githubContributionImage" | "locationEn" | "locationKm" | "profileImage" | "badgeImage" | "cvFile" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
 
 export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Profile"
@@ -1037,11 +1089,21 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     email: string | null
     phone: string | null
     telegram: string | null
+    /**
+     * *
+     *    * Social links
+     */
     github: string | null
     linkedin: string | null
     facebook: string | null
     instagram: string | null
     youtube: string | null
+    /**
+     * *
+     *    * GitHub contribution screenshot
+     */
+    githubUsername: string | null
+    githubContributionImage: string | null
     locationEn: string | null
     locationKm: string | null
     profileImage: string | null
@@ -1494,6 +1556,8 @@ export interface ProfileFieldRefs {
   readonly facebook: Prisma.FieldRef<"Profile", 'String'>
   readonly instagram: Prisma.FieldRef<"Profile", 'String'>
   readonly youtube: Prisma.FieldRef<"Profile", 'String'>
+  readonly githubUsername: Prisma.FieldRef<"Profile", 'String'>
+  readonly githubContributionImage: Prisma.FieldRef<"Profile", 'String'>
   readonly locationEn: Prisma.FieldRef<"Profile", 'String'>
   readonly locationKm: Prisma.FieldRef<"Profile", 'String'>
   readonly profileImage: Prisma.FieldRef<"Profile", 'String'>

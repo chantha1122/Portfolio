@@ -1,25 +1,28 @@
+import type { ReactNode } from "react";
+
 import {
-  ArrowUpRight,
   Award,
   BriefcaseBusiness,
-  CalendarDays,
   Code2,
   Download,
   ExternalLink,
   GraduationCap,
-  Images,
   Mail,
   MapPin,
   MessageCircle,
   Phone,
   Presentation,
   Send,
-  Sparkles,
   Trophy,
 } from "lucide-react";
 
-import ActivityEngagement from "@/components/portfolio/ActivityEngagement";
+import GitHubContributionSection from "@/components/portfolio/GitHubContributionSection";
+import JourneySection from "@/components/portfolio/JourneySection";
+import PortfolioGallerySection from "@/components/portfolio/PortfolioGallerySection";
 import PublicContactForm from "@/components/portfolio/PublicContactForm";
+import PublicProjectCard from "@/components/portfolio/PublicProjectCard";
+import SkillsToolsSection from "@/components/portfolio/SkillsToolsSection";
+
 import type {
   PublicActivity,
   PublicProfile,
@@ -27,13 +30,25 @@ import type {
   PublicTool,
 } from "@/types/publicPortfolio";
 
+/* =========================================================
+   TYPES
+   ========================================================= */
+
 type Props = {
   locale: "en" | "km";
+
   profile: PublicProfile;
+
   skills: PublicSkill[];
+
   tools: PublicTool[];
+
   activities: PublicActivity[];
 };
+
+/* =========================================================
+   MAIN
+   ========================================================= */
 
 export default function PortfolioPreviewSections({
   locale,
@@ -44,17 +59,36 @@ export default function PortfolioPreviewSections({
 }: Props) {
   const khmer = locale === "km";
 
+  /* =======================================================
+     CONTENT GROUPS
+     ======================================================= */
+
   const achievements = activities.filter((item) => item.type === "ACHIEVEMENT");
+
   const experience = activities.filter((item) => item.type === "WORK");
+
   const education = activities.filter((item) => item.type === "EDUCATION");
+
   const projects = activities.filter((item) => item.type === "PROJECT");
+
   const certificates = activities.filter((item) => item.type === "CERTIFICATE");
+
   const teaching = activities.filter((item) => item.type === "TEACHING");
+
   const gallery = activities.filter((item) => item.type === "PHOTO");
+
+  /*
+   * Newest activity at the top
+   * of Year by Year.
+   */
   const timeline = [...activities].sort(
     (a, b) =>
       new Date(b.activityDate).getTime() - new Date(a.activityDate).getTime(),
   );
+
+  /* =======================================================
+     PROFILE CONTENT
+     ======================================================= */
 
   const bio =
     localized(locale, profile.bioEn, profile.bioKm) ||
@@ -65,11 +99,13 @@ export default function PortfolioPreviewSections({
 
   const badgeImage =
     profile.badgeImage || profile.profileImage || "/images/profile-badge.png";
+
   const currentRole = localized(
     locale,
     profile.currentRoleEn,
     profile.currentRoleKm,
   );
+
   const location = localized(locale, profile.locationEn, profile.locationKm);
 
   return (
@@ -77,19 +113,33 @@ export default function PortfolioPreviewSections({
       {/* =====================================================
           ABOUT ME
          ===================================================== */}
+
       <section id="about" className="portfolio-section scroll-mt-28">
         <div className="grid items-center gap-10 lg:grid-cols-[1.08fr_0.92fr]">
+          {/* LEFT */}
+
           <div>
             <SectionBar>{khmer ? "អំពីខ្ញុំ" : "ABOUT ME"}</SectionBar>
 
-            <p className="font-body mt-5 max-w-3xl text-[15px] leading-8 text-[var(--portfolio-muted)]">
+            <p
+              className={
+                khmer
+                  ? "khmer-input-value mt-5 max-w-3xl text-[15px] font-normal leading-8 text-[var(--portfolio-muted)]"
+                  : "font-body mt-5 max-w-3xl text-[15px] leading-8 text-[var(--portfolio-muted)]"
+              }
+            >
               {bio}
             </p>
+
+            {/* ===============================================
+                ACHIEVEMENTS
+               =============================================== */}
 
             <div className="mt-8">
               <SectionBar small>
                 {khmer ? "សមិទ្ធផល" : "ACHIEVEMENTS"}
               </SectionBar>
+
               <div className="mt-4 grid gap-2.5">
                 {achievements.length > 0 ? (
                   achievements.slice(0, 4).map((item) => (
@@ -101,6 +151,7 @@ export default function PortfolioPreviewSections({
                         size={15}
                         className="mt-1 shrink-0 text-[var(--portfolio-cyan)]"
                       />
+
                       <span>{activityTitle(item, locale)}</span>
                     </div>
                   ))
@@ -116,9 +167,16 @@ export default function PortfolioPreviewSections({
               </div>
             </div>
 
+            {/* ===============================================
+                TOOLS + EXPERIENCE PREVIEW
+               =============================================== */}
+
             <div className="mt-8 grid gap-7 md:grid-cols-2">
+              {/* TOOLS */}
+
               <div>
                 <SectionBar small>{khmer ? "ឧបករណ៍" : "TOOLS"}</SectionBar>
+
                 <div className="mt-4 flex flex-wrap gap-2.5">
                   {tools.length > 0 ? (
                     tools
@@ -130,27 +188,42 @@ export default function PortfolioPreviewSections({
                 </div>
               </div>
 
+              {/* EXPERIENCE */}
+
               <div>
                 <SectionBar small>
                   {khmer ? "បទពិសោធន៍" : "EXPERIENCE"}
                 </SectionBar>
+
                 <div className="mt-4 grid gap-3">
-                  {experience.slice(0, 2).map((item) => (
-                    <div key={item.id}>
-                      <p className="font-body text-[13px] font-semibold text-[var(--portfolio-text)]">
-                        {activityTitle(item, locale)}
-                      </p>
-                      <p className="font-body mt-1 text-[11px] text-[var(--portfolio-cyan)]">
-                        {activityOrganization(item, locale) ||
-                          formatActivityPeriod(item, locale)}
-                      </p>
-                      {activityOrganization(item, locale) ? (
-                        <p className="font-body mt-0.5 text-[10px] text-[var(--portfolio-muted)]">
-                          {formatActivityPeriod(item, locale)}
+                  {experience.slice(0, 2).map((item) => {
+                    const organization = activityOrganization(item, locale);
+
+                    return (
+                      <div key={item.id}>
+                        <p
+                          className={
+                            khmer
+                              ? "khmer-input-value text-[13px] font-normal leading-6 text-[var(--portfolio-text)]"
+                              : "font-body text-[13px] font-semibold text-[var(--portfolio-text)]"
+                          }
+                        >
+                          {activityTitle(item, locale)}
                         </p>
-                      ) : null}
-                    </div>
-                  ))}
+
+                        <p className="font-body mt-1 text-[11px] text-[var(--portfolio-cyan)]">
+                          {organization || formatActivityPeriod(item, locale)}
+                        </p>
+
+                        {organization ? (
+                          <p className="font-number mt-0.5 text-[10px] text-[var(--portfolio-muted)]">
+                            {formatActivityPeriod(item, locale)}
+                          </p>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+
                   {experience.length === 0 ? (
                     <EmptyLine
                       text={khmer ? "បន្ថែមបទពិសោធន៍" : "Add experience"}
@@ -160,8 +233,13 @@ export default function PortfolioPreviewSections({
               </div>
             </div>
 
+            {/* ===============================================
+                CONTACT PREVIEW
+               =============================================== */}
+
             <div className="mt-8">
               <SectionBar small>{khmer ? "ទំនាក់ទំនង" : "CONTACT"}</SectionBar>
+
               <div className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {profile.phone ? (
                   <ContactLine
@@ -170,6 +248,7 @@ export default function PortfolioPreviewSections({
                     href={`tel:${profile.phone}`}
                   />
                 ) : null}
+
                 {profile.email ? (
                   <ContactLine
                     icon={Mail}
@@ -177,6 +256,7 @@ export default function PortfolioPreviewSections({
                     href={`mailto:${profile.email}`}
                   />
                 ) : null}
+
                 {profile.telegram ? (
                   <ContactLine
                     icon={Send}
@@ -184,6 +264,7 @@ export default function PortfolioPreviewSections({
                     href={normalizeLink(profile.telegram, "https://t.me/")}
                   />
                 ) : null}
+
                 {profile.linkedin ? (
                   <ContactLine
                     icon={BriefcaseBusiness}
@@ -191,6 +272,7 @@ export default function PortfolioPreviewSections({
                     href={profile.linkedin}
                   />
                 ) : null}
+
                 {location ? (
                   <ContactLine icon={MapPin} value={location} />
                 ) : null}
@@ -198,11 +280,18 @@ export default function PortfolioPreviewSections({
             </div>
           </div>
 
+          {/* =================================================
+              PROFILE BADGE
+             ================================================= */}
+
           <div className="relative mx-auto w-full max-w-[520px] lg:justify-self-end">
             <div className="portfolio-badge-halo" aria-hidden="true" />
+
             <div className="portfolio-badge-frame">
               <div className="portfolio-badge-clip" aria-hidden="true" />
+
               <div className="portfolio-badge-slot" aria-hidden="true" />
+
               <div className="portfolio-badge-image-wrap">
                 <img
                   src={badgeImage}
@@ -210,8 +299,10 @@ export default function PortfolioPreviewSections({
                   className="h-full w-full object-cover"
                 />
               </div>
+
               <div className="portfolio-badge-meta">
                 <span>{profile.fullName}</span>
+
                 <span>{currentRole || (khmer ? "អ្នកបង្កើត" : "Creator")}</span>
               </div>
             </div>
@@ -220,104 +311,29 @@ export default function PortfolioPreviewSections({
       </section>
 
       {/* =====================================================
-          SKILLS & TOOLS
+    SKILLS & TOOLS
+   ===================================================== */}
+
+      <SkillsToolsSection locale={locale} skills={skills} tools={tools} />
+
+      {/* =====================================================
+          GITHUB CONTRIBUTIONS
          ===================================================== */}
-      <section id="skills" className="portfolio-section scroll-mt-28">
-        <PortfolioHeading
-          eyebrow={khmer ? "ជំនាញបច្ចេកទេស" : "CAPABILITIES"}
-          title={khmer ? "ជំនាញ និងឧបករណ៍" : "Skills & Tools"}
-          description={
-            khmer
-              ? "បច្ចេកវិទ្យា ជំនាញ និងឧបករណ៍ដែលខ្ញុំប្រើសម្រាប់បង្កើតផលិតផលឌីជីថល។"
-              : "The skills, technologies and tools I use to build digital products and practical AI experiences."
-          }
-        />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="portfolio-panel p-5 md:p-6">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {skills.length > 0 ? (
-                skills.map((skill) => (
-                  <div
-                    key={skill.id}
-                    className="rounded-2xl border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)] p-4"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--portfolio-accent-soft)] text-[var(--portfolio-cyan)]">
-                        <Sparkles size={15} />
-                      </div>
-                      <span className="rounded-full border border-[var(--portfolio-border)] px-2.5 py-1 font-body text-[9px] uppercase tracking-[0.08em] text-[var(--portfolio-muted)]">
-                        {skill.level}
-                      </span>
-                    </div>
-                    <p className="font-body mt-4 text-[14px] font-semibold text-[var(--portfolio-text)]">
-                      {skill.name}
-                    </p>
-                    <p className="font-body mt-1 text-[10px] text-[var(--portfolio-muted)]">
-                      {khmer && skill.categoryKm
-                        ? skill.categoryKm
-                        : skill.categoryEn || (khmer ? "ជំនាញ" : "Skill")}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <div className="sm:col-span-2">
-                  <EmptyPanel
-                    text={
-                      khmer
-                        ? "បន្ថែមជំនាញពីផ្ទាំងគ្រប់គ្រង។"
-                        : "Add skills from the dashboard."
-                    }
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="portfolio-panel p-5 md:p-6">
-            <p className="font-display text-2xl text-[var(--portfolio-text)]">
-              {khmer ? "បច្ចេកវិទ្យាដែលខ្ញុំប្រើ" : "TECH STACK"}
-            </p>
-            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {tools.length > 0 ? (
-                tools.map((tool) => (
-                  <a
-                    key={tool.id}
-                    href={tool.url || undefined}
-                    target={tool.url ? "_blank" : undefined}
-                    rel={tool.url ? "noopener noreferrer" : undefined}
-                    className="group rounded-2xl border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)] p-4 transition hover:-translate-y-1 hover:border-[var(--portfolio-cyan)]/40"
-                  >
-                    <ToolIcon tool={tool} />
-                    <p className="font-body mt-3 truncate text-[12px] font-semibold text-[var(--portfolio-text)]">
-                      {tool.name}
-                    </p>
-                    <p className="font-body mt-1 truncate text-[9px] uppercase tracking-[0.08em] text-[var(--portfolio-muted)]">
-                      {tool.category.replaceAll("_", " ")}
-                    </p>
-                  </a>
-                ))
-              ) : (
-                <div className="col-span-full">
-                  <EmptyPanel
-                    text={
-                      khmer
-                        ? "បន្ថែមឧបករណ៍ពីផ្ទាំងគ្រប់គ្រង។"
-                        : "Add your tools from the dashboard."
-                    }
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      <GitHubContributionSection
+        locale={locale}
+        image={profile.githubContributionImage}
+        githubUrl={profile.github}
+        username={profile.githubUsername}
+      />
 
       {/* =====================================================
           EXPERIENCE & EDUCATION
          ===================================================== */}
+
       <section id="experience" className="portfolio-section scroll-mt-28">
         <PortfolioHeading
+          locale={locale}
           eyebrow={khmer ? "ប្រវត្តិរបស់ខ្ញុំ" : "MY BACKGROUND"}
           title={khmer ? "បទពិសោធន៍ និងការអប់រំ" : "Experience & Education"}
           description={
@@ -334,6 +350,7 @@ export default function PortfolioPreviewSections({
             items={experience}
             locale={locale}
           />
+
           <TimelinePanel
             icon={GraduationCap}
             title={khmer ? "ការអប់រំ" : "Education"}
@@ -346,21 +363,27 @@ export default function PortfolioPreviewSections({
       {/* =====================================================
           PROJECTS
          ===================================================== */}
+
       <section id="projects" className="portfolio-section scroll-mt-28">
         <PortfolioHeading
+          locale={locale}
           eyebrow={khmer ? "ស្នាដៃដែលបានជ្រើសរើស" : "SELECTED WORK"}
           title={khmer ? "គម្រោង" : "Featured Projects"}
           description={
             khmer
-              ? "គម្រោងដែលបង្ហាញពីការអភិវឌ្ឍ ការរចនា និងការដោះស្រាយបញ្ហារបស់ខ្ញុំ។"
-              : "Projects that reflect my development, design and problem-solving work."
+              ? "គម្រោងដែលបង្ហាញពីការអភិវឌ្ឍ ការរចនា និងការដោះស្រាយបញ្ហារបស់ខ្ញុំ។ ចុចលើគម្រោងដើម្បីមើលព័ត៌មានលម្អិត។"
+              : "Projects that reflect my development, design and problem-solving work. Open a project to explore the complete case study."
           }
         />
 
         {projects.length > 0 ? (
           <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {projects.map((project) => (
-              <ProjectCard key={project.id} item={project} locale={locale} />
+              <PublicProjectCard
+                key={project.id}
+                item={project}
+                locale={locale}
+              />
             ))}
           </div>
         ) : (
@@ -379,8 +402,10 @@ export default function PortfolioPreviewSections({
       {/* =====================================================
           CERTIFICATES
          ===================================================== */}
+
       <section id="certificates" className="portfolio-section scroll-mt-28">
         <PortfolioHeading
+          locale={locale}
           eyebrow={khmer ? "ការរៀនសូត្រ" : "CREDENTIALS"}
           title={khmer ? "វិញ្ញាបនបត្រ" : "Certificates"}
           description={
@@ -408,18 +433,28 @@ export default function PortfolioPreviewSections({
                     <Award size={38} className="text-[var(--portfolio-cyan)]" />
                   )}
                 </div>
-                <p className="font-body mt-4 text-[14px] font-semibold text-[var(--portfolio-text)]">
+
+                <p
+                  className={
+                    khmer && item.titleKm
+                      ? "khmer-input-value mt-4 text-[14px] font-normal leading-6 text-[var(--portfolio-text)]"
+                      : "font-body mt-4 text-[14px] font-semibold text-[var(--portfolio-text)]"
+                  }
+                >
                   {activityTitle(item, locale)}
                 </p>
+
                 <p className="font-body mt-1 text-[10px] text-[var(--portfolio-muted)]">
                   {activityOrganization(item, locale) ||
                     formatActivityPeriod(item, locale)}
                 </p>
+
                 {item.credentialId ? (
                   <p className="font-number mt-2 text-[9px] text-[var(--portfolio-muted)]">
                     ID: {item.credentialId}
                   </p>
                 ) : null}
+
                 {item.externalUrl ? (
                   <a
                     href={item.externalUrl}
@@ -428,6 +463,7 @@ export default function PortfolioPreviewSections({
                     className="mt-4 inline-flex items-center gap-1.5 font-body text-[11px] text-[var(--portfolio-cyan)]"
                   >
                     {khmer ? "មើលវិញ្ញាបនបត្រ" : "View credential"}
+
                     <ExternalLink size={12} />
                   </a>
                 ) : null}
@@ -448,76 +484,18 @@ export default function PortfolioPreviewSections({
       </section>
 
       {/* =====================================================
-          JOURNEY
+          IMPROVED YEAR-BY-YEAR
          ===================================================== */}
-      <section id="journey" className="portfolio-section scroll-mt-28">
-        <PortfolioHeading
-          eyebrow={khmer ? "ដំណើររបស់ខ្ញុំ" : "MY JOURNEY"}
-          title={khmer ? "ប្រវត្តិតាមឆ្នាំ" : "Year by Year"}
-          description={
-            khmer
-              ? "សកម្មភាព គម្រោង ព្រឹត្តិការណ៍ និងសមិទ្ធផលដែលរៀបចំតាមពេលវេលា។"
-              : "Projects, activities, events and achievements organized through time."
-          }
-        />
 
-        <div className="mt-10 grid gap-4">
-          {buildTimelineYears(timeline).map(([year, items]) => (
-            <div
-              key={year}
-              className="portfolio-panel grid gap-5 p-5 md:grid-cols-[150px_1fr] md:p-6"
-            >
-              <div>
-                <p className="font-display text-5xl text-[var(--portfolio-text)]">
-                  {year}
-                </p>
-                <div className="mt-3 h-px w-16 bg-[var(--portfolio-gradient)]" />
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {items.slice(0, 8).map((item) => (
-                  <div
-                    key={item.id}
-                    className="rounded-2xl border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)] p-4"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="rounded-full bg-[var(--portfolio-accent-soft)] px-2 py-1 font-body text-[9px] uppercase tracking-[0.08em] text-[var(--portfolio-cyan)]">
-                        {item.type}
-                      </span>
-                      <span className="font-number text-[9px] text-[var(--portfolio-muted)]">
-                        {formatMonthDay(item.activityDate, locale)}
-                      </span>
-                    </div>
-                    <p className="font-body mt-3 text-[13px] font-semibold text-[var(--portfolio-text)]">
-                      {activityTitle(item, locale)}
-                    </p>
-                    {activitySummary(item, locale) ? (
-                      <p className="font-body mt-1 line-clamp-2 text-[10px] leading-5 text-[var(--portfolio-muted)]">
-                        {activitySummary(item, locale)}
-                      </p>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-
-          {timeline.length === 0 ? (
-            <EmptyPanel
-              text={
-                khmer
-                  ? "បន្ថែមសកម្មភាព ដើម្បីបង្កើតប្រវត្តិតាមឆ្នាំ។"
-                  : "Add activities to build your year-by-year journey."
-              }
-            />
-          ) : null}
-        </div>
-      </section>
+      <JourneySection locale={locale} activities={timeline} />
 
       {/* =====================================================
           TEACHING
          ===================================================== */}
+
       <section id="teaching" className="portfolio-section scroll-mt-28">
         <PortfolioHeading
+          locale={locale}
           eyebrow={khmer ? "ចែករំលែកចំណេះដឹង" : "SHARE KNOWLEDGE"}
           title={khmer ? "ការបង្រៀន និងណែនាំ" : "Teaching & Mentoring"}
           description={
@@ -534,18 +512,34 @@ export default function PortfolioPreviewSections({
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--portfolio-accent-soft)] text-[var(--portfolio-cyan)]">
                   <Presentation size={17} />
                 </div>
-                <p className="font-body mt-4 text-[14px] font-semibold text-[var(--portfolio-text)]">
+
+                <p
+                  className={
+                    khmer && item.titleKm
+                      ? "khmer-input-value mt-4 text-[14px] font-normal leading-6 text-[var(--portfolio-text)]"
+                      : "font-body mt-4 text-[14px] font-semibold text-[var(--portfolio-text)]"
+                  }
+                >
                   {activityTitle(item, locale)}
                 </p>
+
                 <p className="font-body mt-1 text-[10px] text-[var(--portfolio-muted)]">
                   {activityOrganization(item, locale) ||
                     formatActivityPeriod(item, locale)}
                 </p>
+
                 {activitySummary(item, locale) ? (
-                  <p className="font-body mt-3 text-[11px] leading-6 text-[var(--portfolio-muted)]">
+                  <p
+                    className={
+                      khmer && item.summaryKm
+                        ? "khmer-input-value mt-3 text-[11px] font-normal leading-6 text-[var(--portfolio-muted)]"
+                        : "font-body mt-3 text-[11px] leading-6 text-[var(--portfolio-muted)]"
+                    }
+                  >
                     {activitySummary(item, locale)}
                   </p>
                 ) : null}
+
                 {item.technologies ? (
                   <p className="font-body mt-4 text-[10px] text-[var(--portfolio-cyan)]">
                     {item.technologies}
@@ -568,73 +562,40 @@ export default function PortfolioPreviewSections({
       </section>
 
       {/* =====================================================
-          GALLERY
+          IMPROVED GALLERY
          ===================================================== */}
-      <section id="gallery" className="portfolio-section scroll-mt-28">
-        <PortfolioHeading
-          eyebrow={khmer ? "ពេលវេលាដែលបានកត់ត្រា" : "CAPTURED MOMENTS"}
-          title={khmer ? "វិចិត្រសាល" : "Gallery"}
-          description={
-            khmer
-              ? "រូបភាពពីការងារ ព្រឹត្តិការណ៍ ការបង្រៀន និងដំណើររបស់ខ្ញុំ។"
-              : "Photos from work, events, teaching and the moments behind the portfolio."
-          }
-        />
 
-        <div className="mt-10 grid auto-rows-[220px] gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {gallery.length > 0 ? (
-            gallery.slice(0, 9).map((item, index) => (
-              <article
-                key={item.id}
-                className={`portfolio-gallery-card group ${index % 5 === 0 ? "sm:row-span-2" : ""}`}
-              >
-                {item.coverImage ? (
-                  <img
-                    src={item.coverImage}
-                    alt={activityTitle(item, locale)}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center bg-[var(--portfolio-gradient)] opacity-45">
-                    <Images size={36} />
-                  </div>
-                )}
-                <div className="portfolio-gallery-overlay">
-                  <p className="font-body text-[12px] font-semibold text-white">
-                    {activityTitle(item, locale)}
-                  </p>
-                  <p className="font-number mt-1 text-[9px] text-white/70">
-                    {formatActivityPeriod(item, locale)}
-                  </p>
-                </div>
-              </article>
-            ))
-          ) : (
-            <div className="sm:col-span-2 lg:col-span-3">
-              <EmptyPanel
-                text={
-                  khmer
-                    ? "បន្ថែមរូបភាពពីផ្ទាំងគ្រប់គ្រង Gallery។"
-                    : "Add photos from the Gallery dashboard."
-                }
-              />
-            </div>
-          )}
-        </div>
-      </section>
+      <PortfolioGallerySection locale={locale} items={gallery} />
 
       {/* =====================================================
           CONTACT
          ===================================================== */}
+
       <section id="contact" className="portfolio-section scroll-mt-28 pb-28">
         <div className="portfolio-panel portfolio-glow overflow-hidden p-5 md:p-8 lg:p-10">
           <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+            {/* LEFT */}
+
             <div>
               <SectionBar>{khmer ? "ទំនាក់ទំនង" : "GET IN TOUCH"}</SectionBar>
-              <h2 className="font-display mt-6 text-[clamp(2.8rem,6vw,5.5rem)] leading-[0.95] text-[var(--portfolio-text)]">
+
+              <h2
+                className={
+                  khmer
+                    ? "khmer-input-value mt-6 text-[clamp(2.4rem,6vw,5rem)] font-normal leading-[1.45] text-[var(--portfolio-text)]"
+                    : "font-display mt-6 text-[clamp(2.8rem,6vw,5.5rem)] leading-[0.95] text-[var(--portfolio-text)]"
+                }
+              >
                 {khmer ? "ចាប់ផ្តើមការសន្ទនា" : "LET'S CREATE SOMETHING"}
               </h2>
-              <p className="font-body mt-5 max-w-md text-[13px] leading-7 text-[var(--portfolio-muted)]">
+
+              <p
+                className={
+                  khmer
+                    ? "khmer-input-value mt-5 max-w-md text-[13px] font-normal leading-7 text-[var(--portfolio-muted)]"
+                    : "font-body mt-5 max-w-md text-[13px] leading-7 text-[var(--portfolio-muted)]"
+                }
+              >
                 {khmer
                   ? "មានគម្រោង សំណួរ ឬចង់សហការជាមួយខ្ញុំ? ផ្ញើសារមកខ្ញុំបានគ្រប់ពេល។"
                   : "Have a project, question or collaboration in mind? Send me a message and I’ll get back to you."}
@@ -648,6 +609,7 @@ export default function PortfolioPreviewSections({
                     href={`mailto:${profile.email}`}
                   />
                 ) : null}
+
                 {profile.phone ? (
                   <ContactLine
                     icon={Phone}
@@ -655,6 +617,7 @@ export default function PortfolioPreviewSections({
                     href={`tel:${profile.phone}`}
                   />
                 ) : null}
+
                 {profile.telegram ? (
                   <ContactLine
                     icon={MessageCircle}
@@ -662,6 +625,7 @@ export default function PortfolioPreviewSections({
                     href={normalizeLink(profile.telegram, "https://t.me/")}
                   />
                 ) : null}
+
                 {profile.github ? (
                   <ContactLine
                     icon={Code2}
@@ -669,6 +633,7 @@ export default function PortfolioPreviewSections({
                     href={profile.github}
                   />
                 ) : null}
+
                 {profile.linkedin ? (
                   <ContactLine
                     icon={BriefcaseBusiness}
@@ -686,10 +651,13 @@ export default function PortfolioPreviewSections({
                   className="portfolio-secondary-button mt-7"
                 >
                   <Download size={15} />
+
                   {khmer ? "ទាញយក CV" : "Download CV"}
                 </a>
               ) : null}
             </div>
+
+            {/* RIGHT */}
 
             <div className="rounded-[22px] border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)] p-5 md:p-6">
               <PublicContactForm locale={locale} />
@@ -701,45 +669,83 @@ export default function PortfolioPreviewSections({
   );
 }
 
+/* =========================================================
+   SECTION BAR
+   ========================================================= */
+
 function SectionBar({
   children,
   small = false,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   small?: boolean;
 }) {
   return (
     <div
-      className={`portfolio-section-label ${small ? "portfolio-section-label-small" : ""}`}
+      className={`portfolio-section-label ${
+        small ? "portfolio-section-label-small" : ""
+      }`}
     >
       {children}
     </div>
   );
 }
 
+/* =========================================================
+   PORTFOLIO HEADING
+   ========================================================= */
+
 function PortfolioHeading({
+  locale,
   eyebrow,
   title,
   description,
 }: {
+  locale: "en" | "km";
   eyebrow: string;
   title: string;
   description: string;
 }) {
+  const khmer = locale === "km";
+
   return (
     <div className="max-w-3xl">
-      <p className="font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--portfolio-cyan)]">
+      <p
+        className={
+          khmer
+            ? "khmer-input-value text-[11px] font-normal leading-6 text-[var(--portfolio-cyan)]"
+            : "font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--portfolio-cyan)]"
+        }
+      >
         {eyebrow}
       </p>
-      <h2 className="font-display mt-3 text-[clamp(2.8rem,6vw,5.3rem)] leading-[0.92] text-[var(--portfolio-text)]">
+
+      <h2
+        className={
+          khmer
+            ? "khmer-input-value mt-3 text-[clamp(2.5rem,6vw,5rem)] font-normal leading-[1.45] text-[var(--portfolio-text)]"
+            : "font-display mt-3 text-[clamp(2.8rem,6vw,5.3rem)] leading-[0.92] text-[var(--portfolio-text)]"
+        }
+      >
         {title}
       </h2>
-      <p className="font-body mt-4 text-[13px] leading-7 text-[var(--portfolio-muted)]">
+
+      <p
+        className={
+          khmer
+            ? "khmer-input-value mt-4 text-[13px] font-normal leading-7 text-[var(--portfolio-muted)]"
+            : "font-body mt-4 text-[13px] leading-7 text-[var(--portfolio-muted)]"
+        }
+      >
         {description}
       </p>
     </div>
   );
 }
+
+/* =========================================================
+   EMPTY LINE
+   ========================================================= */
 
 function EmptyLine({ text }: { text: string }) {
   return (
@@ -748,6 +754,10 @@ function EmptyLine({ text }: { text: string }) {
     </p>
   );
 }
+
+/* =========================================================
+   EMPTY PANEL
+   ========================================================= */
 
 function EmptyPanel({ text }: { text: string }) {
   return (
@@ -758,6 +768,10 @@ function EmptyPanel({ text }: { text: string }) {
     </div>
   );
 }
+
+/* =========================================================
+   CONTACT LINE
+   ========================================================= */
 
 function ContactLine({
   icon: Icon,
@@ -773,6 +787,7 @@ function ContactLine({
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--portfolio-accent-soft)] text-[var(--portfolio-cyan)]">
         <Icon size={14} />
       </span>
+
       <span className="font-body truncate text-[12px] text-[var(--portfolio-text)]">
         {value}
       </span>
@@ -793,28 +808,162 @@ function ContactLine({
   );
 }
 
+/* =========================================================
+   TOOL PILL
+   ========================================================= */
+
 function ToolPill({ tool }: { tool: PublicTool }) {
   return (
-    <span className="flex h-10 min-w-10 items-center justify-center rounded-xl border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)] px-3 font-body text-[11px] font-semibold text-[var(--portfolio-text)]">
-      {tool.name}
+    <span className="flex h-10 items-center gap-2 rounded-xl border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)] px-2.5">
+      {isImageSource(tool.icon) ? (
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white p-1 dark:bg-white/[0.95]">
+          <img
+            src={tool.icon!}
+            alt=""
+            className="h-full w-full object-contain"
+          />
+        </span>
+      ) : (
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[var(--portfolio-accent-soft)] font-display text-[9px] text-[var(--portfolio-cyan)]">
+          {makeInitials(tool.name)}
+        </span>
+      )}
+
+      <span className="font-body max-w-[110px] truncate text-[10px] font-semibold text-[var(--portfolio-text)]">
+        {tool.name}
+      </span>
     </span>
   );
 }
 
-function ToolIcon({ tool }: { tool: PublicTool }) {
-  if (
-    tool.icon &&
-    (tool.icon.startsWith("/") || tool.icon.startsWith("http"))
-  ) {
-    return <img src={tool.icon} alt="" className="h-8 w-8 object-contain" />;
+/* =========================================================
+   SKILL ICON
+   ========================================================= */
+
+function SkillIcon({ skill }: { skill: PublicSkill }) {
+  if (isImageSource(skill.icon)) {
+    return (
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] border border-[var(--portfolio-border)] bg-white p-2 shadow-[0_5px_16px_rgba(15,23,42,0.04)] dark:bg-white/[0.04]">
+        <img
+          src={skill.icon!}
+          alt={`${skill.name} icon`}
+          className="h-full w-full object-contain"
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--portfolio-accent-soft)] font-display text-lg text-[var(--portfolio-cyan)]">
-      {tool.name.slice(0, 2).toUpperCase()}
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] bg-gradient-to-br from-violet-500/15 to-cyan-400/15 font-display text-[16px] text-[var(--portfolio-cyan)]">
+      {makeInitials(skill.name)}
     </div>
   );
 }
+
+/* =========================================================
+   TOOL LOGO
+   ========================================================= */
+
+function ToolLogo({ tool }: { tool: PublicTool }) {
+  if (isImageSource(tool.icon)) {
+    return (
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] border border-[var(--portfolio-border)] bg-white p-2 shadow-[0_5px_16px_rgba(15,23,42,0.04)] transition duration-300 group-hover:scale-105 dark:bg-white/[0.96]">
+        <img
+          src={tool.icon!}
+          alt={`${tool.name} logo`}
+          className="h-full w-full object-contain"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] bg-gradient-to-br from-violet-500/15 to-cyan-400/15 font-display text-[17px] text-[var(--portfolio-cyan)]">
+      {makeInitials(tool.name)}
+    </div>
+  );
+}
+
+/* =========================================================
+   ICON HELPERS
+   ========================================================= */
+
+function isImageSource(value: string | null | undefined) {
+  if (!value) {
+    return false;
+  }
+
+  return (
+    value.startsWith("/") ||
+    value.startsWith("http://") ||
+    value.startsWith("https://") ||
+    value.startsWith("data:") ||
+    value.startsWith("blob:")
+  );
+}
+
+function makeInitials(value: string) {
+  const words = value.trim().split(/\s+/).filter(Boolean);
+
+  if (words.length === 0) {
+    return "?";
+  }
+
+  if (words.length === 1) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+
+  return words
+    .slice(0, 2)
+    .map((word) => word.charAt(0))
+    .join("")
+    .toUpperCase();
+}
+
+/* =========================================================
+   SKILL LEVEL
+   ========================================================= */
+
+function formatSkillLevel(level: string) {
+  return level
+    .replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function skillLevelWidth(level: string) {
+  switch (level) {
+    case "EXPERT":
+      return "w-full";
+
+    case "ADVANCED":
+      return "w-[82%]";
+
+    case "INTERMEDIATE":
+      return "w-[60%]";
+
+    case "BEGINNER":
+      return "w-[35%]";
+
+    default:
+      return "w-[50%]";
+  }
+}
+
+/* =========================================================
+   TOOL CATEGORY
+   ========================================================= */
+
+function formatToolCategory(category: string) {
+  return category
+    .replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+/* =========================================================
+   EXPERIENCE / EDUCATION TIMELINE
+   ========================================================= */
 
 function TimelinePanel({
   icon: Icon,
@@ -823,44 +972,87 @@ function TimelinePanel({
   locale,
 }: {
   icon: typeof BriefcaseBusiness;
+
   title: string;
+
   items: PublicActivity[];
+
   locale: "en" | "km";
 }) {
+  const khmer = locale === "km";
+
   return (
     <div className="portfolio-panel p-5 md:p-6">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--portfolio-accent-soft)] text-[var(--portfolio-cyan)]">
           <Icon size={17} />
         </div>
-        <p className="font-display text-2xl text-[var(--portfolio-text)]">
+
+        <p
+          className={
+            khmer
+              ? "khmer-input-value text-[20px] font-normal leading-8 text-[var(--portfolio-text)]"
+              : "font-display text-2xl text-[var(--portfolio-text)]"
+          }
+        >
           {title}
         </p>
       </div>
+
       <div className="relative mt-6 grid gap-5 before:absolute before:bottom-2 before:left-[5px] before:top-2 before:w-px before:bg-[var(--portfolio-border)]">
         {items.length > 0 ? (
           items.map((item) => (
             <div key={item.id} className="relative pl-6">
               <span className="absolute left-0 top-2 h-[11px] w-[11px] rounded-full border-2 border-[var(--portfolio-cyan)] bg-[var(--portfolio-bg)]" />
-              <p className="font-body text-[13px] font-semibold text-[var(--portfolio-text)]">
+
+              <p
+                className={
+                  khmer && item.titleKm
+                    ? "khmer-input-value text-[13px] font-normal leading-6 text-[var(--portfolio-text)]"
+                    : "font-body text-[13px] font-semibold text-[var(--portfolio-text)]"
+                }
+              >
                 {activityTitle(item, locale)}
               </p>
-              <p className="font-body mt-1 text-[10px] text-[var(--portfolio-cyan)]">
-                {activityOrganization(item, locale)}
-              </p>
+
+              {activityOrganization(item, locale) ? (
+                <p
+                  className={
+                    khmer && item.organizationKm
+                      ? "khmer-input-value mt-1 text-[10px] font-normal leading-5 text-[var(--portfolio-cyan)]"
+                      : "font-body mt-1 text-[10px] text-[var(--portfolio-cyan)]"
+                  }
+                >
+                  {activityOrganization(item, locale)}
+                </p>
+              ) : null}
+
               <p className="font-number mt-1 text-[9px] text-[var(--portfolio-muted)]">
                 {formatActivityPeriod(item, locale)}
               </p>
+
               {activitySummary(item, locale) ? (
-                <p className="font-body mt-2 text-[10px] leading-5 text-[var(--portfolio-muted)]">
+                <p
+                  className={
+                    khmer && item.summaryKm
+                      ? "khmer-input-value mt-2 text-[10px] font-normal leading-6 text-[var(--portfolio-muted)]"
+                      : "font-body mt-2 text-[10px] leading-5 text-[var(--portfolio-muted)]"
+                  }
+                >
                   {activitySummary(item, locale)}
                 </p>
               ) : null}
             </div>
           ))
         ) : (
-          <p className="font-body pl-6 text-[11px] text-[var(--portfolio-muted)]">
-            No records yet.
+          <p
+            className={
+              khmer
+                ? "khmer-input-value pl-6 text-[11px] font-normal leading-6 text-[var(--portfolio-muted)]"
+                : "font-body pl-6 text-[11px] text-[var(--portfolio-muted)]"
+            }
+          >
+            {khmer ? "មិនទាន់មានទិន្នន័យ។" : "No records yet."}
           </p>
         )}
       </div>
@@ -868,99 +1060,9 @@ function TimelinePanel({
   );
 }
 
-function ProjectCard({
-  item,
-  locale,
-}: {
-  item: PublicActivity;
-  locale: "en" | "km";
-}) {
-  return (
-    <article className="portfolio-panel group overflow-hidden p-3 transition duration-300 hover:-translate-y-1.5">
-      <div className="relative aspect-[16/10] overflow-hidden rounded-[18px] border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)]">
-        {item.coverImage ? (
-          <img
-            src={item.coverImage}
-            alt={activityTitle(item, locale)}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-[var(--portfolio-gradient)] opacity-45">
-            <Code2 size={42} />
-          </div>
-        )}
-        {item.featured ? (
-          <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-black/35 px-2.5 py-1 font-body text-[9px] uppercase tracking-[0.1em] text-white backdrop-blur-lg">
-            Featured
-          </span>
-        ) : null}
-      </div>
-      <div className="p-3 pb-2 pt-4">
-        <p className="font-body text-[15px] font-semibold text-[var(--portfolio-text)]">
-          {activityTitle(item, locale)}
-        </p>
-        {activitySummary(item, locale) ? (
-          <p className="font-body mt-2 line-clamp-2 text-[11px] leading-5 text-[var(--portfolio-muted)]">
-            {activitySummary(item, locale)}
-          </p>
-        ) : null}
-        {item.technologies ? (
-          <p className="font-body mt-3 line-clamp-1 text-[10px] text-[var(--portfolio-cyan)]">
-            {item.technologies}
-          </p>
-        ) : null}
-        <div className="mt-4 flex flex-wrap gap-2">
-          {item.demoUrl ? (
-            <ProjectLink href={item.demoUrl} label="Demo" icon={ArrowUpRight} />
-          ) : null}
-          {item.githubUrl ? (
-            <ProjectLink href={item.githubUrl} label="GitHub" icon={Code2} />
-          ) : null}
-          {item.externalUrl ? (
-            <ProjectLink
-              href={item.externalUrl}
-              label="Details"
-              icon={ExternalLink}
-            />
-          ) : null}
-        </div>
-
-        <div className="mt-4">
-          <ActivityEngagement
-            locale={locale}
-            activityId={item.id}
-            title={activityTitle(item, locale)}
-            initialLikeCount={item.likeCount}
-            initialCommentCount={item.commentCount}
-            comments={item.comments}
-          />
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function ProjectLink({
-  href,
-  label,
-  icon: Icon,
-}: {
-  href: string;
-  label: string;
-  icon: typeof ExternalLink;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)] px-2.5 py-1.5 font-body text-[10px] text-[var(--portfolio-muted)] transition hover:text-[var(--portfolio-cyan)]"
-    >
-      {label}
-      <Icon size={11} />
-    </a>
-  );
-}
+/* =========================================================
+   HELPERS
+   ========================================================= */
 
 function localized(locale: "en" | "km", en: string | null, km: string | null) {
   return locale === "km" ? km || en || "" : en || km || "";
@@ -981,34 +1083,31 @@ function activityOrganization(item: PublicActivity, locale: "en" | "km") {
 function formatActivityPeriod(item: PublicActivity, locale: "en" | "km") {
   const formatter = new Intl.DateTimeFormat(
     locale === "km" ? "km-KH" : "en-US",
-    { year: "numeric", month: "short" },
+    {
+      year: "numeric",
+
+      month: "short",
+    },
   );
+
   const start = formatter.format(new Date(item.activityDate));
-  if (item.isCurrent)
+
+  if (item.isCurrent) {
     return `${start} — ${locale === "km" ? "បច្ចុប្បន្ន" : "Present"}`;
-  if (item.endDate)
+  }
+
+  if (item.endDate) {
     return `${start} — ${formatter.format(new Date(item.endDate))}`;
+  }
+
   return start;
 }
 
-function formatMonthDay(value: string, locale: "en" | "km") {
-  return new Intl.DateTimeFormat(locale === "km" ? "km-KH" : "en-US", {
-    month: "short",
-    day: "numeric",
-  }).format(new Date(value));
-}
-
-function buildTimelineYears(items: PublicActivity[]) {
-  const groups = new Map<string, PublicActivity[]>();
-  items.forEach((item) => {
-    const year = new Date(item.activityDate).getFullYear().toString();
-    groups.set(year, [...(groups.get(year) || []), item]);
-  });
-  return Array.from(groups.entries()).sort(([a], [b]) => Number(b) - Number(a));
-}
-
 function normalizeLink(value: string, prefix: string) {
-  if (/^https?:\/\//i.test(value)) return value;
+  if (/^https?:\/\//i.test(value)) {
+    return value;
+  }
+
   return `${prefix}${value.replace(/^@/, "")}`;
 }
 

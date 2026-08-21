@@ -1,4 +1,4 @@
-import ActivityManager from "@/components/dashboard/ActivityManager";
+import SpecializedContentManager from "@/components/dashboard/SpecializedContentManager";
 
 import { prisma } from "@/lib/db";
 
@@ -13,27 +13,29 @@ type Props = {
 export default async function CertificatesPage({ params }: Props) {
   const { locale } = await params;
 
+  const safeLocale: "en" | "km" = locale === "km" ? "km" : "en";
+
   const items = await prisma.activity.findMany({
     where: {
       type: "CERTIFICATE",
     },
 
-    orderBy: {
-      activityDate: "desc",
-    },
+    orderBy: [
+      {
+        activityDate: "desc",
+      },
+
+      {
+        sortOrder: "asc",
+      },
+    ],
   });
 
   return (
-    <ActivityManager
-      locale={locale === "km" ? "km" : "en"}
+    <SpecializedContentManager
+      locale={safeLocale}
+      kind="certificate"
       items={serializeActivities(items)}
-      lockedType="CERTIFICATE"
-      title={locale === "km" ? "វិញ្ញាបនបត្រ" : "Certificates"}
-      description={
-        locale === "km"
-          ? "គ្រប់គ្រងវិញ្ញាបនបត្រ ស្ថាប័នចេញវិញ្ញាបនបត្រ និងព័ត៌មានសម្គាល់។"
-          : "Manage certificates, issuers, dates and credential information."
-      }
     />
   );
 }

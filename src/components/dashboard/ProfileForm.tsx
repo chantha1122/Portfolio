@@ -1,7 +1,18 @@
 "use client";
 
-import { useActionState, useState, type ReactNode } from "react";
+import {
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ReactNode,
+} from "react";
+
+import { useRouter } from "next/navigation";
+
 import { useTranslations } from "next-intl";
+
 import {
   BriefcaseBusiness,
   Camera,
@@ -15,369 +26,521 @@ import {
   Phone,
   Save,
   Send,
-  Sparkles,
   UserRound,
   Video,
+  X,
   type LucideIcon,
 } from "lucide-react";
 
 import { saveProfileAction, type ProfileActionState } from "@/actions/profile";
+
 import AppToast from "@/components/ui/AppToast";
+
 import { cn } from "@/lib/cn";
 
 type ProfileFormData = {
   fullName: string;
   headlineEn: string;
   headlineKm: string;
+
   shortBioEn: string;
   shortBioKm: string;
+
   bioEn: string;
   bioKm: string;
+
   currentRoleEn: string;
   currentRoleKm: string;
+
   currentFocusEn: string;
   currentFocusKm: string;
+
   yearsExperience: number;
+
   email: string;
   phone: string;
   telegram: string;
+
   github: string;
   linkedin: string;
   facebook: string;
   instagram: string;
   youtube: string;
+
   locationEn: string;
   locationKm: string;
+
   profileImage: string;
   badgeImage: string;
   cvFile: string;
 };
 
-type ProfileFormProps = {
+type Props = {
   locale: "en" | "km";
+
   profile: ProfileFormData;
 };
 
-const initialState: ProfileActionState = {
+const initialProfileActionState: ProfileActionState = {
   success: false,
   message: null,
 };
 
-export default function ProfileForm({ locale, profile }: ProfileFormProps) {
+type Tab = "personal" | "about" | "contact" | "media";
+
+const TAB_ERRORS: Record<Tab, string[]> = {
+  personal: [
+    "fullName",
+    "yearsExperience",
+    "headlineEn",
+    "headlineKm",
+    "currentRoleEn",
+    "currentRoleKm",
+  ],
+
+  about: [
+    "shortBioEn",
+    "shortBioKm",
+    "bioEn",
+    "bioKm",
+    "currentFocusEn",
+    "currentFocusKm",
+  ],
+
+  contact: [
+    "email",
+    "phone",
+    "telegram",
+    "github",
+    "linkedin",
+    "facebook",
+    "instagram",
+    "youtube",
+    "locationEn",
+    "locationKm",
+  ],
+
+  media: ["profileImageFile", "badgeImageFile", "cvFileUpload"],
+};
+
+export default function ProfileForm({ locale, profile }: Props) {
   const t = useTranslations("Profile");
-  const isKhmerPage = locale === "km";
+
+  const router = useRouter();
+
+  const km = locale === "km";
+
   const [state, formAction, pending] = useActionState(
     saveProfileAction,
-    initialState,
+    initialProfileActionState,
   );
-  const [toastDismissed, setToastDismissed] = useState(false);
 
-  const showToast = Boolean(state.message) && !toastDismissed && !pending;
+  const [active, setActive] = useState<Tab>("personal");
+
+  const [toast, setToast] = useState(false);
+
+  useEffect(() => {
+    if (!state.message) {
+      return;
+    }
+
+    setToast(true);
+
+    if (state.success) {
+      router.refresh();
+      return;
+    }
+
+    const errors = state.fieldErrors ?? {};
+
+    const failedTab = (Object.keys(TAB_ERRORS) as Tab[]).find((tab) =>
+      TAB_ERRORS[tab].some((name) => errors[name]?.length),
+    );
+
+    if (failedTab) {
+      setActive(failedTab);
+    }
+  }, [state, router]);
+
+  const tabs: Array<[Tab, string, LucideIcon]> = [
+    ["personal", t("tabPersonal"), UserRound],
+
+    ["about", t("tabAbout"), FileText],
+
+    ["contact", t("tabContact"), Contact],
+
+    ["media", t("tabMedia"), Image],
+  ];
 
   return (
     <>
       <AppToast
-        open={showToast}
+        open={toast}
         locale={locale}
         variant={state.success ? "success" : "error"}
         message={state.success ? t("saveSuccess") : t("saveError")}
-        onClose={() => setToastDismissed(true)}
+        onClose={() => setToast(false)}
       />
 
-      <form
-        action={formAction}
-        onSubmit={() => setToastDismissed(false)}
-        className="space-y-4"
-      >
+      {/* Tabs */}
+
+      <div className="mb-5 overflow-x-auto border-b border-black/[0.06] dark:border-white/[0.07]">
+        <div className="flex min-w-max gap-1">
+          {tabs.map(([value, label, Icon]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setActive(value)}
+              className={cn(
+                "font-body relative inline-flex h-11 items-center gap-2 rounded-t-xl px-4 transition",
+
+                km ? "text-[12px] font-normal" : "text-[12px] font-semibold",
+
+                active === value
+                  ? "bg-violet-500/[0.07] text-violet-700 dark:text-violet-300"
+                  : "text-[var(--foreground-muted)] hover:bg-black/[0.025] dark:hover:bg-white/[0.035]",
+              )}
+            >
+              <Icon size={14} />
+
+              {label}
+
+              {active === value ? (
+                <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-violet-600" />
+              ) : null}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <form action={formAction} className="space-y-4">
         <input type="hidden" name="locale" value={locale} />
 
-        <FormSection
-          icon={UserRound}
-          title={t("basicInformation")}
-          description={t("basicInformationDescription")}
-          isKhmerPage={isKhmerPage}
-        >
-          <div className="grid gap-x-4 gap-y-4 md:grid-cols-2">
-            <Field
-              label={t("fullName")}
-              name="fullName"
-              defaultValue={profile.fullName}
-              required
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.fullName?.[0]}
+        {/* PERSONAL */}
+
+        <Panel active={active === "personal"}>
+          <Section
+            icon={UserRound}
+            title={t("basicInformation")}
+            description={t("personalTabDescription")}
+            km={km}
+          >
+            <Info
+              km={km}
+              text={`${t("currentRoleHelpTitle")}: ${t("currentRoleHelp")}`}
             />
 
-            <Field
-              label={t("yearsExperience")}
-              name="yearsExperience"
-              type="number"
-              min="0"
-              max="100"
-              numeric
-              defaultValue={String(profile.yearsExperience)}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.yearsExperience?.[0]}
-            />
-
-            <Field
-              label={t("headlineEn")}
-              name="headlineEn"
-              defaultValue={profile.headlineEn}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.headlineEn?.[0]}
-            />
-
-            <Field
-              label={t("headlineKm")}
-              name="headlineKm"
-              defaultValue={profile.headlineKm}
-              isKhmerPage={isKhmerPage}
-              khmerValue
-              error={state.fieldErrors?.headlineKm?.[0]}
-            />
-
-            <Field
-              label={t("currentRoleEn")}
-              name="currentRoleEn"
-              icon={BriefcaseBusiness}
-              defaultValue={profile.currentRoleEn}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.currentRoleEn?.[0]}
-            />
-
-            <Field
-              label={t("currentRoleKm")}
-              name="currentRoleKm"
-              icon={BriefcaseBusiness}
-              defaultValue={profile.currentRoleKm}
-              isKhmerPage={isKhmerPage}
-              khmerValue
-              error={state.fieldErrors?.currentRoleKm?.[0]}
-            />
-          </div>
-        </FormSection>
-
-        <FormSection
-          icon={FileText}
-          title={t("aboutMe")}
-          description={t("aboutMeDescription")}
-          isKhmerPage={isKhmerPage}
-        >
-          <div className="grid gap-4 md:grid-cols-2">
-            <TextAreaField
-              label={t("shortBioEn")}
-              name="shortBioEn"
-              rows={3}
-              defaultValue={profile.shortBioEn}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.shortBioEn?.[0]}
-            />
-
-            <TextAreaField
-              label={t("shortBioKm")}
-              name="shortBioKm"
-              rows={3}
-              defaultValue={profile.shortBioKm}
-              isKhmerPage={isKhmerPage}
-              khmerValue
-              error={state.fieldErrors?.shortBioKm?.[0]}
-            />
-
-            <TextAreaField
-              label={t("bioEn")}
-              name="bioEn"
-              defaultValue={profile.bioEn}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.bioEn?.[0]}
-            />
-
-            <TextAreaField
-              label={t("bioKm")}
-              name="bioKm"
-              defaultValue={profile.bioKm}
-              isKhmerPage={isKhmerPage}
-              khmerValue
-              error={state.fieldErrors?.bioKm?.[0]}
-            />
-
-            <TextAreaField
-              label={t("currentFocusEn")}
-              name="currentFocusEn"
-              rows={3}
-              icon={Sparkles}
-              defaultValue={profile.currentFocusEn}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.currentFocusEn?.[0]}
-            />
-
-            <TextAreaField
-              label={t("currentFocusKm")}
-              name="currentFocusKm"
-              rows={3}
-              icon={Sparkles}
-              defaultValue={profile.currentFocusKm}
-              isKhmerPage={isKhmerPage}
-              khmerValue
-              error={state.fieldErrors?.currentFocusKm?.[0]}
-            />
-          </div>
-        </FormSection>
-
-        <FormSection
-          icon={Contact}
-          title={t("contactInformation")}
-          description={t("contactInformationDescription")}
-          isKhmerPage={isKhmerPage}
-        >
-          <div className="grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
-            <Field
-              label={t("email")}
-              name="email"
-              type="email"
-              icon={Mail}
-              defaultValue={profile.email}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.email?.[0]}
-            />
-            <Field
-              label={t("phone")}
-              name="phone"
-              type="tel"
-              icon={Phone}
-              defaultValue={profile.phone}
-              numeric
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.phone?.[0]}
-            />
-            <Field
-              label={t("telegram")}
-              name="telegram"
-              icon={Send}
-              defaultValue={profile.telegram}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.telegram?.[0]}
-            />
-            <Field
-              label={t("github")}
-              name="github"
-              icon={Code2}
-              defaultValue={profile.github}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.github?.[0]}
-            />
-            <Field
-              label={t("linkedin")}
-              name="linkedin"
-              icon={BriefcaseBusiness}
-              defaultValue={profile.linkedin}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.linkedin?.[0]}
-            />
-
-            <Field
-              label={t("facebook")}
-              name="facebook"
-              icon={MessageCircle}
-              defaultValue={profile.facebook}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.facebook?.[0]}
-            />
-
-            <Field
-              label={t("instagram")}
-              name="instagram"
-              icon={Camera}
-              defaultValue={profile.instagram}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.instagram?.[0]}
-            />
-
-            <Field
-              label={t("youtube")}
-              name="youtube"
-              icon={Video}
-              defaultValue={profile.youtube}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.youtube?.[0]}
-            />
-          </div>
-        </FormSection>
-
-        <FormSection
-          icon={MapPin}
-          title={t("location")}
-          description={t("locationDescription")}
-          isKhmerPage={isKhmerPage}
-        >
-          <div className="grid gap-4 md:grid-cols-2">
-            <Field
-              label={t("locationEn")}
-              name="locationEn"
-              icon={MapPin}
-              defaultValue={profile.locationEn}
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.locationEn?.[0]}
-            />
-            <Field
-              label={t("locationKm")}
-              name="locationKm"
-              icon={MapPin}
-              defaultValue={profile.locationKm}
-              isKhmerPage={isKhmerPage}
-              khmerValue
-              error={state.fieldErrors?.locationKm?.[0]}
-            />
-          </div>
-        </FormSection>
-
-        <FormSection
-          icon={Image}
-          title={t("media")}
-          description={t("mediaDescription")}
-          isKhmerPage={isKhmerPage}
-        >
-          <div className="grid gap-4 md:grid-cols-2">
-            <Field
-              label={t("profileImage")}
-              name="profileImage"
-              defaultValue={profile.profileImage}
-              placeholder="/images/profile.jpg"
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.profileImage?.[0]}
-            />
-            <Field
-              label={t("badgeImage")}
-              name="badgeImage"
-              defaultValue={profile.badgeImage}
-              placeholder="/images/profile-badge.png"
-              isKhmerPage={isKhmerPage}
-              error={state.fieldErrors?.badgeImage?.[0]}
-            />
-            <div className="md:col-span-2">
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
               <Field
-                label={t("cvFile")}
-                name="cvFile"
-                defaultValue={profile.cvFile}
-                placeholder="/files/chantha-cv.pdf"
-                isKhmerPage={isKhmerPage}
-                error={state.fieldErrors?.cvFile?.[0]}
+                label={t("fullName")}
+                name="fullName"
+                value={profile.fullName}
+                required
+                km={km}
+                error={state.fieldErrors?.fullName?.[0]}
+              />
+
+              <Field
+                label={t("yearsExperience")}
+                name="yearsExperience"
+                value={String(profile.yearsExperience)}
+                type="number"
+                min="0"
+                max="100"
+                numeric
+                km={km}
+                hint={t("yearsExperienceHelp")}
+                error={state.fieldErrors?.yearsExperience?.[0]}
+              />
+
+              <Field
+                label={t("headlineEn")}
+                name="headlineEn"
+                value={profile.headlineEn}
+                km={km}
+                error={state.fieldErrors?.headlineEn?.[0]}
+              />
+
+              <Field
+                label={t("headlineKm")}
+                name="headlineKm"
+                value={profile.headlineKm}
+                khmer
+                km={km}
+                error={state.fieldErrors?.headlineKm?.[0]}
+              />
+
+              <Field
+                label={t("currentRoleEn")}
+                name="currentRoleEn"
+                value={profile.currentRoleEn}
+                icon={BriefcaseBusiness}
+                placeholder="Full-Stack Developer & AI Instructor"
+                km={km}
+                error={state.fieldErrors?.currentRoleEn?.[0]}
+              />
+
+              <Field
+                label={t("currentRoleKm")}
+                name="currentRoleKm"
+                value={profile.currentRoleKm}
+                icon={BriefcaseBusiness}
+                khmer
+                km={km}
+                error={state.fieldErrors?.currentRoleKm?.[0]}
               />
             </div>
-          </div>
-        </FormSection>
+          </Section>
+        </Panel>
 
-        <div className="flex justify-end pt-1">
+        {/* ABOUT */}
+
+        <Panel active={active === "about"}>
+          <Section
+            icon={FileText}
+            title={t("aboutMe")}
+            description={t("aboutTabDescription")}
+            km={km}
+          >
+            <Info
+              km={km}
+              cyan
+              text={`${t("currentFocusHelpTitle")}: ${t("currentFocusHelp")}`}
+            />
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <Area
+                label={t("shortBioEn")}
+                name="shortBioEn"
+                value={profile.shortBioEn}
+                rows={3}
+                km={km}
+                error={state.fieldErrors?.shortBioEn?.[0]}
+              />
+
+              <Area
+                label={t("shortBioKm")}
+                name="shortBioKm"
+                value={profile.shortBioKm}
+                rows={3}
+                khmer
+                km={km}
+                error={state.fieldErrors?.shortBioKm?.[0]}
+              />
+
+              <Area
+                label={t("bioEn")}
+                name="bioEn"
+                value={profile.bioEn}
+                rows={5}
+                km={km}
+                error={state.fieldErrors?.bioEn?.[0]}
+              />
+
+              <Area
+                label={t("bioKm")}
+                name="bioKm"
+                value={profile.bioKm}
+                rows={5}
+                khmer
+                km={km}
+                error={state.fieldErrors?.bioKm?.[0]}
+              />
+
+              <Area
+                label={t("currentFocusEn")}
+                name="currentFocusEn"
+                value={profile.currentFocusEn}
+                rows={4}
+                km={km}
+                error={state.fieldErrors?.currentFocusEn?.[0]}
+              />
+
+              <Area
+                label={t("currentFocusKm")}
+                name="currentFocusKm"
+                value={profile.currentFocusKm}
+                rows={4}
+                khmer
+                km={km}
+                error={state.fieldErrors?.currentFocusKm?.[0]}
+              />
+            </div>
+          </Section>
+        </Panel>
+
+        {/* CONTACT */}
+
+        <Panel active={active === "contact"}>
+          <div className="space-y-4">
+            <Section
+              icon={Contact}
+              title={t("contactInformation")}
+              description={t("contactInformationDescription")}
+              km={km}
+            >
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <Field
+                  label={t("email")}
+                  name="email"
+                  value={profile.email}
+                  type="email"
+                  icon={Mail}
+                  km={km}
+                />
+
+                <Field
+                  label={t("phone")}
+                  name="phone"
+                  value={profile.phone}
+                  type="tel"
+                  icon={Phone}
+                  numeric
+                  km={km}
+                />
+
+                <Field
+                  label={t("telegram")}
+                  name="telegram"
+                  value={profile.telegram}
+                  icon={Send}
+                  km={km}
+                />
+
+                <Field
+                  label={t("github")}
+                  name="github"
+                  value={profile.github}
+                  icon={Code2}
+                  km={km}
+                />
+
+                <Field
+                  label={t("linkedin")}
+                  name="linkedin"
+                  value={profile.linkedin}
+                  icon={BriefcaseBusiness}
+                  km={km}
+                />
+
+                <Field
+                  label={t("facebook")}
+                  name="facebook"
+                  value={profile.facebook}
+                  icon={MessageCircle}
+                  km={km}
+                />
+
+                <Field
+                  label={t("instagram")}
+                  name="instagram"
+                  value={profile.instagram}
+                  icon={Camera}
+                  km={km}
+                />
+
+                <Field
+                  label={t("youtube")}
+                  name="youtube"
+                  value={profile.youtube}
+                  icon={Video}
+                  km={km}
+                />
+              </div>
+            </Section>
+
+            <Section
+              icon={MapPin}
+              title={t("location")}
+              description={t("locationDescription")}
+              km={km}
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field
+                  label={t("locationEn")}
+                  name="locationEn"
+                  value={profile.locationEn}
+                  icon={MapPin}
+                  km={km}
+                />
+
+                <Field
+                  label={t("locationKm")}
+                  name="locationKm"
+                  value={profile.locationKm}
+                  icon={MapPin}
+                  khmer
+                  km={km}
+                />
+              </div>
+            </Section>
+          </div>
+        </Panel>
+
+        {/* MEDIA */}
+
+        <Panel active={active === "media"}>
+          <Section
+            icon={Image}
+            title={t("media")}
+            description={t("mediaDescription")}
+            km={km}
+          >
+            <div className="grid gap-4 lg:grid-cols-2">
+              <MediaUpload
+                locale={locale}
+                title={t("profilePhoto")}
+                description={t("profilePhotoDescription")}
+                current={profile.profileImage}
+                inputName="profileImageFile"
+                removeName="removeProfileImage"
+                kind="image"
+                error={state.fieldErrors?.profileImageFile?.[0]}
+              />
+
+              <MediaUpload
+                locale={locale}
+                title={t("badgePortrait")}
+                description={t("badgePortraitDescription")}
+                current={profile.badgeImage}
+                inputName="badgeImageFile"
+                removeName="removeBadgeImage"
+                kind="image"
+                error={state.fieldErrors?.badgeImageFile?.[0]}
+              />
+
+              <div className="lg:col-span-2">
+                <MediaUpload
+                  locale={locale}
+                  title={t("cvResume")}
+                  description={t("cvDescription")}
+                  current={profile.cvFile}
+                  inputName="cvFileUpload"
+                  removeName="removeCvFile"
+                  kind="pdf"
+                  error={state.fieldErrors?.cvFileUpload?.[0]}
+                />
+              </div>
+            </div>
+          </Section>
+        </Panel>
+
+        <div className="flex items-center justify-between gap-3 border-t border-black/[0.055] pt-4 dark:border-white/[0.07]">
+          <p className="font-body text-[11px] text-[var(--foreground-muted)]">
+            {t("saveHint")}
+          </p>
+
           <button
             type="submit"
             disabled={pending}
             className={cn(
-              "font-body inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-violet-600 px-6 text-white shadow-[0_8px_18px_rgba(124,58,237,0.15)] transition hover:-translate-y-0.5 hover:bg-violet-700 disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-60 dark:bg-violet-500 dark:hover:bg-violet-600",
-              isKhmerPage
-                ? "text-[13px] font-normal"
-                : "text-[13px] font-semibold",
+              "font-body inline-flex h-10 shrink-0 items-center gap-2 rounded-xl bg-violet-600 px-6 text-white transition hover:bg-violet-700 disabled:opacity-60",
+
+              km ? "text-[13px] font-normal" : "text-[13px] font-semibold",
             )}
           >
-            <Save size={15} strokeWidth={1.9} />
+            <Save size={15} />
+
             {pending ? t("saving") : t("save")}
           </button>
         </div>
@@ -386,44 +549,60 @@ export default function ProfileForm({ locale, profile }: ProfileFormProps) {
   );
 }
 
-type FormSectionProps = {
-  icon: LucideIcon;
-  title: string;
-  description?: string;
-  children: ReactNode;
-  isKhmerPage: boolean;
-};
+/* =========================================================
+   HELPERS
+   ========================================================= */
 
-function FormSection({
+function Panel({ active, children }: { active: boolean; children: ReactNode }) {
+  return <div className={active ? "block" : "hidden"}>{children}</div>;
+}
+
+function Section({
   icon: Icon,
   title,
   description,
+  km,
   children,
-  isKhmerPage,
-}: FormSectionProps) {
+}: {
+  icon: LucideIcon;
+
+  title: string;
+
+  description: string;
+
+  km: boolean;
+
+  children: ReactNode;
+}) {
   return (
     <section className="rounded-2xl border border-black/[0.055] bg-black/[0.01] p-4 dark:border-white/[0.07] dark:bg-white/[0.015] md:p-5">
       <div className="flex items-start gap-3">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 text-violet-700 dark:text-violet-300">
-          <Icon size={16} strokeWidth={1.8} />
+          <Icon size={16} />
         </div>
 
-        <div className="min-w-0">
+        <div>
           <h2
             className={cn(
               "font-body text-[var(--foreground)]",
-              isKhmerPage
+
+              km
                 ? "text-[16px] font-normal leading-7"
-                : "text-[16px] font-semibold leading-6",
+                : "text-[16px] font-semibold",
             )}
           >
             {title}
           </h2>
-          {description ? (
-            <p className="font-body mt-0.5 text-[11px] leading-5 text-[var(--foreground-muted)]">
-              {description}
-            </p>
-          ) : null}
+
+          <p
+            className={cn(
+              "font-body mt-0.5 text-[11px] text-[var(--foreground-muted)]",
+
+              km ? "font-normal leading-6" : "leading-5",
+            )}
+          >
+            {description}
+          </p>
         </div>
       </div>
 
@@ -432,46 +611,92 @@ function FormSection({
   );
 }
 
+function Info({
+  text,
+  km,
+  cyan = false,
+}: {
+  text: string;
+  km: boolean;
+  cyan?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-xl border px-3.5 py-3",
+
+        cyan
+          ? "border-cyan-500/10 bg-cyan-500/[0.045]"
+          : "border-violet-500/10 bg-violet-500/[0.045]",
+      )}
+    >
+      <p
+        className={cn(
+          "font-body text-[12px]",
+
+          km ? "font-normal leading-6" : "leading-5",
+        )}
+      >
+        {text}
+      </p>
+    </div>
+  );
+}
+
 type FieldProps = {
   label: string;
+
   name: string;
+
+  value: string;
+
   type?: string;
+
   icon?: LucideIcon;
-  defaultValue?: string;
+
   required?: boolean;
+
   numeric?: boolean;
-  khmerValue?: boolean;
-  isKhmerPage: boolean;
+
+  khmer?: boolean;
+
+  km: boolean;
+
   error?: string;
+
+  hint?: string;
+
   placeholder?: string;
+
   min?: string;
+
   max?: string;
 };
 
 function Field({
   label,
   name,
+  value,
   type = "text",
   icon: Icon,
-  defaultValue = "",
-  required = false,
-  numeric = false,
-  khmerValue = false,
-  isKhmerPage,
+  required,
+  numeric,
+  khmer,
+  km,
   error,
+  hint,
   placeholder,
   min,
   max,
 }: FieldProps) {
   return (
-    <div className="min-w-0">
+    <div>
       <label
         htmlFor={name}
         className={cn(
-          "font-body mb-1.5 block text-[var(--foreground)]",
-          isKhmerPage
-            ? "text-[12px] font-normal leading-6"
-            : "text-[12px] font-semibold leading-5",
+          "font-body mb-1.5 block text-[12px] text-[var(--foreground)]",
+
+          km ? "font-normal leading-6" : "font-semibold",
         )}
       >
         {label}
@@ -481,7 +706,6 @@ function Field({
         {Icon ? (
           <Icon
             size={14}
-            strokeWidth={1.7}
             className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground-muted)]"
           />
         ) : null}
@@ -493,62 +717,67 @@ function Field({
           min={min}
           max={max}
           required={required}
-          defaultValue={defaultValue}
+          defaultValue={value}
           placeholder={placeholder}
-          lang={khmerValue ? "km" : undefined}
+          lang={khmer ? "km" : undefined}
           className={cn(
-            numeric
-              ? "font-number"
-              : khmerValue
-                ? "khmer-input-value"
-                : "font-body",
-            "h-10 w-full rounded-xl border bg-white text-[13px] font-normal text-[var(--foreground)] outline-none transition placeholder:text-[var(--foreground-muted)]/55 dark:bg-[#121520]",
+            numeric ? "font-number" : khmer ? "khmer-input-value" : "font-body",
+
+            "h-10 w-full rounded-xl border bg-white text-[13px] font-normal outline-none transition dark:bg-[#121520]",
+
             error
-              ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/10 dark:border-red-400/60"
+              ? "border-red-400"
               : "border-black/[0.085] focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 dark:border-white/[0.08]",
+
             Icon ? "pl-9 pr-3" : "px-3.5",
           )}
         />
       </div>
 
       {error ? (
-        <p className="font-body mt-1 text-[10px] leading-4 text-red-600 dark:text-red-300">
+        <p className="font-body mt-1 text-[10px] text-red-600 dark:text-red-300">
           {error}
+        </p>
+      ) : hint ? (
+        <p className="font-body mt-1 text-[10px] text-[var(--foreground-muted)]">
+          {hint}
         </p>
       ) : null}
     </div>
   );
 }
 
-type TextAreaFieldProps = {
-  label: string;
-  name: string;
-  defaultValue?: string;
-  khmerValue?: boolean;
-  isKhmerPage: boolean;
-  error?: string;
-  rows?: number;
-  icon?: LucideIcon;
-};
-
-function TextAreaField({
+function Area({
   label,
   name,
-  defaultValue = "",
-  khmerValue = false,
-  isKhmerPage,
+  value,
+  rows,
+  khmer,
+  km,
   error,
-  rows = 4,
-}: TextAreaFieldProps) {
+}: {
+  label: string;
+
+  name: string;
+
+  value: string;
+
+  rows: number;
+
+  khmer?: boolean;
+
+  km: boolean;
+
+  error?: string;
+}) {
   return (
-    <div className="min-w-0">
+    <div>
       <label
         htmlFor={name}
         className={cn(
-          "font-body mb-1.5 block text-[var(--foreground)]",
-          isKhmerPage
-            ? "text-[12px] font-normal leading-6"
-            : "text-[12px] font-semibold leading-5",
+          "font-body mb-1.5 block text-[12px]",
+
+          km ? "font-normal leading-6" : "font-semibold",
         )}
       >
         {label}
@@ -558,21 +787,215 @@ function TextAreaField({
         id={name}
         name={name}
         rows={rows}
-        defaultValue={defaultValue}
-        lang={khmerValue ? "km" : undefined}
+        defaultValue={value}
+        lang={khmer ? "km" : undefined}
         className={cn(
-          khmerValue ? "khmer-input-value" : "font-body",
-          "w-full resize-y rounded-xl border bg-white px-3.5 py-3 text-[13px] font-normal text-[var(--foreground)] outline-none transition dark:bg-[#121520]",
-          rows <= 3 ? "min-h-[82px]" : "min-h-[104px]",
-          khmerValue ? "leading-7" : "leading-5",
+          khmer ? "khmer-input-value" : "font-body",
+
+          "w-full resize-y rounded-xl border bg-white px-3.5 py-3 text-[13px] font-normal outline-none dark:bg-[#121520]",
+
+          khmer ? "leading-7" : "leading-5",
+
           error
-            ? "border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/10 dark:border-red-400/60"
+            ? "border-red-400"
             : "border-black/[0.085] focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 dark:border-white/[0.08]",
         )}
       />
 
       {error ? (
-        <p className="font-body mt-1 text-[10px] leading-4 text-red-600 dark:text-red-300">
+        <p className="font-body mt-1 text-[10px] text-red-600 dark:text-red-300">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function MediaUpload({
+  locale,
+  title,
+  description,
+  current,
+  inputName,
+  removeName,
+  kind,
+  error,
+}: {
+  locale: "en" | "km";
+
+  title: string;
+
+  description: string;
+
+  current: string;
+
+  inputName: string;
+
+  removeName: string;
+
+  kind: "image" | "pdf";
+
+  error?: string;
+}) {
+  const km = locale === "km";
+
+  const ref = useRef<HTMLInputElement>(null);
+
+  const [preview, setPreview] = useState(current);
+
+  const [selected, setSelected] = useState("");
+
+  const [removed, setRemoved] = useState(false);
+
+  useEffect(() => {
+    setPreview(current);
+
+    setSelected("");
+
+    setRemoved(false);
+  }, [current]);
+
+  function change(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setSelected(file.name);
+
+    setRemoved(false);
+
+    if (kind === "image") {
+      setPreview(URL.createObjectURL(file));
+    }
+  }
+
+  function remove() {
+    setRemoved(true);
+
+    setPreview("");
+
+    setSelected("");
+
+    if (ref.current) {
+      ref.current.value = "";
+    }
+  }
+
+  const hasFile = selected || (!removed && current);
+
+  const fileName =
+    selected || (current ? current.split("/").pop() || current : "");
+
+  return (
+    <div className="rounded-2xl border border-black/[0.06] bg-white p-4 dark:border-white/[0.07] dark:bg-[#10131d]">
+      <input type="hidden" name={removeName} value={removed ? "1" : "0"} />
+
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3
+            className={cn(
+              "font-body text-[14px]",
+
+              km ? "font-normal leading-6" : "font-semibold",
+            )}
+          >
+            {title}
+          </h3>
+
+          <p
+            className={cn(
+              "font-body mt-1 text-[11px] text-[var(--foreground-muted)]",
+
+              km ? "font-normal leading-6" : "leading-5",
+            )}
+          >
+            {description}
+          </p>
+        </div>
+
+        {hasFile ? (
+          <button
+            type="button"
+            onClick={remove}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-red-500 hover:bg-red-500/[0.06]"
+          >
+            <X size={14} />
+          </button>
+        ) : null}
+      </div>
+
+      <div className="mt-4 flex items-center gap-4">
+        <div className="flex h-[92px] w-[92px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-dashed border-violet-500/20 bg-violet-500/[0.045]">
+          {kind === "image" && preview ? (
+            <img src={preview} alt="" className="h-full w-full object-cover" />
+          ) : kind === "pdf" ? (
+            <FileText size={24} className="text-violet-400" />
+          ) : (
+            <Camera size={23} className="text-violet-400" />
+          )}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <input
+            ref={ref}
+            type="file"
+            name={inputName}
+            accept={
+              kind === "image"
+                ? "image/jpeg,image/png,image/webp"
+                : "application/pdf,.pdf"
+            }
+            onChange={change}
+            className="sr-only"
+          />
+
+          <button
+            type="button"
+            onClick={() => ref.current?.click()}
+            className="font-body h-9 rounded-xl bg-violet-600 px-4 text-[12px] font-semibold text-white hover:bg-violet-700"
+          >
+            {hasFile
+              ? km
+                ? "ប្ដូរ"
+                : "Replace"
+              : km
+                ? "ជ្រើសរើស"
+                : "Choose file"}
+          </button>
+
+          {kind === "pdf" && current && !removed && !selected ? (
+            <a
+              href={current}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-body ml-2 inline-flex h-9 items-center rounded-xl border border-black/[0.08] px-4 text-[12px] font-semibold dark:border-white/[0.08]"
+            >
+              {km ? "មើល" : "View"}
+            </a>
+          ) : null}
+
+          <p className="font-body mt-2 text-[10px] text-[var(--foreground-muted)]">
+            {kind === "image"
+              ? km
+                ? "JPG, PNG, WEBP • អតិបរមា 5 MB"
+                : "JPG, PNG, WEBP • Max 5 MB"
+              : km
+                ? "PDF • អតិបរមា 10 MB"
+                : "PDF • Max 10 MB"}
+          </p>
+
+          {fileName ? (
+            <p className="font-body mt-1 truncate text-[10px] text-violet-700 dark:text-violet-300">
+              {fileName}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      {error ? (
+        <p className="font-body mt-2 text-[10px] text-red-600 dark:text-red-300">
           {error}
         </p>
       ) : null}

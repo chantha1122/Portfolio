@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import {
   Activity,
   Award,
   BrainCircuit,
   BriefcaseBusiness,
+  Code2,
   ExternalLink,
   FolderKanban,
   GraduationCap,
@@ -15,9 +17,9 @@ import {
   Mail,
   Medal,
   MessageCircle,
+  Presentation,
   Settings,
   UserRound,
-  Presentation,
   type LucideIcon,
 } from "lucide-react";
 
@@ -26,26 +28,33 @@ import { cn } from "@/lib/cn";
 type DashboardSidebarProps = {
   locale: string;
   userName: string;
+
   labels: {
     management: string;
     content: string;
     aboutSection: string;
     engagement: string;
     system: string;
+
     overview: string;
     profile: string;
+
     activities: string;
     projects: string;
     certificates: string;
     gallery: string;
+
     skillsTools: string;
     experience: string;
     education: string;
     achievements: string;
     teaching: string;
+
     messages: string;
     comments: string;
+
     settings: string;
+
     soon: string;
     viewWebsite: string;
     administrator: string;
@@ -71,15 +80,23 @@ export default function DashboardSidebar({
 }: DashboardSidebarProps) {
   const pathname = usePathname();
 
+  const githubLabel = locale === "km" ? "សកម្មភាព GitHub" : "GitHub Activity";
+
   const groups: MenuGroup[] = [
+    /* =====================================================
+       MANAGEMENT
+       ===================================================== */
+
     {
       label: labels.management,
+
       items: [
         {
           label: labels.overview,
           href: `/${locale}/dashboard`,
           icon: LayoutDashboard,
         },
+
         {
           label: labels.profile,
           href: `/${locale}/dashboard/profile`,
@@ -87,24 +104,33 @@ export default function DashboardSidebar({
         },
       ],
     },
+
+    /* =====================================================
+       CONTENT
+       ===================================================== */
+
     {
       label: labels.content,
+
       items: [
         {
           label: labels.activities,
           href: `/${locale}/dashboard/activities`,
           icon: Activity,
         },
+
         {
           label: labels.projects,
           href: `/${locale}/dashboard/projects`,
           icon: FolderKanban,
         },
+
         {
           label: labels.certificates,
           href: `/${locale}/dashboard/certificates`,
           icon: Award,
         },
+
         {
           label: labels.gallery,
           href: `/${locale}/dashboard/gallery`,
@@ -112,29 +138,49 @@ export default function DashboardSidebar({
         },
       ],
     },
+
+    /* =====================================================
+       ABOUT
+       ===================================================== */
+
     {
       label: labels.aboutSection,
+
       items: [
         {
           label: labels.skillsTools,
           href: `/${locale}/dashboard/skills`,
           icon: BrainCircuit,
         },
+
+        /* =================================================
+           GITHUB ACTIVITY
+           ================================================= */
+
+        {
+          label: githubLabel,
+          href: `/${locale}/dashboard/github`,
+          icon: Code2,
+        },
+
         {
           label: labels.experience,
           href: `/${locale}/dashboard/experience`,
           icon: BriefcaseBusiness,
         },
+
         {
           label: labels.education,
           href: `/${locale}/dashboard/education`,
           icon: GraduationCap,
         },
+
         {
           label: labels.achievements,
           href: `/${locale}/dashboard/achievements`,
           icon: Medal,
         },
+
         {
           label: labels.teaching,
           href: `/${locale}/dashboard/teaching`,
@@ -142,14 +188,21 @@ export default function DashboardSidebar({
         },
       ],
     },
+
+    /* =====================================================
+       ENGAGEMENT
+       ===================================================== */
+
     {
       label: labels.engagement,
+
       items: [
         {
           label: labels.messages,
           href: `/${locale}/dashboard/messages`,
           icon: Mail,
         },
+
         {
           label: labels.comments,
           href: `/${locale}/dashboard/comments`,
@@ -157,8 +210,14 @@ export default function DashboardSidebar({
         },
       ],
     },
+
+    /* =====================================================
+       SYSTEM
+       ===================================================== */
+
     {
       label: labels.system,
+
       items: [
         {
           label: labels.settings,
@@ -168,6 +227,10 @@ export default function DashboardSidebar({
       ],
     },
   ];
+
+  /* =======================================================
+     ACTIVE MENU
+     ======================================================= */
 
   const isActive = (href: string) => {
     if (href === `/${locale}/dashboard`) {
@@ -179,20 +242,36 @@ export default function DashboardSidebar({
 
   return (
     <aside className="fixed bottom-0 left-0 top-[68px] z-40 hidden w-[260px] border-r border-black/[0.07] bg-white dark:border-white/[0.08] dark:bg-[#0b0d17] lg:flex lg:flex-col">
+      {/* ===================================================
+          MENU AREA
+         =================================================== */}
+
       <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
         {groups.map((group, groupIndex) => (
           <div
             key={group.label}
-            className={cn(groupIndex > 0 && "mt-5 border-t border-black/[0.055] pt-4 dark:border-white/[0.06]")}
+            className={cn(
+              groupIndex > 0 &&
+                "mt-5 border-t border-black/[0.055] pt-4 dark:border-white/[0.06]",
+            )}
           >
+            {/* GROUP TITLE */}
+
             <p className="font-body px-3 text-[10px] font-semibold uppercase tracking-[0.17em] text-[var(--foreground-muted)]">
               {group.label}
             </p>
 
+            {/* MENU */}
+
             <nav className="mt-2 grid gap-1">
               {group.items.map((item) => {
                 const Icon = item.icon;
+
                 const active = !item.disabled && isActive(item.href);
+
+                /* =======================================
+                       DISABLED ITEM
+                       ======================================= */
 
                 if (item.disabled) {
                   return (
@@ -215,6 +294,10 @@ export default function DashboardSidebar({
                     </div>
                   );
                 }
+
+                /* =======================================
+                       NORMAL ITEM
+                       ======================================= */
 
                 return (
                   <Link
@@ -242,7 +325,13 @@ export default function DashboardSidebar({
         ))}
       </div>
 
+      {/* ===================================================
+          BOTTOM AREA
+         =================================================== */}
+
       <div className="shrink-0 border-t border-black/[0.07] bg-white p-3 dark:border-white/[0.08] dark:bg-[#0b0d17]">
+        {/* VIEW WEBSITE */}
+
         <Link
           href={`/${locale}`}
           target="_blank"
@@ -257,6 +346,8 @@ export default function DashboardSidebar({
             {labels.viewWebsite}
           </span>
         </Link>
+
+        {/* ADMIN */}
 
         <div className="mt-2 flex items-center gap-3 rounded-xl bg-black/[0.025] p-3 dark:bg-white/[0.035]">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/15 to-cyan-400/15 text-violet-700 ring-1 ring-violet-500/10 dark:text-violet-300">

@@ -7,6 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
+/**
+ * =========================================================
+ * ENUMS
+ * =========================================================
+ */
+
 enum ActivityType {
   PROJECT
   CERTIFICATE
@@ -58,6 +64,12 @@ enum ContactMessageStatus {
   ARCHIVED
 }
 
+/**
+ * =========================================================
+ * ADMIN USER
+ * =========================================================
+ */
+
 model AdminUser {
   id           Int      @id @default(autoincrement())
   name         String
@@ -69,6 +81,12 @@ model AdminUser {
 
   @@map("admin_users")
 }
+
+/**
+ * =========================================================
+ * PROFILE
+ * =========================================================
+ */
 
 model Profile {
   id         Int    @id @default(autoincrement())
@@ -97,12 +115,21 @@ model Profile {
   phone    String?
   telegram String?
 
+  /**
+   * Social links
+   */
   github   String?
   linkedin String?
 
   facebook  String?
   instagram String?
   youtube   String?
+
+  /**
+   * GitHub contribution screenshot
+   */
+  githubUsername          String?
+  githubContributionImage String?
 
   locationEn String?
   locationKm String?
@@ -116,6 +143,12 @@ model Profile {
 
   @@map("profiles")
 }
+
+/**
+ * =========================================================
+ * ACTIVITY
+ * =========================================================
+ */
 
 model Activity {
   id   Int    @id @default(autoincrement())
@@ -174,6 +207,12 @@ model Activity {
   @@map("activities")
 }
 
+/**
+ * =========================================================
+ * ACTIVITY MEDIA
+ * =========================================================
+ */
+
 model ActivityMedia {
   id Int @id @default(autoincrement())
 
@@ -181,7 +220,8 @@ model ActivityMedia {
   activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
 
   fileUrl String
-  type    MediaType @default(IMAGE)
+
+  type MediaType @default(IMAGE)
 
   captionEn String?
   captionKm String?
@@ -193,6 +233,12 @@ model ActivityMedia {
   @@index([activityId])
   @@map("activity_media")
 }
+
+/**
+ * =========================================================
+ * SKILLS
+ * =========================================================
+ */
 
 model Skill {
   id Int @id @default(autoincrement())
@@ -207,15 +253,25 @@ model Skill {
   icon String?
 
   published Boolean @default(true)
-  sortOrder Int     @default(0)
+
+  isCore Boolean @default(false)
+
+  sortOrder Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([published])
+  @@index([isCore])
   @@index([sortOrder])
   @@map("skills")
 }
+
+/**
+ * =========================================================
+ * TOOLS
+ * =========================================================
+ */
 
 model Tool {
   id Int @id @default(autoincrement())
@@ -228,7 +284,8 @@ model Tool {
   url  String?
 
   published Boolean @default(true)
-  sortOrder Int     @default(0)
+
+  sortOrder Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -239,6 +296,12 @@ model Tool {
   @@map("tools")
 }
 
+/**
+ * =========================================================
+ * CONTACT MESSAGE
+ * =========================================================
+ */
+
 model ContactMessage {
   id Int @id @default(autoincrement())
 
@@ -246,7 +309,8 @@ model ContactMessage {
   email String
 
   subject String?
-  message String  @db.Text
+
+  message String @db.Text
 
   status ContactMessageStatus @default(NEW)
 
@@ -258,6 +322,11 @@ model ContactMessage {
   @@map("contact_messages")
 }
 
+/**
+ * =========================================================
+ * COMMENTS
+ * =========================================================
+ */
 
 model Comment {
   id Int @id @default(autoincrement())
@@ -265,8 +334,10 @@ model Comment {
   activityId Int
   activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
 
-  name    String
-  email   String?
+  name String
+
+  email String?
+
   message String @db.Text
 
   isApproved Boolean @default(false)
@@ -279,6 +350,12 @@ model Comment {
   @@index([createdAt])
   @@map("comments")
 }
+
+/**
+ * =========================================================
+ * LIKES
+ * =========================================================
+ */
 
 model Like {
   id Int @id @default(autoincrement())

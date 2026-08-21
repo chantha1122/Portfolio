@@ -113,47 +113,80 @@
     "title": "Profile Management",
     "description": "Manage the personal information that will appear across your public portfolio.",
     "administrator": "Administrator",
+
+    "tabPersonal": "Personal",
+    "tabAbout": "About",
+    "tabContact": "Contact",
+    "tabMedia": "Media",
+
     "basicInformation": "Basic Information",
     "basicInformationDescription": "Your name and professional headlines.",
+    "personalTabDescription": "Manage your identity, professional headline and what you are doing now.",
+
     "fullName": "Full Name",
     "headlineEn": "Professional Headline — English",
     "headlineKm": "Professional Headline — Khmer",
+
+    "yearsExperience": "Years of Experience",
+    "yearsExperienceHelp": "Use 0 if you do not want to emphasize experience yet.",
+
+    "currentRole": "Current Role",
+    "currentRoleEn": "Current Role — English",
+    "currentRoleKm": "Current Role — Khmer",
+    "currentRoleHelpTitle": "Current Role",
+    "currentRoleHelp": "What you are doing professionally right now, for example Full-Stack Developer & AI Instructor.",
+
     "aboutMe": "About Me",
     "aboutMeDescription": "Write your introduction in English and Khmer.",
+    "aboutTabDescription": "Manage your short introduction, full About Me text and current focus.",
+
+    "shortBioEn": "Short Bio — English",
+    "shortBioKm": "Short Bio — Khmer",
+
     "bioEn": "About Me — English",
     "bioKm": "About Me — Khmer",
+
+    "currentFocusEn": "Current Focus — English",
+    "currentFocusKm": "Current Focus — Khmer",
+    "currentFocusHelpTitle": "Current Focus",
+    "currentFocusHelp": "What you are currently building, learning, teaching or working toward. This is different from your job title.",
+
     "contactInformation": "Contact Information",
     "contactInformationDescription": "Keep your public contact and social links up to date.",
+
     "email": "Email",
     "phone": "Phone",
     "telegram": "Telegram",
     "github": "GitHub",
     "linkedin": "LinkedIn",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "youtube": "YouTube",
+
     "location": "Location",
     "locationDescription": "Add your location in both languages.",
     "locationEn": "Location — English",
     "locationKm": "Location — Khmer",
+
+    "media": "Profile Media",
+    "mediaDescription": "Upload the photos and CV used by your dashboard and public portfolio. You no longer need to type file paths manually.",
+
+    "profilePhoto": "Profile Photo",
+    "profilePhotoDescription": "Your main photo used on the dashboard and public portfolio.",
+
+    "badgePortrait": "About Badge Portrait",
+    "badgePortraitDescription": "The special portrait used in the futuristic About Me badge/card.",
+
+    "cvResume": "CV / Resume",
+    "cvDescription": "Upload the PDF visitors can open or download from your portfolio.",
+
     "save": "Save Profile",
     "saving": "Saving...",
+    "saveHint": "Save once after editing any tab. Media files are uploaded automatically.",
+
     "toastSuccessTitle": "Saved successfully",
     "toastErrorTitle": "Unable to save",
     "saveSuccess": "Profile updated successfully.",
-    "saveError": "Unable to save the profile. Please check the information and try again.",
-    "yearsExperience": "Years of Experience",
-    "currentRole": "Current Role",
-    "currentRoleEn": "Current Role — English",
-    "currentRoleKm": "Current Role — Khmer",
-    "shortBioEn": "Short Bio — English",
-    "shortBioKm": "Short Bio — Khmer",
-    "currentFocusEn": "Current Focus — English",
-    "currentFocusKm": "Current Focus — Khmer",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "youtube": "YouTube",
-    "media": "Profile Media",
-    "mediaDescription": "Use public paths or URLs for your profile image, futuristic badge portrait and CV.",
-    "profileImage": "Profile Image URL / Path",
-    "badgeImage": "Badge Portrait URL / Path",
-    "cvFile": "CV File URL / Path"
+    "saveError": "Unable to save the profile. Please check the information and try again."
   }
 }
