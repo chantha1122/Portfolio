@@ -66,6 +66,7 @@ export type ProfileMinAggregateOutputType = {
   profileImage: string | null
   badgeImage: string | null
   cvFile: string | null
+  showTeachingSection: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -100,6 +101,7 @@ export type ProfileMaxAggregateOutputType = {
   profileImage: string | null
   badgeImage: string | null
   cvFile: string | null
+  showTeachingSection: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -134,6 +136,7 @@ export type ProfileCountAggregateOutputType = {
   profileImage: number
   badgeImage: number
   cvFile: number
+  showTeachingSection: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -180,6 +183,7 @@ export type ProfileMinAggregateInputType = {
   profileImage?: true
   badgeImage?: true
   cvFile?: true
+  showTeachingSection?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -214,6 +218,7 @@ export type ProfileMaxAggregateInputType = {
   profileImage?: true
   badgeImage?: true
   cvFile?: true
+  showTeachingSection?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -248,6 +253,7 @@ export type ProfileCountAggregateInputType = {
   profileImage?: true
   badgeImage?: true
   cvFile?: true
+  showTeachingSection?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -369,6 +375,7 @@ export type ProfileGroupByOutputType = {
   profileImage: string | null
   badgeImage: string | null
   cvFile: string | null
+  showTeachingSection: boolean
   createdAt: Date
   updatedAt: Date
   _count: ProfileCountAggregateOutputType | null
@@ -426,6 +433,7 @@ export type ProfileWhereInput = {
   profileImage?: Prisma.StringNullableFilter<"Profile"> | string | null
   badgeImage?: Prisma.StringNullableFilter<"Profile"> | string | null
   cvFile?: Prisma.StringNullableFilter<"Profile"> | string | null
+  showTeachingSection?: Prisma.BoolFilter<"Profile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
 }
@@ -460,6 +468,7 @@ export type ProfileOrderByWithRelationInput = {
   profileImage?: Prisma.SortOrderInput | Prisma.SortOrder
   badgeImage?: Prisma.SortOrderInput | Prisma.SortOrder
   cvFile?: Prisma.SortOrderInput | Prisma.SortOrder
+  showTeachingSection?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -497,6 +506,7 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   profileImage?: Prisma.StringNullableFilter<"Profile"> | string | null
   badgeImage?: Prisma.StringNullableFilter<"Profile"> | string | null
   cvFile?: Prisma.StringNullableFilter<"Profile"> | string | null
+  showTeachingSection?: Prisma.BoolFilter<"Profile"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
 }, "id" | "profileKey">
@@ -531,6 +541,7 @@ export type ProfileOrderByWithAggregationInput = {
   profileImage?: Prisma.SortOrderInput | Prisma.SortOrder
   badgeImage?: Prisma.SortOrderInput | Prisma.SortOrder
   cvFile?: Prisma.SortOrderInput | Prisma.SortOrder
+  showTeachingSection?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProfileCountOrderByAggregateInput
@@ -573,6 +584,7 @@ export type ProfileScalarWhereWithAggregatesInput = {
   profileImage?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   badgeImage?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
   cvFile?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
+  showTeachingSection?: Prisma.BoolWithAggregatesFilter<"Profile"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Profile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Profile"> | Date | string
 }
@@ -606,6 +618,7 @@ export type ProfileCreateInput = {
   profileImage?: string | null
   badgeImage?: string | null
   cvFile?: string | null
+  showTeachingSection?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -640,6 +653,7 @@ export type ProfileUncheckedCreateInput = {
   profileImage?: string | null
   badgeImage?: string | null
   cvFile?: string | null
+  showTeachingSection?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -673,6 +687,7 @@ export type ProfileUpdateInput = {
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cvFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showTeachingSection?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -707,6 +722,7 @@ export type ProfileUncheckedUpdateInput = {
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cvFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showTeachingSection?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -741,6 +757,7 @@ export type ProfileCreateManyInput = {
   profileImage?: string | null
   badgeImage?: string | null
   cvFile?: string | null
+  showTeachingSection?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -774,6 +791,7 @@ export type ProfileUpdateManyMutationInput = {
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cvFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showTeachingSection?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -808,6 +826,7 @@ export type ProfileUncheckedUpdateManyInput = {
   profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   badgeImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cvFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showTeachingSection?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -842,6 +861,7 @@ export type ProfileCountOrderByAggregateInput = {
   profileImage?: Prisma.SortOrder
   badgeImage?: Prisma.SortOrder
   cvFile?: Prisma.SortOrder
+  showTeachingSection?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -881,6 +901,7 @@ export type ProfileMaxOrderByAggregateInput = {
   profileImage?: Prisma.SortOrder
   badgeImage?: Prisma.SortOrder
   cvFile?: Prisma.SortOrder
+  showTeachingSection?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -915,6 +936,7 @@ export type ProfileMinOrderByAggregateInput = {
   profileImage?: Prisma.SortOrder
   badgeImage?: Prisma.SortOrder
   cvFile?: Prisma.SortOrder
+  showTeachingSection?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -960,6 +982,7 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   profileImage?: boolean
   badgeImage?: boolean
   cvFile?: boolean
+  showTeachingSection?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["profile"]>
@@ -994,6 +1017,7 @@ export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   profileImage?: boolean
   badgeImage?: boolean
   cvFile?: boolean
+  showTeachingSection?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["profile"]>
@@ -1028,6 +1052,7 @@ export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   profileImage?: boolean
   badgeImage?: boolean
   cvFile?: boolean
+  showTeachingSection?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["profile"]>
@@ -1062,11 +1087,12 @@ export type ProfileSelectScalar = {
   profileImage?: boolean
   badgeImage?: boolean
   cvFile?: boolean
+  showTeachingSection?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileKey" | "fullName" | "headlineEn" | "headlineKm" | "shortBioEn" | "shortBioKm" | "bioEn" | "bioKm" | "currentRoleEn" | "currentRoleKm" | "currentFocusEn" | "currentFocusKm" | "yearsExperience" | "email" | "phone" | "telegram" | "github" | "linkedin" | "facebook" | "instagram" | "youtube" | "githubUsername" | "githubContributionImage" | "locationEn" | "locationKm" | "profileImage" | "badgeImage" | "cvFile" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "profileKey" | "fullName" | "headlineEn" | "headlineKm" | "shortBioEn" | "shortBioKm" | "bioEn" | "bioKm" | "currentRoleEn" | "currentRoleKm" | "currentFocusEn" | "currentFocusKm" | "yearsExperience" | "email" | "phone" | "telegram" | "github" | "linkedin" | "facebook" | "instagram" | "youtube" | "githubUsername" | "githubContributionImage" | "locationEn" | "locationKm" | "profileImage" | "badgeImage" | "cvFile" | "showTeachingSection" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
 
 export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Profile"
@@ -1109,6 +1135,7 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     profileImage: string | null
     badgeImage: string | null
     cvFile: string | null
+    showTeachingSection: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["profile"]>
@@ -1563,6 +1590,7 @@ export interface ProfileFieldRefs {
   readonly profileImage: Prisma.FieldRef<"Profile", 'String'>
   readonly badgeImage: Prisma.FieldRef<"Profile", 'String'>
   readonly cvFile: Prisma.FieldRef<"Profile", 'String'>
+  readonly showTeachingSection: Prisma.FieldRef<"Profile", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Profile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Profile", 'DateTime'>
 }

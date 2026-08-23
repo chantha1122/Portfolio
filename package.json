@@ -17,6 +17,7 @@
     "next": "16.3.1",
     "next-auth": "^5.0.0-beta.32",
     "next-intl": "^4.13.7",
+    "nodemailer": "^8.0.11",
     "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
     "@types/pg": "^8.21.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",

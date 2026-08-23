@@ -138,6 +138,8 @@ model Profile {
   badgeImage   String?
   cvFile       String?
 
+  showTeachingSection Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -317,6 +319,11 @@ model ContactMessage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  replyMessage String?   @db.Text
+  repliedAt    DateTime?
+  sourceIpHash String?
+
+  @@index([sourceIpHash, createdAt])
   @@index([status])
   @@index([createdAt])
   @@map("contact_messages")

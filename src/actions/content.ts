@@ -1,5 +1,14 @@
 "use server";
 
+import { createHash } from "node:crypto";
+
+import { headers } from "next/headers";
+
+import {
+  sendContactNotificationEmail,
+  sendContactReplyEmail,
+} from "@/lib/mail";
+
 import { randomUUID } from "node:crypto";
 import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -827,12 +836,49 @@ export async function deleteToolAction(
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Name is required").max(100),
 
-  email: z.string().trim().email("Enter a valid email"),
+  email: z.string().trim().email("Enter a valid email").max(200),
 
   subject: z.string().trim().max(200),
 
   message: z.string().trim().min(5, "Message is required").max(5000),
+
+  company: z.string().trim().max(200),
 });
+
+/* =========================================================
+   CONTACT RATE LIMIT
+   ========================================================= */
+
+const CONTACT_RATE_LIMIT_MINUTES = Number(
+  process.env.CONTACT_RATE_LIMIT_MINUTES || "15",
+);
+
+const CONTACT_RATE_LIMIT_COUNT = Number(
+  process.env.CONTACT_RATE_LIMIT_COUNT || "5",
+);
+
+function hashIp(value: string) {
+  const secret =
+    process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "chantha-contact";
+
+  return createHash("sha256").update(`${secret}:${value}`).digest("hex");
+}
+
+async function getRequestIpHash() {
+  const requestHeaders = await headers();
+
+  const forwardedFor = requestHeaders.get("x-forwarded-for");
+
+  const realIp = requestHeaders.get("x-real-ip");
+
+  const ip = forwardedFor?.split(",")[0]?.trim() || realIp?.trim() || "unknown";
+
+  return hashIp(ip);
+}
+
+/* =========================================================
+   SEND CONTACT MESSAGE
+   ========================================================= */
 
 export async function sendContactMessageAction(
   formData: FormData,
@@ -845,6 +891,8 @@ export async function sendContactMessageAction(
     subject: text(formData, "subject"),
 
     message: text(formData, "message"),
+
+    company: text(formData, "company"),
   });
 
   if (!parsed.success) {
@@ -854,8 +902,45 @@ export async function sendContactMessageAction(
     };
   }
 
+  /*
+   * Honeypot field.
+   *
+   * Real users never see this field.
+   * Basic spam bots often fill it.
+   */
+  if (parsed.data.company) {
+    return {
+      success: true,
+      message: "Your message was sent successfully.",
+    };
+  }
+
   try {
-    await prisma.contactMessage.create({
+    const sourceIpHash = await getRequestIpHash();
+
+    const rateLimitStart = new Date(
+      Date.now() - CONTACT_RATE_LIMIT_MINUTES * 60 * 1000,
+    );
+
+    const recentCount = await prisma.contactMessage.count({
+      where: {
+        sourceIpHash,
+
+        createdAt: {
+          gte: rateLimitStart,
+        },
+      },
+    });
+
+    if (recentCount >= CONTACT_RATE_LIMIT_COUNT) {
+      return {
+        success: false,
+        message:
+          "Too many messages. Please wait a few minutes before trying again.",
+      };
+    }
+
+    const contactMessage = await prisma.contactMessage.create({
       data: {
         name: parsed.data.name,
 
@@ -864,8 +949,35 @@ export async function sendContactMessageAction(
         subject: nullableText(parsed.data.subject),
 
         message: parsed.data.message,
+
+        status: "NEW",
+
+        sourceIpHash,
       },
     });
+
+    /*
+     * Save to DB first.
+     *
+     * If email notification fails,
+     * the visitor's message is still safely stored.
+     */
+    try {
+      await sendContactNotificationEmail({
+        name: contactMessage.name,
+
+        email: contactMessage.email,
+
+        subject: contactMessage.subject,
+
+        message: contactMessage.message,
+      });
+    } catch (emailError) {
+      console.error("Contact notification email error:", emailError);
+    }
+
+    revalidatePath("/en/dashboard/messages");
+    revalidatePath("/km/dashboard/messages");
 
     return {
       success: true,
@@ -887,9 +999,15 @@ export async function sendContactMessageAction(
 
 const contactStatuses = ["NEW", "READ", "REPLIED", "ARCHIVED"] as const;
 
+type ContactStatus = (typeof contactStatuses)[number];
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
 export async function updateContactMessageStatusAction(
   id: number,
-  status: (typeof contactStatuses)[number],
+  status: ContactStatus,
 ): Promise<ContentActionResult> {
   if (!(await requireAdmin())) {
     return {
@@ -902,6 +1020,18 @@ export async function updateContactMessageStatusAction(
     return {
       success: false,
       message: "Invalid message status.",
+    };
+  }
+
+  /*
+   * REPLIED should only be set by the real
+   * reply action below.
+   */
+  if (status === "REPLIED") {
+    return {
+      success: false,
+      message:
+        "Use Reply to send an email before marking this message as replied.",
     };
   }
 
@@ -926,7 +1056,13 @@ export async function updateContactMessageStatusAction(
 
     return {
       success: true,
-      message: "Message status updated.",
+
+      message:
+        status === "READ"
+          ? "Message marked as read."
+          : status === "ARCHIVED"
+            ? "Message archived."
+            : "Message status updated.",
     };
   } catch (error) {
     console.error("Contact message status error:", error);
@@ -937,6 +1073,105 @@ export async function updateContactMessageStatusAction(
     };
   }
 }
+
+/* =========================================================
+   REPLY
+   ========================================================= */
+
+const contactReplySchema = z.object({
+  reply: z.string().trim().min(2, "Reply is required").max(5000),
+});
+
+export async function replyToContactMessageAction(
+  id: number,
+  reply: string,
+): Promise<ContentActionResult> {
+  if (!(await requireAdmin())) {
+    return {
+      success: false,
+      message: "Unauthorized",
+    };
+  }
+
+  const parsed = contactReplySchema.safeParse({
+    reply,
+  });
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: "Please enter a reply.",
+    };
+  }
+
+  try {
+    const contactMessage = await prisma.contactMessage.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!contactMessage) {
+      return {
+        success: false,
+        message: "Contact message was not found.",
+      };
+    }
+
+    /*
+     * Send the email FIRST.
+     *
+     * Only mark REPLIED if email delivery succeeds.
+     */
+    await sendContactReplyEmail({
+      to: contactMessage.email,
+
+      visitorName: contactMessage.name,
+
+      originalSubject: contactMessage.subject,
+
+      reply: parsed.data.reply,
+    });
+
+    await prisma.contactMessage.update({
+      where: {
+        id,
+      },
+
+      data: {
+        status: "REPLIED",
+
+        replyMessage: parsed.data.reply,
+
+        repliedAt: new Date(),
+      },
+    });
+
+    revalidatePath("/en/dashboard/messages");
+
+    revalidatePath("/km/dashboard/messages");
+
+    revalidatePath("/en/dashboard");
+
+    revalidatePath("/km/dashboard");
+
+    return {
+      success: true,
+      message: "Reply email sent successfully.",
+    };
+  } catch (error) {
+    console.error("Contact reply error:", error);
+
+    return {
+      success: false,
+      message: "Unable to send the reply email.",
+    };
+  }
+}
+
+/* =========================================================
+   DELETE
+   ========================================================= */
 
 export async function deleteContactMessageAction(
   id: number,

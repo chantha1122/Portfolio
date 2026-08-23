@@ -230,7 +230,7 @@ export default async function JourneyYearPage({ params, searchParams }: Props) {
       : "ALL";
 
   return (
-    <main className="portfolio-site relative min-h-screen overflow-x-hidden">
+    <main className="portfolio-site relative min-h-screen overflow-x-clip">
       <PublicNavbar locale={safeLocale} />
 
       <JourneySection

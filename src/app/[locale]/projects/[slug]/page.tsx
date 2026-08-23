@@ -103,7 +103,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       .filter(Boolean) ?? [];
 
   return (
-    <main className="portfolio-site min-h-screen overflow-x-hidden">
+    <main className="portfolio-site min-h-screen overflow-x-clip">
       <PublicNavbar locale={safeLocale} />
 
       {/* =====================================================

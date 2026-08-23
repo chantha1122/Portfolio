@@ -196,6 +196,8 @@ export default async function HomePage({ params }: Props) {
         badgeImage: profileRecord.badgeImage,
 
         cvFile: profileRecord.cvFile,
+
+        showTeachingSection: profileRecord.showTeachingSection,
       }
     : {
         fullName: "Chay Chantha",
@@ -253,6 +255,8 @@ export default async function HomePage({ params }: Props) {
         badgeImage: "/images/profile-badge.png",
 
         cvFile: null,
+
+        showTeachingSection: false,
       };
 
   /* =====================================================
@@ -371,7 +375,7 @@ export default async function HomePage({ params }: Props) {
   ).length;
 
   return (
-    <main className="portfolio-site relative min-h-screen overflow-x-hidden">
+    <main className="portfolio-site relative min-h-screen overflow-x-clip">
       <PublicNavbar locale={safeLocale} />
 
       <HeroSection

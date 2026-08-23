@@ -42,6 +42,8 @@ export type PublicProfile = {
   profileImage: string | null;
   badgeImage: string | null;
   cvFile: string | null;
+
+  showTeachingSection: boolean;
 };
 
 export type PublicActivity = {

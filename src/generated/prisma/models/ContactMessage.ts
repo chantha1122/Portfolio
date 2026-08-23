@@ -43,6 +43,9 @@ export type ContactMessageMinAggregateOutputType = {
   status: $Enums.ContactMessageStatus | null
   createdAt: Date | null
   updatedAt: Date | null
+  replyMessage: string | null
+  repliedAt: Date | null
+  sourceIpHash: string | null
 }
 
 export type ContactMessageMaxAggregateOutputType = {
@@ -54,6 +57,9 @@ export type ContactMessageMaxAggregateOutputType = {
   status: $Enums.ContactMessageStatus | null
   createdAt: Date | null
   updatedAt: Date | null
+  replyMessage: string | null
+  repliedAt: Date | null
+  sourceIpHash: string | null
 }
 
 export type ContactMessageCountAggregateOutputType = {
@@ -65,6 +71,9 @@ export type ContactMessageCountAggregateOutputType = {
   status: number
   createdAt: number
   updatedAt: number
+  replyMessage: number
+  repliedAt: number
+  sourceIpHash: number
   _all: number
 }
 
@@ -86,6 +95,9 @@ export type ContactMessageMinAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  replyMessage?: true
+  repliedAt?: true
+  sourceIpHash?: true
 }
 
 export type ContactMessageMaxAggregateInputType = {
@@ -97,6 +109,9 @@ export type ContactMessageMaxAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  replyMessage?: true
+  repliedAt?: true
+  sourceIpHash?: true
 }
 
 export type ContactMessageCountAggregateInputType = {
@@ -108,6 +123,9 @@ export type ContactMessageCountAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
+  replyMessage?: true
+  repliedAt?: true
+  sourceIpHash?: true
   _all?: true
 }
 
@@ -206,6 +224,9 @@ export type ContactMessageGroupByOutputType = {
   status: $Enums.ContactMessageStatus
   createdAt: Date
   updatedAt: Date
+  replyMessage: string | null
+  repliedAt: Date | null
+  sourceIpHash: string | null
   _count: ContactMessageCountAggregateOutputType | null
   _avg: ContactMessageAvgAggregateOutputType | null
   _sum: ContactMessageSumAggregateOutputType | null
@@ -240,6 +261,9 @@ export type ContactMessageWhereInput = {
   status?: Prisma.EnumContactMessageStatusFilter<"ContactMessage"> | $Enums.ContactMessageStatus
   createdAt?: Prisma.DateTimeFilter<"ContactMessage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContactMessage"> | Date | string
+  replyMessage?: Prisma.StringNullableFilter<"ContactMessage"> | string | null
+  repliedAt?: Prisma.DateTimeNullableFilter<"ContactMessage"> | Date | string | null
+  sourceIpHash?: Prisma.StringNullableFilter<"ContactMessage"> | string | null
 }
 
 export type ContactMessageOrderByWithRelationInput = {
@@ -251,6 +275,9 @@ export type ContactMessageOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  replyMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  repliedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceIpHash?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type ContactMessageWhereUniqueInput = Prisma.AtLeast<{
@@ -265,6 +292,9 @@ export type ContactMessageWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumContactMessageStatusFilter<"ContactMessage"> | $Enums.ContactMessageStatus
   createdAt?: Prisma.DateTimeFilter<"ContactMessage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContactMessage"> | Date | string
+  replyMessage?: Prisma.StringNullableFilter<"ContactMessage"> | string | null
+  repliedAt?: Prisma.DateTimeNullableFilter<"ContactMessage"> | Date | string | null
+  sourceIpHash?: Prisma.StringNullableFilter<"ContactMessage"> | string | null
 }, "id">
 
 export type ContactMessageOrderByWithAggregationInput = {
@@ -276,6 +306,9 @@ export type ContactMessageOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  replyMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  repliedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceIpHash?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ContactMessageCountOrderByAggregateInput
   _avg?: Prisma.ContactMessageAvgOrderByAggregateInput
   _max?: Prisma.ContactMessageMaxOrderByAggregateInput
@@ -295,6 +328,9 @@ export type ContactMessageScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumContactMessageStatusWithAggregatesFilter<"ContactMessage"> | $Enums.ContactMessageStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ContactMessage"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ContactMessage"> | Date | string
+  replyMessage?: Prisma.StringNullableWithAggregatesFilter<"ContactMessage"> | string | null
+  repliedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ContactMessage"> | Date | string | null
+  sourceIpHash?: Prisma.StringNullableWithAggregatesFilter<"ContactMessage"> | string | null
 }
 
 export type ContactMessageCreateInput = {
@@ -305,6 +341,9 @@ export type ContactMessageCreateInput = {
   status?: $Enums.ContactMessageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyMessage?: string | null
+  repliedAt?: Date | string | null
+  sourceIpHash?: string | null
 }
 
 export type ContactMessageUncheckedCreateInput = {
@@ -316,6 +355,9 @@ export type ContactMessageUncheckedCreateInput = {
   status?: $Enums.ContactMessageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyMessage?: string | null
+  repliedAt?: Date | string | null
+  sourceIpHash?: string | null
 }
 
 export type ContactMessageUpdateInput = {
@@ -326,6 +368,9 @@ export type ContactMessageUpdateInput = {
   status?: Prisma.EnumContactMessageStatusFieldUpdateOperationsInput | $Enums.ContactMessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ContactMessageUncheckedUpdateInput = {
@@ -337,6 +382,9 @@ export type ContactMessageUncheckedUpdateInput = {
   status?: Prisma.EnumContactMessageStatusFieldUpdateOperationsInput | $Enums.ContactMessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ContactMessageCreateManyInput = {
@@ -348,6 +396,9 @@ export type ContactMessageCreateManyInput = {
   status?: $Enums.ContactMessageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyMessage?: string | null
+  repliedAt?: Date | string | null
+  sourceIpHash?: string | null
 }
 
 export type ContactMessageUpdateManyMutationInput = {
@@ -358,6 +409,9 @@ export type ContactMessageUpdateManyMutationInput = {
   status?: Prisma.EnumContactMessageStatusFieldUpdateOperationsInput | $Enums.ContactMessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ContactMessageUncheckedUpdateManyInput = {
@@ -369,6 +423,9 @@ export type ContactMessageUncheckedUpdateManyInput = {
   status?: Prisma.EnumContactMessageStatusFieldUpdateOperationsInput | $Enums.ContactMessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repliedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceIpHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ContactMessageCountOrderByAggregateInput = {
@@ -380,6 +437,9 @@ export type ContactMessageCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  replyMessage?: Prisma.SortOrder
+  repliedAt?: Prisma.SortOrder
+  sourceIpHash?: Prisma.SortOrder
 }
 
 export type ContactMessageAvgOrderByAggregateInput = {
@@ -395,6 +455,9 @@ export type ContactMessageMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  replyMessage?: Prisma.SortOrder
+  repliedAt?: Prisma.SortOrder
+  sourceIpHash?: Prisma.SortOrder
 }
 
 export type ContactMessageMinOrderByAggregateInput = {
@@ -406,6 +469,9 @@ export type ContactMessageMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  replyMessage?: Prisma.SortOrder
+  repliedAt?: Prisma.SortOrder
+  sourceIpHash?: Prisma.SortOrder
 }
 
 export type ContactMessageSumOrderByAggregateInput = {
@@ -427,6 +493,9 @@ export type ContactMessageSelect<ExtArgs extends runtime.Types.Extensions.Intern
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  replyMessage?: boolean
+  repliedAt?: boolean
+  sourceIpHash?: boolean
 }, ExtArgs["result"]["contactMessage"]>
 
 export type ContactMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -438,6 +507,9 @@ export type ContactMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  replyMessage?: boolean
+  repliedAt?: boolean
+  sourceIpHash?: boolean
 }, ExtArgs["result"]["contactMessage"]>
 
 export type ContactMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -449,6 +521,9 @@ export type ContactMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  replyMessage?: boolean
+  repliedAt?: boolean
+  sourceIpHash?: boolean
 }, ExtArgs["result"]["contactMessage"]>
 
 export type ContactMessageSelectScalar = {
@@ -460,9 +535,12 @@ export type ContactMessageSelectScalar = {
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  replyMessage?: boolean
+  repliedAt?: boolean
+  sourceIpHash?: boolean
 }
 
-export type ContactMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "subject" | "message" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["contactMessage"]>
+export type ContactMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "subject" | "message" | "status" | "createdAt" | "updatedAt" | "replyMessage" | "repliedAt" | "sourceIpHash", ExtArgs["result"]["contactMessage"]>
 
 export type $ContactMessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ContactMessage"
@@ -476,6 +554,9 @@ export type $ContactMessagePayload<ExtArgs extends runtime.Types.Extensions.Inte
     status: $Enums.ContactMessageStatus
     createdAt: Date
     updatedAt: Date
+    replyMessage: string | null
+    repliedAt: Date | null
+    sourceIpHash: string | null
   }, ExtArgs["result"]["contactMessage"]>
   composites: {}
 }
@@ -907,6 +988,9 @@ export interface ContactMessageFieldRefs {
   readonly status: Prisma.FieldRef<"ContactMessage", 'ContactMessageStatus'>
   readonly createdAt: Prisma.FieldRef<"ContactMessage", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ContactMessage", 'DateTime'>
+  readonly replyMessage: Prisma.FieldRef<"ContactMessage", 'String'>
+  readonly repliedAt: Prisma.FieldRef<"ContactMessage", 'DateTime'>
+  readonly sourceIpHash: Prisma.FieldRef<"ContactMessage", 'String'>
 }
     
 

@@ -1173,6 +1173,7 @@ export const ProfileScalarFieldEnum = {
   profileImage: 'profileImage',
   badgeImage: 'badgeImage',
   cvFile: 'cvFile',
+  showTeachingSection: 'showTeachingSection',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1268,7 +1269,10 @@ export const ContactMessageScalarFieldEnum = {
   message: 'message',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  replyMessage: 'replyMessage',
+  repliedAt: 'repliedAt',
+  sourceIpHash: 'sourceIpHash'
 } as const
 
 export type ContactMessageScalarFieldEnum = (typeof ContactMessageScalarFieldEnum)[keyof typeof ContactMessageScalarFieldEnum]

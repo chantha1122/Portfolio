@@ -73,15 +73,19 @@ export default function PortfolioPreviewSections({
 
   const certificates = activities.filter((item) => item.type === "CERTIFICATE");
 
-  const teaching = activities.filter((item) => item.type === "TEACHING");
+  const showTeachingSection = profile.showTeachingSection ?? false;
+
+  const teaching = showTeachingSection
+    ? activities.filter((item) => item.type === "TEACHING")
+    : [];
 
   const gallery = activities.filter((item) => item.type === "PHOTO");
 
-  /*
-   * Newest activity at the top
-   * of Year by Year.
-   */
-  const timeline = [...activities].sort(
+  const timelineActivities = showTeachingSection
+    ? activities
+    : activities.filter((item) => item.type !== "TEACHING");
+
+  const timeline = [...timelineActivities].sort(
     (a, b) =>
       new Date(b.activityDate).getTime() - new Date(a.activityDate).getTime(),
   );
@@ -490,76 +494,57 @@ export default function PortfolioPreviewSections({
       <JourneySection locale={locale} activities={timeline} />
 
       {/* =====================================================
-          TEACHING
-         ===================================================== */}
+    TEACHING
+   ===================================================== */}
 
-      <section id="teaching" className="portfolio-section scroll-mt-28">
-        <PortfolioHeading
-          locale={locale}
-          eyebrow={khmer ? "ចែករំលែកចំណេះដឹង" : "SHARE KNOWLEDGE"}
-          title={khmer ? "ការបង្រៀន និងណែនាំ" : "Teaching & Mentoring"}
-          description={
-            khmer
-              ? "វគ្គបង្រៀន សិក្ខាសាលា និងប្រធានបទជាក់ស្តែងដែលខ្ញុំបានចែករំលែក។"
-              : "Practical courses, workshops and topics I have taught or mentored."
-          }
-        />
+      {showTeachingSection && teaching.length > 0 ? (
+        <section id="teaching" className="portfolio-section scroll-mt-28">
+          <PortfolioHeading
+            locale={locale}
+            eyebrow={khmer ? "ចែករំលែកចំណេះដឹង" : "SHARE KNOWLEDGE"}
+            title={khmer ? "ការបង្រៀន និងណែនាំ" : "Teaching & Mentoring"}
+            description={
+              khmer
+                ? "វគ្គបង្រៀន សិក្ខាសាលា និងប្រធានបទជាក់ស្តែងដែលខ្ញុំបានចែករំលែក។"
+                : "Practical courses, workshops and topics I have taught or mentored."
+            }
+          />
 
-        <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {teaching.length > 0 ? (
-            teaching.map((item) => (
-              <article key={item.id} className="portfolio-panel p-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--portfolio-accent-soft)] text-[var(--portfolio-cyan)]">
-                  <Presentation size={17} />
+          {teaching.length <= 3 ? (
+            <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {teaching.map((item) => (
+                <TeachingCard key={item.id} item={item} locale={locale} />
+              ))}
+            </div>
+          ) : (
+            <div className="teaching-marquee mt-10">
+              <div className="teaching-marquee-track">
+                <div className="teaching-marquee-group">
+                  {teaching.map((item) => (
+                    <div
+                      key={`teaching-a-${item.id}`}
+                      className="teaching-marquee-card"
+                    >
+                      <TeachingCard item={item} locale={locale} />
+                    </div>
+                  ))}
                 </div>
 
-                <p
-                  className={
-                    khmer && item.titleKm
-                      ? "khmer-input-value mt-4 text-[14px] font-normal leading-6 text-[var(--portfolio-text)]"
-                      : "font-body mt-4 text-[14px] font-semibold text-[var(--portfolio-text)]"
-                  }
-                >
-                  {activityTitle(item, locale)}
-                </p>
-
-                <p className="font-body mt-1 text-[10px] text-[var(--portfolio-muted)]">
-                  {activityOrganization(item, locale) ||
-                    formatActivityPeriod(item, locale)}
-                </p>
-
-                {activitySummary(item, locale) ? (
-                  <p
-                    className={
-                      khmer && item.summaryKm
-                        ? "khmer-input-value mt-3 text-[11px] font-normal leading-6 text-[var(--portfolio-muted)]"
-                        : "font-body mt-3 text-[11px] leading-6 text-[var(--portfolio-muted)]"
-                    }
-                  >
-                    {activitySummary(item, locale)}
-                  </p>
-                ) : null}
-
-                {item.technologies ? (
-                  <p className="font-body mt-4 text-[10px] text-[var(--portfolio-cyan)]">
-                    {item.technologies}
-                  </p>
-                ) : null}
-              </article>
-            ))
-          ) : (
-            <div className="md:col-span-2 xl:col-span-3">
-              <EmptyPanel
-                text={
-                  khmer
-                    ? "បន្ថែមការបង្រៀនពីផ្ទាំងគ្រប់គ្រង។"
-                    : "Add teaching and mentoring activities from the dashboard."
-                }
-              />
+                <div className="teaching-marquee-group" aria-hidden="true">
+                  {teaching.map((item) => (
+                    <div
+                      key={`teaching-b-${item.id}`}
+                      className="teaching-marquee-card"
+                    >
+                      <TeachingCard item={item} locale={locale} />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {/* =====================================================
           IMPROVED GALLERY
@@ -688,6 +673,57 @@ function SectionBar({
     >
       {children}
     </div>
+  );
+}
+
+function TeachingCard({
+  item,
+  locale,
+}: {
+  item: PublicActivity;
+  locale: "en" | "km";
+}) {
+  const khmer = locale === "km";
+
+  return (
+    <article className="portfolio-panel flex h-full min-h-[220px] flex-col p-5">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--portfolio-accent-soft)] text-[var(--portfolio-cyan)]">
+        <Presentation size={17} />
+      </div>
+
+      <p
+        className={
+          khmer && item.titleKm
+            ? "khmer-input-value mt-4 text-[14px] font-normal leading-6 text-[var(--portfolio-text)]"
+            : "font-body mt-4 text-[14px] font-semibold text-[var(--portfolio-text)]"
+        }
+      >
+        {activityTitle(item, locale)}
+      </p>
+
+      <p className="font-body mt-1 text-[10px] text-[var(--portfolio-muted)]">
+        {activityOrganization(item, locale) ||
+          formatActivityPeriod(item, locale)}
+      </p>
+
+      {activitySummary(item, locale) ? (
+        <p
+          className={
+            khmer && item.summaryKm
+              ? "khmer-input-value mt-3 line-clamp-3 text-[11px] font-normal leading-6 text-[var(--portfolio-muted)]"
+              : "font-body mt-3 line-clamp-3 text-[11px] leading-6 text-[var(--portfolio-muted)]"
+          }
+        >
+          {activitySummary(item, locale)}
+        </p>
+      ) : null}
+
+      {item.technologies ? (
+        <p className="font-body mt-auto line-clamp-2 pt-4 text-[10px] text-[var(--portfolio-cyan)]">
+          {item.technologies}
+        </p>
+      ) : null}
+    </article>
   );
 }
 

@@ -1,4 +1,4 @@
-import ActivityManager from "@/components/dashboard/ActivityManager";
+import EducationManager from "@/components/dashboard/EducationManager";
 
 import { prisma } from "@/lib/db";
 
@@ -13,27 +13,29 @@ type Props = {
 export default async function EducationPage({ params }: Props) {
   const { locale } = await params;
 
+  const safeLocale = locale === "km" ? "km" : "en";
+
   const items = await prisma.activity.findMany({
     where: {
       type: "EDUCATION",
     },
 
-    orderBy: {
-      activityDate: "desc",
-    },
+    orderBy: [
+      {
+        isCurrent: "desc",
+      },
+
+      {
+        activityDate: "desc",
+      },
+
+      {
+        sortOrder: "asc",
+      },
+    ],
   });
 
   return (
-    <ActivityManager
-      locale={locale === "km" ? "km" : "en"}
-      items={serializeActivities(items)}
-      lockedType="EDUCATION"
-      title={locale === "km" ? "ការអប់រំ" : "Education"}
-      description={
-        locale === "km"
-          ? "គ្រប់គ្រងសញ្ញាបត្រ កម្មវិធីសិក្សា សាកលវិទ្យាល័យ និងរយៈពេលសិក្សា។"
-          : "Manage degrees, programs, universities and education history."
-      }
-    />
+    <EducationManager locale={safeLocale} items={serializeActivities(items)} />
   );
 }
