@@ -22,6 +22,7 @@ import PortfolioGallerySection from "@/components/portfolio/PortfolioGallerySect
 import PublicContactForm from "@/components/portfolio/PublicContactForm";
 import PublicProjectCard from "@/components/portfolio/PublicProjectCard";
 import SkillsToolsSection from "@/components/portfolio/SkillsToolsSection";
+import CertificatesSection from "@/components/portfolio/CertificatesSection";
 
 import type {
   PublicActivity,
@@ -407,85 +408,7 @@ export default function PortfolioPreviewSections({
           CERTIFICATES
          ===================================================== */}
 
-      <section id="certificates" className="portfolio-section scroll-mt-28">
-        <PortfolioHeading
-          locale={locale}
-          eyebrow={khmer ? "ការរៀនសូត្រ" : "CREDENTIALS"}
-          title={khmer ? "វិញ្ញាបនបត្រ" : "Certificates"}
-          description={
-            khmer
-              ? "វិញ្ញាបនបត្រ និងការបណ្តុះបណ្តាលដែលខ្ញុំបានបញ្ចប់។"
-              : "Certificates and training that document my continued learning."
-          }
-        />
-
-        <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {certificates.length > 0 ? (
-            certificates.map((item) => (
-              <article
-                key={item.id}
-                className="portfolio-panel overflow-hidden p-4"
-              >
-                <div className="flex aspect-[16/10] items-center justify-center overflow-hidden rounded-2xl border border-[var(--portfolio-border)] bg-[var(--portfolio-chip)]">
-                  {item.coverImage ? (
-                    <img
-                      src={item.coverImage}
-                      alt={activityTitle(item, locale)}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <Award size={38} className="text-[var(--portfolio-cyan)]" />
-                  )}
-                </div>
-
-                <p
-                  className={
-                    khmer && item.titleKm
-                      ? "khmer-input-value mt-4 text-[14px] font-normal leading-6 text-[var(--portfolio-text)]"
-                      : "font-body mt-4 text-[14px] font-semibold text-[var(--portfolio-text)]"
-                  }
-                >
-                  {activityTitle(item, locale)}
-                </p>
-
-                <p className="font-body mt-1 text-[10px] text-[var(--portfolio-muted)]">
-                  {activityOrganization(item, locale) ||
-                    formatActivityPeriod(item, locale)}
-                </p>
-
-                {item.credentialId ? (
-                  <p className="font-number mt-2 text-[9px] text-[var(--portfolio-muted)]">
-                    ID: {item.credentialId}
-                  </p>
-                ) : null}
-
-                {item.externalUrl ? (
-                  <a
-                    href={item.externalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1.5 font-body text-[11px] text-[var(--portfolio-cyan)]"
-                  >
-                    {khmer ? "មើលវិញ្ញាបនបត្រ" : "View credential"}
-
-                    <ExternalLink size={12} />
-                  </a>
-                ) : null}
-              </article>
-            ))
-          ) : (
-            <div className="md:col-span-2 xl:col-span-3">
-              <EmptyPanel
-                text={
-                  khmer
-                    ? "បន្ថែមវិញ្ញាបនបត្រពីផ្ទាំងគ្រប់គ្រង។"
-                    : "Add certificates from the dashboard."
-                }
-              />
-            </div>
-          )}
-        </div>
-      </section>
+      <CertificatesSection locale={locale} items={certificates} />
 
       {/* =====================================================
           IMPROVED YEAR-BY-YEAR
