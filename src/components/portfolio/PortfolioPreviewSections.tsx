@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import {
+  ArrowRight,
   Award,
   BriefcaseBusiness,
   Code2,
@@ -16,6 +17,8 @@ import {
   Trophy,
 } from "lucide-react";
 
+import { Link } from "@/i18n/navigation";
+
 import GitHubContributionSection from "@/components/portfolio/GitHubContributionSection";
 import JourneySection from "@/components/portfolio/JourneySection";
 import PortfolioGallerySection from "@/components/portfolio/PortfolioGallerySection";
@@ -23,6 +26,7 @@ import PublicContactForm from "@/components/portfolio/PublicContactForm";
 import PublicProjectCard from "@/components/portfolio/PublicProjectCard";
 import SkillsToolsSection from "@/components/portfolio/SkillsToolsSection";
 import CertificatesSection from "@/components/portfolio/CertificatesSection";
+import AchievementsSection from "@/components/portfolio/AchievementsSection";
 
 import type {
   PublicActivity,
@@ -70,7 +74,25 @@ export default function PortfolioPreviewSections({
 
   const education = activities.filter((item) => item.type === "EDUCATION");
 
-  const projects = activities.filter((item) => item.type === "PROJECT");
+  const projects = activities
+    .filter((item) => item.type === "PROJECT")
+    .sort((a, b) => {
+      const dateA = new Date(a.activityDate).getTime();
+      const dateB = new Date(b.activityDate).getTime();
+
+      if (dateA !== dateB) {
+        return dateB - dateA;
+      }
+
+      return b.id - a.id;
+    });
+
+  const featuredProjects = projects.filter((item) => item.featured).slice(0, 6);
+
+  const homepageProjects =
+    featuredProjects.length > 0 ? featuredProjects : projects.slice(0, 3);
+
+  const hasMoreProjects = projects.length > homepageProjects.length;
 
   const certificates = activities.filter((item) => item.type === "CERTIFICATE");
 
@@ -366,31 +388,46 @@ export default function PortfolioPreviewSections({
       </section>
 
       {/* =====================================================
-          PROJECTS
-         ===================================================== */}
+    PROJECTS
+   ===================================================== */}
 
       <section id="projects" className="portfolio-section scroll-mt-28">
         <PortfolioHeading
           locale={locale}
           eyebrow={khmer ? "ស្នាដៃដែលបានជ្រើសរើស" : "SELECTED WORK"}
-          title={khmer ? "គម្រោង" : "Featured Projects"}
+          title={khmer ? "គម្រោងលេចធ្លោ" : "Featured Projects"}
           description={
             khmer
-              ? "គម្រោងដែលបង្ហាញពីការអភិវឌ្ឍ ការរចនា និងការដោះស្រាយបញ្ហារបស់ខ្ញុំ។ ចុចលើគម្រោងដើម្បីមើលព័ត៌មានលម្អិត។"
-              : "Projects that reflect my development, design and problem-solving work. Open a project to explore the complete case study."
+              ? "គម្រោងដែលបានជ្រើសរើស ដែលបង្ហាញពីការអភិវឌ្ឍ ការរចនា និងការដោះស្រាយបញ្ហារបស់ខ្ញុំ។ ចុចលើគម្រោងដើម្បីមើលព័ត៌មានលម្អិត។"
+              : "Selected projects that reflect my development, design and problem-solving work. Open a project to explore the complete case study."
           }
         />
 
-        {projects.length > 0 ? (
-          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {projects.map((project) => (
-              <PublicProjectCard
-                key={project.id}
-                item={project}
-                locale={locale}
-              />
-            ))}
-          </div>
+        {homepageProjects.length > 0 ? (
+          <>
+            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {homepageProjects.map((project) => (
+                <PublicProjectCard
+                  key={project.id}
+                  item={project}
+                  locale={locale}
+                />
+              ))}
+            </div>
+
+            {hasMoreProjects ? (
+              <div className="mt-8 flex justify-center">
+                <Link
+                  href="/projects"
+                  className="font-body inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[var(--portfolio-border)] bg-[var(--portfolio-panel)] px-5 text-[11px] font-semibold text-[var(--portfolio-text)] shadow-[0_10px_28px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--portfolio-cyan)]/35 hover:text-[var(--portfolio-cyan)]"
+                >
+                  {khmer ? "មើលគម្រោងទាំងអស់" : "View All Projects"}
+
+                  <ArrowRight size={14} />
+                </Link>
+              </div>
+            ) : null}
+          </>
         ) : (
           <div className="mt-10">
             <EmptyPanel
@@ -405,14 +442,20 @@ export default function PortfolioPreviewSections({
       </section>
 
       {/* =====================================================
-          CERTIFICATES
-         ===================================================== */}
+    CERTIFICATES
+   ===================================================== */}
 
       <CertificatesSection locale={locale} items={certificates} />
 
       {/* =====================================================
-          IMPROVED YEAR-BY-YEAR
-         ===================================================== */}
+    ACHIEVEMENTS
+   ===================================================== */}
+
+      <AchievementsSection locale={locale} items={achievements} />
+
+      {/* =====================================================
+    IMPROVED YEAR-BY-YEAR
+   ===================================================== */}
 
       <JourneySection locale={locale} activities={timeline} />
 

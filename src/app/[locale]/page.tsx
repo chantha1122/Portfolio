@@ -6,6 +6,8 @@ import PublicNavbar from "@/components/layout/PublicNavbar";
 
 import { prisma } from "@/lib/db";
 
+import PortfolioMotion from "@/components/animations/PortfolioMotion";
+
 import type {
   PublicActivity,
   PublicProfile,
@@ -376,6 +378,8 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <main className="portfolio-site relative min-h-screen overflow-x-clip">
+      <PortfolioMotion />
+
       <PublicNavbar locale={safeLocale} />
 
       <HeroSection

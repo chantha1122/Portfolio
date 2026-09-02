@@ -112,6 +112,21 @@ body {
 }
 
 /* =========================================================
+   THEME SWITCH
+   Prevent reload-like transition flash
+   ========================================================= */
+
+html.theme-switching {
+  scroll-behavior: auto !important;
+}
+
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+}
+
+/* =========================================================
    TYPOGRAPHY
    ========================================================= */
 
@@ -131,6 +146,24 @@ body {
   font-synthesis: none;
 }
 
+/* =========================================================
+   LATIN DISPLAY LOCK
+   Keep English display text and numbers identical in EN/KM
+   ========================================================= */
+
+.latin-display {
+  font-family: var(--font-anton), sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.01em !important;
+}
+
+html[lang="km"] .latin-display {
+  font-family: var(--font-anton), sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.01em !important;
+  line-height: 1 !important;
+}
+
 html[lang="km"] body,
 html[lang="km"] .font-body {
   line-height: 1.75;
@@ -142,6 +175,30 @@ html[lang="km"] .font-display {
   letter-spacing: normal;
 
   line-height: 1.65;
+}
+
+/* =========================================================
+   HERO DISPLAY TITLE
+   Keep CHANTHA PORTFOLIO identical in EN and KM
+   ========================================================= */
+
+html[lang="km"] .hero-main-title,
+.hero-main-title {
+  font-family: var(--font-anton), sans-serif;
+
+  font-weight: 400;
+
+  letter-spacing: 0.01em;
+
+  line-height: 0.8;
+}
+
+.hero-main-title > span {
+  line-height: inherit;
+
+  margin: 0;
+
+  padding: 0;
 }
 
 /* =========================================================
@@ -1260,4 +1317,464 @@ html[lang="km"] .portfolio-section-label {
   .portfolio-badge-frame {
     transform: rotate(1.5deg);
   }
+}
+
+/* =========================================================
+   CHANTHA DASHBOARD — CLEAN CMS SYSTEM
+   ========================================================= */
+
+.dashboard-shell {
+  --dash-bg: #f7f8fb;
+  --dash-panel: #ffffff;
+  --dash-panel-soft: #fafbfc;
+  --dash-panel-hover: #f6f4ff;
+
+  --dash-text: #171923;
+  --dash-muted: #7b8294;
+  --dash-muted-soft: #a3a9b7;
+
+  --dash-border: rgba(22, 28, 45, 0.08);
+  --dash-border-strong: rgba(22, 28, 45, 0.12);
+
+  --dash-violet: #6d45e8;
+  --dash-violet-hover: #5e39d6;
+  --dash-violet-soft: rgba(109, 69, 232, 0.09);
+
+  --dash-blue: #4888f7;
+  --dash-cyan: #41c8cf;
+  --dash-green: #29ba91;
+  --dash-orange: #f39a43;
+  --dash-red: #e85b6b;
+
+  --dash-shadow:
+    0 1px 2px rgba(20, 26, 40, 0.025), 0 8px 28px rgba(20, 26, 40, 0.035);
+
+  min-height: 100vh;
+
+  background: var(--dash-bg);
+
+  color: var(--dash-text);
+
+  --foreground: var(--dash-text);
+  --foreground-muted: var(--dash-muted);
+}
+
+.dark .dashboard-shell {
+  --dash-bg: #17181c;
+  --dash-panel: #1d1f24;
+  --dash-panel-soft: #202228;
+  --dash-panel-hover: #262331;
+
+  --dash-text: #f4f5f8;
+  --dash-muted: #959aa7;
+  --dash-muted-soft: #6f7481;
+
+  --dash-border: rgba(255, 255, 255, 0.075);
+  --dash-border-strong: rgba(255, 255, 255, 0.115);
+
+  --dash-violet: #7655ef;
+  --dash-violet-hover: #8465f7;
+  --dash-violet-soft: rgba(118, 85, 239, 0.13);
+
+  --dash-shadow: 0 1px 2px rgba(0, 0, 0, 0.18), 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  --foreground: var(--dash-text);
+  --foreground-muted: var(--dash-muted);
+}
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+
+.dashboard-main {
+  min-height: 100vh;
+
+  background: var(--dash-bg);
+
+  transition:
+    background-color 150ms ease-out,
+    color 150ms ease-out;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-main {
+    margin-left: 238px;
+  }
+}
+
+.dashboard-content {
+  width: 100%;
+
+  max-width: 1480px;
+
+  margin: 0 auto;
+
+  padding: 92px 22px 36px;
+}
+
+@media (min-width: 768px) {
+  .dashboard-content {
+    padding: 94px 28px 40px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dashboard-content {
+    padding: 96px 32px 44px;
+  }
+}
+
+/* =========================================================
+   SHARED DASHBOARD SURFACES
+   ========================================================= */
+
+.dashboard-surface {
+  border: 1px solid var(--dash-border);
+
+  border-radius: 16px;
+
+  background: var(--dash-panel);
+
+  box-shadow: var(--dash-shadow);
+}
+
+.dashboard-surface-flat {
+  border: 1px solid var(--dash-border);
+
+  border-radius: 14px;
+
+  background: var(--dash-panel);
+}
+
+.dashboard-soft {
+  border: 1px solid var(--dash-border);
+
+  background: var(--dash-panel-soft);
+}
+
+/*
+ * Existing CMS components already use bg-white.
+ * This makes those components inherit the new
+ * dashboard light/dark surface automatically.
+ */
+.dashboard-shell .bg-white {
+  background-color: var(--dash-panel) !important;
+}
+
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+.dashboard-shell .input,
+.dashboard-shell .textarea {
+  border-color: var(--dash-border-strong);
+
+  background: var(--dash-panel);
+
+  color: var(--dash-text);
+
+  box-shadow: none;
+}
+
+.dashboard-shell .input::placeholder,
+.dashboard-shell .textarea::placeholder {
+  color: var(--dash-muted-soft);
+}
+
+.dashboard-shell .input:focus,
+.dashboard-shell .textarea:focus {
+  border-color: rgba(109, 69, 232, 0.48);
+
+  box-shadow: 0 0 0 3px rgba(109, 69, 232, 0.08);
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.dashboard-sidebar-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.dashboard-sidebar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.dashboard-table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.dashboard-table th {
+  border-bottom: 1px solid var(--dash-border);
+
+  padding: 11px 14px;
+
+  text-align: left;
+
+  font-family: var(--font-gupter), serif;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  color: var(--dash-muted);
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.06em;
+}
+
+.dashboard-table td {
+  border-bottom: 1px solid var(--dash-border);
+
+  padding: 13px 14px;
+
+  font-family: var(--font-gupter), var(--font-khmer), serif;
+
+  font-size: 12px;
+
+  color: var(--dash-text);
+}
+
+.dashboard-table tr:last-child td {
+  border-bottom: 0;
+}
+
+/* =========================================================
+   CLEAN HOVER
+   ========================================================= */
+
+.dashboard-hover {
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.dashboard-hover:hover {
+  border-color: var(--dash-border-strong);
+
+  box-shadow: 0 8px 24px rgba(25, 30, 45, 0.055);
+
+  transform: translateY(-1px);
+}
+
+.dark .dashboard-hover:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 1023px) {
+  .dashboard-content {
+    padding-top: 82px;
+  }
+}
+
+/* =========================================================
+   PORTFOLIO MOTION
+   ========================================================= */
+
+/* =========================================================
+   HERO FIRST LOAD
+   ========================================================= */
+
+@keyframes portfolio-hero-left-enter {
+  from {
+    opacity: 0;
+
+    transform: translate3d(-30px, 20px, 0) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes portfolio-hero-right-enter {
+  from {
+    opacity: 0;
+
+    transform: translate3d(32px, 18px, 0) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.portfolio-hero-left {
+  animation: portfolio-hero-left-enter 820ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.portfolio-hero-right {
+  animation: portfolio-hero-right-enter 900ms 100ms
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* =========================================================
+   HERO TITLE
+   ========================================================= */
+
+.hero-main-title > span:first-child {
+  animation: portfolio-title-one 850ms 80ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-main-title > span:last-child {
+  animation: portfolio-title-two 900ms 150ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes portfolio-title-one {
+  from {
+    opacity: 0;
+
+    transform: translate3d(0, 42px, 0);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes portfolio-title-two {
+  from {
+    opacity: 0;
+
+    transform: translate3d(0, 55px, 0);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* =========================================================
+   SOFT CARD MOTION
+   ========================================================= */
+
+.portfolio-panel {
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-panel:hover {
+    transform: translate3d(0, -3px, 0);
+  }
+}
+
+/* =========================================================
+   IMAGE MOTION
+   ========================================================= */
+
+.portfolio-site img {
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+ * Only images inside interactive/card areas.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-panel:hover img {
+    transform: scale(1.015);
+  }
+}
+
+/* =========================================================
+   BUTTON MOTION
+   ========================================================= */
+
+.portfolio-primary-button,
+.portfolio-secondary-button {
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    background-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-primary-button:hover,
+  .portfolio-secondary-button:hover {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* =========================================================
+   PERFORMANCE
+   ========================================================= */
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  .portfolio-hero-left,
+  .portfolio-hero-right,
+  .hero-main-title > span {
+    animation: none !important;
+
+    transform: none !important;
+
+    opacity: 1 !important;
+
+    filter: none !important;
+  }
+
+  .portfolio-panel,
+  .portfolio-site img,
+  .portfolio-primary-button,
+  .portfolio-secondary-button {
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   LENIS SMOOTH SCROLL
+   ========================================================= */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }

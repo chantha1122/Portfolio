@@ -1,7 +1,6 @@
-import ActivityManager from "@/components/dashboard/ActivityManager";
+import AchievementsManager from "@/components/dashboard/AchievementsManager";
 
 import { prisma } from "@/lib/db";
-
 import { serializeActivities } from "@/lib/serializeActivity";
 
 type Props = {
@@ -13,27 +12,32 @@ type Props = {
 export default async function AchievementsPage({ params }: Props) {
   const { locale } = await params;
 
+  const safeLocale: "en" | "km" = locale === "km" ? "km" : "en";
+
   const items = await prisma.activity.findMany({
     where: {
       type: "ACHIEVEMENT",
     },
 
-    orderBy: {
-      activityDate: "desc",
-    },
+    orderBy: [
+      {
+        featured: "desc",
+      },
+
+      {
+        activityDate: "desc",
+      },
+
+      {
+        sortOrder: "asc",
+      },
+    ],
   });
 
   return (
-    <ActivityManager
-      locale={locale === "km" ? "km" : "en"}
+    <AchievementsManager
+      locale={safeLocale}
       items={serializeActivities(items)}
-      lockedType="ACHIEVEMENT"
-      title={locale === "km" ? "សមិទ្ធផល" : "Achievements"}
-      description={
-        locale === "km"
-          ? "បន្ថែមពានរង្វាន់ ជ័យលាភី និងសមិទ្ធផលសំខាន់ៗរបស់អ្នក។"
-          : "Add awards, competition results and important achievements."
-      }
     />
   );
 }

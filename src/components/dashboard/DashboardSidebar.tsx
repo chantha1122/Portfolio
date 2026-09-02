@@ -1,370 +1,371 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import type { LucideIcon } from "lucide-react";
 
 import {
   Activity,
   Award,
-  BrainCircuit,
+  BookOpen,
   BriefcaseBusiness,
+  CircleUserRound,
   Code2,
-  ExternalLink,
   FolderKanban,
   GraduationCap,
-  Images,
+  Image,
   LayoutDashboard,
-  Mail,
-  Medal,
   MessageCircle,
+  MessageSquareText,
   Presentation,
   Settings,
-  UserRound,
-  type LucideIcon,
+  Shapes,
+  Sparkles,
+  Wrench,
 } from "lucide-react";
+
+import { Link, usePathname } from "@/i18n/navigation";
 
 import { cn } from "@/lib/cn";
 
-type DashboardSidebarProps = {
-  locale: string;
-  userName: string;
-
-  labels: {
-    management: string;
-    content: string;
-    aboutSection: string;
-    engagement: string;
-    system: string;
-
-    overview: string;
-    profile: string;
-
-    activities: string;
-    projects: string;
-    certificates: string;
-    gallery: string;
-
-    skillsTools: string;
-    experience: string;
-    education: string;
-    achievements: string;
-    teaching: string;
-
-    messages: string;
-    comments: string;
-
-    settings: string;
-
-    soon: string;
-    viewWebsite: string;
-    administrator: string;
-  };
-};
-
-type MenuItem = {
-  label: string;
+export type DashboardNavItem = {
   href: string;
+
+  labelEn: string;
+
+  labelKm: string;
+
   icon: LucideIcon;
-  disabled?: boolean;
 };
 
-type MenuGroup = {
-  label: string;
-  items: MenuItem[];
+export type DashboardNavGroup = {
+  labelEn: string;
+
+  labelKm: string;
+
+  items: DashboardNavItem[];
+};
+
+export const dashboardNavGroups: DashboardNavGroup[] = [
+  {
+    labelEn: "Overview",
+
+    labelKm: "ទិដ្ឋភាពទូទៅ",
+
+    items: [
+      {
+        href: "/dashboard",
+
+        labelEn: "Dashboard",
+
+        labelKm: "ផ្ទាំងគ្រប់គ្រង",
+
+        icon: LayoutDashboard,
+      },
+      {
+        href: "/dashboard/profile",
+
+        labelEn: "Profile",
+
+        labelKm: "ប្រវត្តិរូប",
+
+        icon: CircleUserRound,
+      },
+    ],
+  },
+
+  {
+    labelEn: "Portfolio",
+
+    labelKm: "Portfolio",
+
+    items: [
+      {
+        href: "/dashboard/activities",
+
+        labelEn: "Activities",
+
+        labelKm: "សកម្មភាព",
+
+        icon: Activity,
+      },
+      {
+        href: "/dashboard/projects",
+
+        labelEn: "Projects",
+
+        labelKm: "គម្រោង",
+
+        icon: FolderKanban,
+      },
+      {
+        href: "/dashboard/certificates",
+
+        labelEn: "Certificates",
+
+        labelKm: "វិញ្ញាបនបត្រ",
+
+        icon: Award,
+      },
+      {
+        href: "/dashboard/gallery",
+
+        labelEn: "Gallery",
+
+        labelKm: "វិចិត្រសាល",
+
+        icon: Image,
+      },
+      {
+        href: "/dashboard/skills",
+        labelEn: "Skills & Tools",
+        labelKm: "ជំនាញ និងឧបករណ៍",
+        icon: Wrench,
+      },
+    ],
+  },
+
+  {
+    labelEn: "Journey",
+
+    labelKm: "ដំណើរ",
+
+    items: [
+      {
+        href: "/dashboard/experience",
+
+        labelEn: "Experience",
+
+        labelKm: "បទពិសោធន៍",
+
+        icon: BriefcaseBusiness,
+      },
+      {
+        href: "/dashboard/education",
+
+        labelEn: "Education",
+
+        labelKm: "ការអប់រំ",
+
+        icon: GraduationCap,
+      },
+      {
+        href: "/dashboard/achievements",
+
+        labelEn: "Achievements",
+
+        labelKm: "សមិទ្ធផល",
+
+        icon: Sparkles,
+      },
+      {
+        href: "/dashboard/teaching",
+
+        labelEn: "Teaching",
+
+        labelKm: "ការបង្រៀន",
+
+        icon: Presentation,
+      },
+    ],
+  },
+
+  {
+    labelEn: "Inbox",
+
+    labelKm: "ប្រអប់សារ",
+
+    items: [
+      {
+        href: "/dashboard/messages",
+
+        labelEn: "Messages",
+
+        labelKm: "សារ",
+
+        icon: MessageSquareText,
+      },
+      {
+        href: "/dashboard/comments",
+
+        labelEn: "Comments",
+
+        labelKm: "មតិយោបល់",
+
+        icon: MessageCircle,
+      },
+    ],
+  },
+
+  {
+    labelEn: "System",
+
+    labelKm: "ប្រព័ន្ធ",
+
+    items: [
+      {
+        href: "/dashboard/settings",
+
+        labelEn: "Settings",
+
+        labelKm: "ការកំណត់",
+
+        icon: Settings,
+      },
+    ],
+  },
+];
+
+type Props = {
+  locale: "en" | "km";
+
+  userName?: string;
+
+  userEmail?: string;
 };
 
 export default function DashboardSidebar({
   locale,
-  userName,
-  labels,
-}: DashboardSidebarProps) {
+  userName = "Chantha",
+  userEmail = "",
+}: Props) {
   const pathname = usePathname();
 
-  const githubLabel = locale === "km" ? "សកម្មភាព GitHub" : "GitHub Activity";
+  const khmer = locale === "km";
+  type Locale = "en" | "km";
 
-  const groups: MenuGroup[] = [
-    /* =====================================================
-       MANAGEMENT
-       ===================================================== */
-
+  const sidebarText: Record<
+    Locale,
     {
-      label: labels.management,
-
-      items: [
-        {
-          label: labels.overview,
-          href: `/${locale}/dashboard`,
-          icon: LayoutDashboard,
-        },
-
-        {
-          label: labels.profile,
-          href: `/${locale}/dashboard/profile`,
-          icon: UserRound,
-        },
-      ],
-    },
-
-    /* =====================================================
-       CONTENT
-       ===================================================== */
-
-    {
-      label: labels.content,
-
-      items: [
-        {
-          label: labels.activities,
-          href: `/${locale}/dashboard/activities`,
-          icon: Activity,
-        },
-
-        {
-          label: labels.projects,
-          href: `/${locale}/dashboard/projects`,
-          icon: FolderKanban,
-        },
-
-        {
-          label: labels.certificates,
-          href: `/${locale}/dashboard/certificates`,
-          icon: Award,
-        },
-
-        {
-          label: labels.gallery,
-          href: `/${locale}/dashboard/gallery`,
-          icon: Images,
-        },
-      ],
-    },
-
-    /* =====================================================
-       ABOUT
-       ===================================================== */
-
-    {
-      label: labels.aboutSection,
-
-      items: [
-        {
-          label: labels.skillsTools,
-          href: `/${locale}/dashboard/skills`,
-          icon: BrainCircuit,
-        },
-
-        /* =================================================
-           GITHUB ACTIVITY
-           ================================================= */
-
-        {
-          label: githubLabel,
-          href: `/${locale}/dashboard/github`,
-          icon: Code2,
-        },
-
-        {
-          label: labels.experience,
-          href: `/${locale}/dashboard/experience`,
-          icon: BriefcaseBusiness,
-        },
-
-        {
-          label: labels.education,
-          href: `/${locale}/dashboard/education`,
-          icon: GraduationCap,
-        },
-
-        {
-          label: labels.achievements,
-          href: `/${locale}/dashboard/achievements`,
-          icon: Medal,
-        },
-
-        {
-          label: labels.teaching,
-          href: `/${locale}/dashboard/teaching`,
-          icon: Presentation,
-        },
-      ],
-    },
-
-    /* =====================================================
-       ENGAGEMENT
-       ===================================================== */
-
-    {
-      label: labels.engagement,
-
-      items: [
-        {
-          label: labels.messages,
-          href: `/${locale}/dashboard/messages`,
-          icon: Mail,
-        },
-
-        {
-          label: labels.comments,
-          href: `/${locale}/dashboard/comments`,
-          icon: MessageCircle,
-        },
-      ],
-    },
-
-    /* =====================================================
-       SYSTEM
-       ===================================================== */
-
-    {
-      label: labels.system,
-
-      items: [
-        {
-          label: labels.settings,
-          href: `/${locale}/dashboard/settings`,
-          icon: Settings,
-        },
-      ],
-    },
-  ];
-
-  /* =======================================================
-     ACTIVE MENU
-     ======================================================= */
-
-  const isActive = (href: string) => {
-    if (href === `/${locale}/dashboard`) {
-      return pathname === href;
+      management: string;
+      overview: string;
+      content: string;
+      settings: string;
     }
+  > = {
+    en: {
+      management: "Management",
+      overview: "Overview",
+      content: "Content",
+      settings: "Settings",
+    },
 
-    return pathname.startsWith(href);
+    km: {
+      management: "ការគ្រប់គ្រង",
+      overview: "ទិដ្ឋភាពទូទៅ",
+      content: "មាតិកា",
+      settings: "ការកំណត់",
+    },
   };
 
   return (
-    <aside className="fixed bottom-0 left-0 top-[68px] z-40 hidden w-[260px] border-r border-black/[0.07] bg-white dark:border-white/[0.08] dark:bg-[#0b0d17] lg:flex lg:flex-col">
-      {/* ===================================================
-          MENU AREA
-         =================================================== */}
+    <aside className="fixed inset-y-0 left-0 z-50 hidden w-[238px] border-r border-[var(--dash-border)] bg-[var(--dash-panel)] lg:flex lg:flex-col">
+      {/* ===============================================
+          BRAND
+         =============================================== */}
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
-        {groups.map((group, groupIndex) => (
-          <div
-            key={group.label}
-            className={cn(
-              groupIndex > 0 &&
-                "mt-5 border-t border-black/[0.055] pt-4 dark:border-white/[0.06]",
-            )}
-          >
-            {/* GROUP TITLE */}
+      <div className="flex h-[76px] shrink-0 items-center border-b border-[var(--dash-border)] px-5">
+        <Link href="/dashboard" className="flex min-w-0 items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-violet-600 text-white shadow-[0_7px_20px_rgba(109,69,232,0.25)]">
+            <Shapes size={19} strokeWidth={2} />
+          </span>
 
-            <p className="font-body px-3 text-[10px] font-semibold uppercase tracking-[0.17em] text-[var(--foreground-muted)]">
-              {group.label}
+          <span className="min-w-0">
+            <span className="font-body block truncate text-[15px] font-semibold text-[var(--dash-text)]">
+              Chantha
+            </span>
+
+            <span className="font-body mt-0.5 block truncate text-[10px] text-[var(--dash-muted)]">
+              Portfolio CMS
+            </span>
+          </span>
+        </Link>
+      </div>
+
+      {/* ===============================================
+          NAVIGATION
+         =============================================== */}
+
+      <div className="dashboard-sidebar-scroll min-h-0 flex-1 overflow-y-auto px-3 py-4">
+        {dashboardNavGroups.map((group, groupIndex) => (
+          <div key={group.labelEn} className={cn(groupIndex > 0 && "mt-5")}>
+            <p
+              className={
+                khmer
+                  ? "khmer-input-value px-3 pb-1.5 text-[9px] font-normal leading-5 text-[var(--dash-muted)]"
+                  : "font-body px-3 pb-1.5 text-[9px] font-semibold uppercase tracking-[0.13em] text-[var(--dash-muted)]"
+              }
+            >
+              {khmer ? group.labelKm : group.labelEn}
             </p>
 
-            {/* MENU */}
-
-            <nav className="mt-2 grid gap-1">
+            <div className="grid gap-1">
               {group.items.map((item) => {
                 const Icon = item.icon;
 
-                const active = !item.disabled && isActive(item.href);
-
-                /* =======================================
-                       DISABLED ITEM
-                       ======================================= */
-
-                if (item.disabled) {
-                  return (
-                    <div
-                      key={item.href}
-                      title={labels.soon}
-                      className="flex h-[42px] cursor-not-allowed items-center gap-3 rounded-xl px-3 text-[var(--foreground-muted)] opacity-40"
-                    >
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center">
-                        <Icon size={16} strokeWidth={1.8} />
-                      </span>
-
-                      <span className="font-body min-w-0 flex-1 truncate text-[13px] font-medium">
-                        {item.label}
-                      </span>
-
-                      <span className="font-body rounded-full bg-black/[0.045] px-2 py-0.5 text-[9px] dark:bg-white/[0.06]">
-                        {labels.soon}
-                      </span>
-                    </div>
-                  );
-                }
-
-                /* =======================================
-                       NORMAL ITEM
-                       ======================================= */
+                const active = isActiveRoute(pathname, item.href);
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex h-[42px] items-center gap-3 rounded-xl px-3 transition",
+                      "group relative flex h-10 items-center gap-3 rounded-[10px] px-3 font-body text-[12px] font-medium transition",
                       active
-                        ? "bg-gradient-to-r from-violet-600 to-violet-500 text-white shadow-[0_8px_22px_rgba(124,58,237,0.16)]"
-                        : "text-[var(--foreground-muted)] hover:bg-black/[0.04] hover:text-[var(--foreground)] dark:hover:bg-white/[0.05]",
+                        ? "bg-[var(--dash-violet-soft)] text-[var(--dash-violet)]"
+                        : "text-[var(--dash-muted)] hover:bg-[var(--dash-panel-soft)] hover:text-[var(--dash-text)]",
                     )}
                   >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center">
-                      <Icon size={16} strokeWidth={1.9} />
-                    </span>
+                    {active ? (
+                      <span className="absolute bottom-2 left-0 top-2 w-[3px] rounded-r-full bg-[var(--dash-violet)]" />
+                    ) : null}
 
-                    <span className="font-body truncate text-[13px] font-semibold">
-                      {item.label}
+                    <Icon size={16} strokeWidth={1.8} className="shrink-0" />
+
+                    <span
+                      className={
+                        khmer
+                          ? "khmer-input-value truncate text-[11px] font-normal leading-6"
+                          : "truncate"
+                      }
+                    >
+                      {khmer ? item.labelKm : item.labelEn}
                     </span>
                   </Link>
                 );
               })}
-            </nav>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* ===================================================
-          BOTTOM AREA
-         =================================================== */}
+      {/* ===============================================
+          USER
+         =============================================== */}
 
-      <div className="shrink-0 border-t border-black/[0.07] bg-white p-3 dark:border-white/[0.08] dark:bg-[#0b0d17]">
-        {/* VIEW WEBSITE */}
-
-        <Link
-          href={`/${locale}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-[42px] items-center gap-3 rounded-xl px-3 text-[var(--foreground-muted)] transition hover:bg-black/[0.04] hover:text-[var(--foreground)] dark:hover:bg-white/[0.05]"
-        >
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center">
-            <ExternalLink size={16} strokeWidth={1.9} />
-          </span>
-
-          <span className="font-body text-[13px] font-semibold">
-            {labels.viewWebsite}
-          </span>
-        </Link>
-
-        {/* ADMIN */}
-
-        <div className="mt-2 flex items-center gap-3 rounded-xl bg-black/[0.025] p-3 dark:bg-white/[0.035]">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/15 to-cyan-400/15 text-violet-700 ring-1 ring-violet-500/10 dark:text-violet-300">
-            <UserRound size={17} strokeWidth={1.9} />
+      <div className="shrink-0 border-t border-[var(--dash-border)] p-3">
+        <div className="flex items-center gap-3 rounded-[12px] px-2 py-2">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--dash-violet-soft)] text-[var(--dash-violet)]">
+            <CircleUserRound size={17} />
           </div>
 
-          <div className="min-w-0">
-            <p className="font-body truncate text-[13px] font-semibold">
+          <div className="min-w-0 flex-1">
+            <p className="font-body truncate text-[12px] font-semibold text-[var(--dash-text)]">
               {userName}
             </p>
 
-            <p className="font-body mt-0.5 truncate text-[10px] text-[var(--foreground-muted)]">
-              {labels.administrator}
+            <p className="font-body mt-0.5 truncate text-[9px] text-[var(--dash-muted)]">
+              {userEmail || "Administrator"}
             </p>
           </div>
         </div>
       </div>
     </aside>
   );
+}
+
+function isActiveRoute(pathname: string, href: string) {
+  if (href === "/dashboard") {
+    return pathname === "/dashboard";
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
