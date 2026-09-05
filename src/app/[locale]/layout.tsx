@@ -11,14 +11,50 @@ import { anton, gupter, odorMeanChey } from "../fonts";
 
 import "../globals.css";
 
+import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
+
   title: {
-    default: "Chantha Portfolio",
-    template: "%s | Chantha Portfolio",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
 
-  description:
-    "Personal portfolio, projects, activities, achievements and journey of Chantha.",
+  description: SITE_DESCRIPTION,
+
+  applicationName: SITE_NAME,
+
+  authors: [
+    {
+      name: "Chay Chantha",
+    },
+  ],
+
+  creator: "Chay Chantha",
+
+  openGraph: {
+    type: "website",
+
+    title: SITE_NAME,
+
+    description: SITE_DESCRIPTION,
+
+    siteName: SITE_NAME,
+  },
+
+  twitter: {
+    card: "summary_large_image",
+
+    title: SITE_NAME,
+
+    description: SITE_DESCRIPTION,
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 type Props = {

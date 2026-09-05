@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
 
   experimental: {
+    globalNotFound: true,
+
     serverActions: {
       bodySizeLimit: "25mb",
     },

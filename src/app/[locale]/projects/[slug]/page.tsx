@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { getSiteUrl, SITE_NAME } from "@/lib/site";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -27,6 +29,162 @@ type Props = {
     slug: string;
   }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
+
+  const safeLocale: "en" | "km" = locale === "km" ? "km" : "en";
+
+  const project = await prisma.activity.findFirst({
+    where: {
+      slug,
+      type: "PROJECT",
+      published: true,
+    },
+
+    select: {
+      slug: true,
+
+      titleEn: true,
+      titleKm: true,
+
+      summaryEn: true,
+      summaryKm: true,
+
+      descriptionEn: true,
+      descriptionKm: true,
+
+      coverImage: true,
+
+      activityDate: true,
+
+      organizationEn: true,
+      organizationKm: true,
+    },
+  });
+
+  /*
+   * If someone opens an invalid/unpublished
+   * project URL, do not let search engines index it.
+   */
+  if (!project) {
+    return {
+      title: safeLocale === "km" ? "រកមិនឃើញគម្រោង" : "Project Not Found",
+
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const title = localized(safeLocale, project.titleEn, project.titleKm);
+
+  const rawDescription =
+    localized(safeLocale, project.summaryEn, project.summaryKm) ||
+    localized(safeLocale, project.descriptionEn, project.descriptionKm) ||
+    (safeLocale === "km"
+      ? `មើលព័ត៌មានលម្អិតអំពីគម្រោង ${title} នៅក្នុង Portfolio របស់ Chay Chantha។`
+      : `Explore ${title}, a project featured in Chay Chantha's portfolio.`);
+
+  const description = createMetaDescription(rawDescription);
+
+  const siteUrl = getSiteUrl();
+
+  const projectUrl = `${siteUrl}/${safeLocale}/projects/${project.slug}`;
+
+  const englishUrl = `${siteUrl}/en/projects/${project.slug}`;
+
+  const khmerUrl = `${siteUrl}/km/projects/${project.slug}`;
+
+  const imageUrl = resolvePublicUrl(project.coverImage, siteUrl);
+
+  const organization = localized(
+    safeLocale,
+    project.organizationEn,
+    project.organizationKm,
+  );
+
+  return {
+    /*
+     * Because your root metadata uses:
+     *
+     * template: "%s | Chantha Portfolio"
+     *
+     * this becomes:
+     *
+     * Thnal BrorChum Event Management System
+     * | Chantha Portfolio
+     */
+    title,
+
+    description,
+
+    keywords: [
+      title,
+      "Chay Chantha",
+      "Chantha Portfolio",
+      "Software Development",
+      "Full Stack Development",
+      "AI",
+      "Project",
+      ...(organization ? [organization] : []),
+    ],
+
+    alternates: {
+      canonical: projectUrl,
+
+      languages: {
+        en: englishUrl,
+
+        km: khmerUrl,
+      },
+    },
+
+    openGraph: {
+      type: "article",
+
+      url: projectUrl,
+
+      title,
+
+      description,
+
+      siteName: SITE_NAME,
+
+      locale: safeLocale === "km" ? "km_KH" : "en_US",
+
+      alternateLocale: [safeLocale === "km" ? "en_US" : "km_KH"],
+
+      publishedTime: project.activityDate.toISOString(),
+
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+
+              alt: title,
+            },
+          ]
+        : undefined,
+    },
+
+    twitter: {
+      card: "summary_large_image",
+
+      title,
+
+      description,
+
+      images: imageUrl ? [imageUrl] : undefined,
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 export default async function ProjectDetailPage({ params }: Props) {
   const { locale, slug } = await params;
@@ -585,4 +743,54 @@ function formatPeriod(
   }
 
   return startText;
+}
+
+/* =========================================================
+   SEO HELPERS
+   ========================================================= */
+
+function createMetaDescription(value: string) {
+  const clean = value.replace(/\s+/g, " ").trim();
+
+  /*
+   * Search/social descriptions should
+   * stay reasonably compact.
+   */
+  if (clean.length <= 160) {
+    return clean;
+  }
+
+  return `${clean.slice(0, 157).trimEnd()}...`;
+}
+
+function resolvePublicUrl(value: string | null, siteUrl: string) {
+  if (!value) {
+    return null;
+  }
+
+  /*
+   * Supabase / Cloudinary / external URL later.
+   */
+  if (value.startsWith("https://") || value.startsWith("http://")) {
+    return value;
+  }
+
+  /*
+   * Current local files:
+   *
+   * /uploads/...
+   *
+   * become:
+   *
+   * http://localhost:3000/uploads/...
+   *
+   * and later:
+   *
+   * https://yourdomain.com/uploads/...
+   */
+  try {
+    return new URL(value, `${siteUrl}/`).toString();
+  } catch {
+    return null;
+  }
 }
