@@ -1,3 +1,17 @@
+export type SerializedActivityMedia = {
+  id: number;
+
+  fileUrl: string;
+
+  type: string;
+
+  captionEn: string | null;
+
+  captionKm: string | null;
+
+  sortOrder: number;
+};
+
 type ActivityForSerialization = {
   id: number;
   type: string;
@@ -36,6 +50,20 @@ type ActivityForSerialization = {
 
   featured: boolean;
   published: boolean;
+
+  media?: Array<{
+    id: number;
+
+    fileUrl: string;
+
+    type: string;
+
+    captionEn: string | null;
+
+    captionKm: string | null;
+
+    sortOrder: number;
+  }>;
 
   sortOrder: number;
 };
@@ -78,6 +106,7 @@ export type SerializedActivity = {
 
   featured: boolean;
   published: boolean;
+  media?: SerializedActivityMedia[];
 
   sortOrder: number;
 };
@@ -130,6 +159,21 @@ export function serializeActivities(
     featured: activity.featured,
 
     published: activity.published,
+
+    media:
+      activity.media?.map((media) => ({
+        id: media.id,
+
+        fileUrl: media.fileUrl,
+
+        type: media.type,
+
+        captionEn: media.captionEn,
+
+        captionKm: media.captionKm,
+
+        sortOrder: media.sortOrder,
+      })) ?? [],
 
     sortOrder: activity.sortOrder,
   }));

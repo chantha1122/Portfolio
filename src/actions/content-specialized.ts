@@ -27,12 +27,26 @@ const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 
 const MAX_GALLERY_FILES = 4;
 
+/*
+ * Project detail gallery:
+ *
+ * - maximum 3 new images per Save
+ * - maximum 8 total images per project
+ */
+const MAX_PROJECT_MEDIA_PER_UPLOAD = 3;
+
+const MAX_PROJECT_MEDIA_TOTAL = 8;
+
 const IMAGE_TYPES: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/jpg": "jpg",
   "image/png": "png",
   "image/webp": "webp",
 };
+
+/* =========================================================
+   FORM HELPERS
+   ========================================================= */
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -62,6 +76,13 @@ function getFiles(formData: FormData, key: string) {
     );
 }
 
+function numberList(formData: FormData, key: string) {
+  return formData
+    .getAll(key)
+    .map((value) => Number(value))
+    .filter((value) => Number.isInteger(value) && value > 0);
+}
+
 function bool(formData: FormData, key: string) {
   return formData.get(key) === "on";
 }
@@ -86,11 +107,19 @@ function slugify(value: string) {
   return slug || "portfolio-item";
 }
 
+/* =========================================================
+   AUTH
+   ========================================================= */
+
 async function requireAdmin() {
   const session = await auth();
 
   return Boolean(session?.user);
 }
+
+/* =========================================================
+   LOCAL FILE STORAGE
+   ========================================================= */
 
 function uploadDirectory(kind: string) {
   return path.join(process.cwd(), "public", "uploads", "content", kind);
@@ -136,18 +165,38 @@ async function removeLocalFile(filePath: string | null | undefined) {
   try {
     await unlink(absolutePath);
   } catch {
-    // Old file may already be removed.
+    /*
+     * The file may already have been removed.
+     */
   }
 }
 
-function revalidatePortfolio() {
-  revalidatePath("/en/dashboard", "layout");
+/* =========================================================
+   REVALIDATION
+   ========================================================= */
 
+function revalidatePortfolio(projectSlug?: string | null) {
+  revalidatePath("/en/dashboard", "layout");
   revalidatePath("/km/dashboard", "layout");
+
+  revalidatePath("/en/dashboard/projects");
+  revalidatePath("/km/dashboard/projects");
+
+  revalidatePath("/en/projects");
+  revalidatePath("/km/projects");
 
   revalidatePath("/en");
   revalidatePath("/km");
+
+  if (projectSlug) {
+    revalidatePath(`/en/projects/${projectSlug}`);
+    revalidatePath(`/km/projects/${projectSlug}`);
+  }
 }
+
+/* =========================================================
+   CONTENT TYPE
+   ========================================================= */
 
 function resolveContentType(
   kind: ContentKind,
@@ -226,6 +275,10 @@ export async function saveSpecializedContentAction(
     };
   }
 
+  /* =====================================================
+     LOAD CURRENT RECORD
+     ===================================================== */
+
   const existing = id
     ? await prisma.activity.findUnique({
         where: {
@@ -233,10 +286,70 @@ export async function saveSpecializedContentAction(
         },
 
         select: {
+          id: true,
+
+          slug: true,
+
+          type: true,
+
           coverImage: true,
+
+          media: {
+            where: {
+              type: "IMAGE",
+            },
+
+            select: {
+              id: true,
+
+              fileUrl: true,
+
+              sortOrder: true,
+            },
+          },
         },
       })
     : null;
+
+  if (id && !existing) {
+    return {
+      success: false,
+      message: "Content was not found.",
+    };
+  }
+
+  /*
+   * Protect specialized editors from accidentally
+   * editing the wrong activity type.
+   */
+  if (existing && kind === "project" && existing.type !== "PROJECT") {
+    return {
+      success: false,
+      message: "This record is not a project.",
+    };
+  }
+
+  if (existing && kind === "certificate" && existing.type !== "CERTIFICATE") {
+    return {
+      success: false,
+      message: "This record is not a certificate.",
+    };
+  }
+
+  if (
+    existing &&
+    kind === "activity" &&
+    !["EVENT", "COMPETITION", "OTHER"].includes(existing.type)
+  ) {
+    return {
+      success: false,
+      message: "This record cannot be edited from Activities.",
+    };
+  }
+
+  /* =====================================================
+     COVER IMAGE
+     ===================================================== */
 
   let coverImage =
     text(formData, "currentCoverImage") || existing?.coverImage || "";
@@ -249,12 +362,86 @@ export async function saveSpecializedContentAction(
 
   const coverFile = getFile(formData, "coverImageFile");
 
+  /* =====================================================
+     PROJECT DETAIL MEDIA
+     ===================================================== */
+
+  const projectMediaFiles =
+    kind === "project" ? getFiles(formData, "projectMediaFiles") : [];
+
+  const requestedRemoveMediaIds =
+    kind === "project" ? numberList(formData, "removeMediaIds") : [];
+
+  if (projectMediaFiles.length > MAX_PROJECT_MEDIA_PER_UPLOAD) {
+    return {
+      success: false,
+      message: `Upload at most ${MAX_PROJECT_MEDIA_PER_UPLOAD} project detail images at one time.`,
+    };
+  }
+
+  const existingProjectMedia = existing?.media ?? [];
+
+  /*
+   * Only allow IDs belonging to this project.
+   */
+  const existingMediaIdSet = new Set(
+    existingProjectMedia.map((media) => media.id),
+  );
+
+  const removeMediaIds = requestedRemoveMediaIds.filter((mediaId) =>
+    existingMediaIdSet.has(mediaId),
+  );
+
+  const removableIds = new Set(removeMediaIds);
+
+  const remainingProjectMedia = existingProjectMedia.filter(
+    (media) => !removableIds.has(media.id),
+  );
+
+  if (
+    remainingProjectMedia.length + projectMediaFiles.length >
+    MAX_PROJECT_MEDIA_TOTAL
+  ) {
+    return {
+      success: false,
+      message: `A project can have up to ${MAX_PROJECT_MEDIA_TOTAL} detail images.`,
+    };
+  }
+
+  /*
+   * Keep all newly-written image paths so we can
+   * remove them if database saving fails.
+   */
+  const newProjectMediaPaths: string[] = [];
+
+  let savedSlug = existing?.slug ?? null;
+
   try {
+    /* ===================================================
+       SAVE NEW COVER
+       =================================================== */
+
     if (coverFile) {
       newCoverImage = await saveImage(coverFile, kind);
 
       coverImage = newCoverImage;
     }
+
+    /* ===================================================
+       SAVE NEW PROJECT DETAIL IMAGES
+       =================================================== */
+
+    if (kind === "project") {
+      for (const file of projectMediaFiles) {
+        const savedPath = await saveImage(file, "project-media");
+
+        newProjectMediaPaths.push(savedPath);
+      }
+    }
+
+    /* ===================================================
+       COMMON DATA
+       =================================================== */
 
     const endDateValue = text(formData, "endDate");
 
@@ -289,6 +476,10 @@ export async function saveSpecializedContentAction(
 
       sortOrder: numberValue(formData, "sortOrder"),
     };
+
+    /* ===================================================
+       TYPE-SPECIFIC DATA
+       =================================================== */
 
     const contextualData =
       kind === "project"
@@ -351,33 +542,125 @@ export async function saveSpecializedContentAction(
               credentialId: null,
             };
 
+    /* ===================================================
+       UPDATE
+       =================================================== */
+
     if (id) {
-      await prisma.activity.update({
-        where: {
-          id,
-        },
+      const highestRemainingOrder = remainingProjectMedia.reduce(
+        (highest, media) => Math.max(highest, media.sortOrder),
+        -1,
+      );
 
-        data: {
-          ...commonData,
-          ...contextualData,
-        },
+      await prisma.$transaction(async (tx) => {
+        await tx.activity.update({
+          where: {
+            id,
+          },
+
+          data: {
+            ...commonData,
+            ...contextualData,
+          },
+        });
+
+        /*
+         * Delete selected project screenshots from DB.
+         */
+        if (kind === "project" && removeMediaIds.length > 0) {
+          await tx.activityMedia.deleteMany({
+            where: {
+              activityId: id,
+
+              type: "IMAGE",
+
+              id: {
+                in: removeMediaIds,
+              },
+            },
+          });
+        }
+
+        /*
+         * Add newly uploaded project screenshots.
+         */
+        if (kind === "project" && newProjectMediaPaths.length > 0) {
+          await tx.activityMedia.createMany({
+            data: newProjectMediaPaths.map((fileUrl, index) => ({
+              activityId: id,
+
+              fileUrl,
+
+              type: "IMAGE",
+
+              sortOrder: highestRemainingOrder + index + 1,
+            })),
+          });
+        }
       });
+
+      savedSlug = existing?.slug ?? null;
     } else {
-      await prisma.activity.create({
-        data: {
-          slug: `${slugify(titleEn)}-${Date.now().toString(36)}`,
+      /* =================================================
+         CREATE
+         ================================================= */
 
-          ...commonData,
-          ...contextualData,
-        },
+      const generatedSlug = `${slugify(titleEn)}-${Date.now().toString(36)}`;
+
+      const created = await prisma.$transaction(async (tx) => {
+        const activity = await tx.activity.create({
+          data: {
+            slug: generatedSlug,
+
+            ...commonData,
+
+            ...contextualData,
+          },
+        });
+
+        if (kind === "project" && newProjectMediaPaths.length > 0) {
+          await tx.activityMedia.createMany({
+            data: newProjectMediaPaths.map((fileUrl, index) => ({
+              activityId: activity.id,
+
+              fileUrl,
+
+              type: "IMAGE",
+
+              sortOrder: index,
+            })),
+          });
+        }
+
+        return activity;
       });
+
+      savedSlug = created.slug;
     }
+
+    /* ===================================================
+       CLEAN OLD COVER FILE
+       =================================================== */
 
     if (existing?.coverImage && existing.coverImage !== coverImage) {
       await removeLocalFile(existing.coverImage);
     }
 
-    revalidatePortfolio();
+    /* ===================================================
+       CLEAN REMOVED PROJECT MEDIA FILES
+       =================================================== */
+
+    if (kind === "project" && removeMediaIds.length > 0) {
+      const removedMedia = existingProjectMedia.filter((media) =>
+        removableIds.has(media.id),
+      );
+
+      await Promise.all(
+        removedMedia.map((media) => removeLocalFile(media.fileUrl)),
+      );
+    }
+
+    revalidatePortfolio(kind === "project" ? savedSlug : undefined);
 
     return {
       success: true,
@@ -385,9 +668,21 @@ export async function saveSpecializedContentAction(
       message: id ? "Updated successfully." : "Created successfully.",
     };
   } catch (error) {
+    /* ===================================================
+       CLEAN NEW COVER IF SAVE FAILED
+       =================================================== */
+
     if (newCoverImage) {
       await removeLocalFile(newCoverImage);
     }
+
+    /* ===================================================
+       CLEAN NEW PROJECT IMAGES IF SAVE FAILED
+       =================================================== */
+
+    await Promise.all(
+      newProjectMediaPaths.map((filePath) => removeLocalFile(filePath)),
+    );
 
     console.error("Specialized content save error:", error);
 
@@ -449,7 +744,9 @@ export async function saveGalleryItemAction(
     };
   }
 
-  /* EDIT */
+  /* =====================================================
+     EDIT
+     ===================================================== */
 
   if (id) {
     const existing = await prisma.activity.findUnique({
@@ -564,7 +861,9 @@ export async function saveGalleryItemAction(
     }
   }
 
-  /* CREATE MULTIPLE */
+  /* =====================================================
+     CREATE MULTIPLE
+     ===================================================== */
 
   const savedFiles: string[] = [];
 
@@ -691,6 +990,10 @@ export async function deleteSpecializedContentAction(
       },
 
       select: {
+        slug: true,
+
+        type: true,
+
         coverImage: true,
 
         media: {
@@ -720,7 +1023,7 @@ export async function deleteSpecializedContentAction(
       item.media.map((media) => removeLocalFile(media.fileUrl)),
     );
 
-    revalidatePortfolio();
+    revalidatePortfolio(item.type === "PROJECT" ? item.slug : undefined);
 
     return {
       success: true,

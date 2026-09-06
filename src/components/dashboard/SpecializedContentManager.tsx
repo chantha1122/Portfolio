@@ -765,8 +765,10 @@ function ActivityFields({
       <CoverUpload
         locale={locale}
         current={selected?.coverImage ?? ""}
-        title={km ? "រូបភាពសកម្មភាព" : "Activity Cover"}
+        title={km ? "រូបភាពគម្រោង" : "Project Cover"}
       />
+
+      <ProjectDetailImages locale={locale} current={selected?.media ?? []} />
     </div>
   );
 }
@@ -902,6 +904,8 @@ function ProjectFields({
         current={selected?.coverImage ?? ""}
         title={km ? "រូបភាពគម្រោង" : "Project Cover"}
       />
+
+      <ProjectDetailImages locale={locale} current={selected?.media ?? []} />
     </div>
   );
 }
@@ -1148,6 +1152,169 @@ function CoverUpload({
             </button>
           ) : null}
         </div>
+      </div>
+    </Section>
+  );
+}
+
+function ProjectDetailImages({
+  locale,
+  current,
+}: {
+  locale: "en" | "km";
+
+  current: Array<{
+    id: number;
+
+    fileUrl: string;
+
+    type: string;
+
+    captionEn: string | null;
+
+    captionKm: string | null;
+
+    sortOrder: number;
+  }>;
+}) {
+  const km = locale === "km";
+
+  const [removedIds, setRemovedIds] = useState<number[]>([]);
+
+  const [previews, setPreviews] = useState<string[]>([]);
+
+  function changed(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []).slice(0, 3);
+
+    previews.forEach((url) => URL.revokeObjectURL(url));
+
+    setPreviews(files.map((file) => URL.createObjectURL(file)));
+  }
+
+  function toggleRemove(id: number) {
+    setRemovedIds((currentIds) =>
+      currentIds.includes(id)
+        ? currentIds.filter((value) => value !== id)
+        : [...currentIds, id],
+    );
+  }
+
+  const visibleCurrent = current.filter(
+    (media) => !removedIds.includes(media.id),
+  );
+
+  return (
+    <Section
+      icon={ImageIcon}
+      title={km ? "រូបភាពបន្ថែមក្នុង Project Detail" : "Project Detail Images"}
+      description={
+        km
+          ? "បន្ថែម Screenshot ឬរូបភាពសំខាន់ៗសម្រាប់ទំព័រលម្អិតគម្រោង។ អាចមានរហូតដល់ 8 រូប។"
+          : "Add screenshots or supporting images for the project case study. Up to 8 images per project."
+      }
+      km={km}
+    >
+      {removedIds.map((id) => (
+        <input key={id} type="hidden" name="removeMediaIds" value={id} />
+      ))}
+
+      {current.length > 0 ? (
+        <div>
+          <p className="font-body text-[10px] font-semibold text-[var(--foreground-muted)]">
+            {km ? "រូបភាពបច្ចុប្បន្ន" : "Current Images"}
+          </p>
+
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+            {current.map((media) => {
+              const removed = removedIds.includes(media.id);
+
+              return (
+                <div
+                  key={media.id}
+                  className={cn(
+                    "relative aspect-[4/3] overflow-hidden rounded-xl border bg-black/[0.02] dark:bg-white/[0.02]",
+                    removed
+                      ? "border-red-500/30 opacity-40"
+                      : "border-black/[0.07] dark:border-white/[0.08]",
+                  )}
+                >
+                  <img
+                    src={media.fileUrl}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => toggleRemove(media.id)}
+                    className={cn(
+                      "absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-lg text-white shadow-sm",
+                      removed ? "bg-emerald-600" : "bg-black/65",
+                    )}
+                  >
+                    {removed ? <Plus size={13} /> : <X size={13} />}
+                  </button>
+
+                  {removed ? (
+                    <div className="absolute inset-x-2 bottom-2 rounded-lg bg-red-500/85 px-2 py-1 text-center font-body text-[8px] font-semibold text-white">
+                      {km ? "នឹងលុប" : "Will remove"}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
+      <div className={current.length > 0 ? "mt-5" : ""}>
+        <p className="font-body text-[10px] font-semibold text-[var(--foreground-muted)]">
+          {km ? "បន្ថែមរូបភាពថ្មី" : "Add New Images"}
+        </p>
+
+        <label className="mt-2 flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed border-violet-500/25 bg-violet-500/[0.035] px-4 py-5 text-violet-600 transition hover:bg-violet-500/[0.06] dark:text-violet-300">
+          <Upload size={16} />
+
+          <span className="font-body text-[11px] font-semibold">
+            {km ? "ជ្រើសរើសរូបភាព" : "Choose Images"}
+          </span>
+
+          <input
+            type="file"
+            name="projectMediaFiles"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            onChange={changed}
+            className="hidden"
+          />
+        </label>
+
+        <p className="font-body mt-2 text-[9px] text-[var(--foreground-muted)]">
+          {km
+            ? "JPG, PNG ឬ WEBP • អតិបរមា 5 MB ក្នុងមួយរូប • បន្ថែមបាន 3 រូបក្នុងមួយលើក"
+            : "JPG, PNG or WEBP • Max 5 MB each • Add up to 3 images per save"}
+        </p>
+
+        {previews.length > 0 ? (
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {previews.map((src, index) => (
+              <div
+                key={src}
+                className="aspect-[4/3] overflow-hidden rounded-xl border border-violet-500/20 bg-violet-500/[0.03]"
+              >
+                <img
+                  src={src}
+                  alt={`New project image ${index + 1}`}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        <p className="font-number mt-3 text-[9px] text-[var(--foreground-muted)]">
+          {visibleCurrent.length + previews.length} / 8
+        </p>
       </div>
     </Section>
   );

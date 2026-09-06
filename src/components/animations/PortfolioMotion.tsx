@@ -258,23 +258,55 @@ export default function PortfolioMotion() {
 
         event.preventDefault();
 
-        /*
-         * Smooth movement when user clicks
-         * About / Skills / Projects / Gallery etc.
-         */
+        /* ===================================================
+       TELL NAVBAR:
+       programmatic scroll is STARTING
+       =================================================== */
+
+        window.dispatchEvent(
+          new CustomEvent("portfolio:navigation-start", {
+            detail: {
+              href,
+            },
+          }),
+        );
+
+        /* ===================================================
+       LENIS SCROLL
+       =================================================== */
+
         lenis.scrollTo(target, {
           offset: -100,
 
           duration: 1.2,
 
           easing: (value) => 1 - Math.pow(1 - value, 4),
-        });
 
-        /*
-         * Update URL hash without browser
-         * performing another scroll.
-         */
-        window.history.replaceState(null, "", href);
+          /* ===============================================
+           ACTUAL SCROLL COMPLETION
+           =============================================== */
+
+          onComplete: () => {
+            /*
+             * Keep URL hash updated without
+             * causing another browser scroll.
+             */
+            window.history.replaceState(null, "", href);
+
+            /*
+             * Tell navbar that Lenis really finished.
+             *
+             * Now normal scroll-spy may take control.
+             */
+            window.dispatchEvent(
+              new CustomEvent("portfolio:navigation-end", {
+                detail: {
+                  href,
+                },
+              }),
+            );
+          },
+        });
       };
 
       link.addEventListener("click", handler);

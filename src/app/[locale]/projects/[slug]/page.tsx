@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getSiteUrl, SITE_NAME } from "@/lib/site";
+
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -17,11 +17,15 @@ import PublicNavbar from "@/components/layout/PublicNavbar";
 
 import ActivityEngagement from "@/components/portfolio/ActivityEngagement";
 
+import ProjectImageGallery from "@/components/portfolio/ProjectImageGallery";
+
 import { Link } from "@/i18n/navigation";
 
 import { prisma } from "@/lib/db";
 
 import { cn } from "@/lib/cn";
+
+import { getSiteUrl, SITE_NAME } from "@/lib/site";
 
 type Props = {
   params: Promise<{
@@ -29,6 +33,10 @@ type Props = {
     slug: string;
   }>;
 };
+
+/* =========================================================
+   SEO / OPEN GRAPH
+   ========================================================= */
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
@@ -60,13 +68,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
       organizationEn: true,
       organizationKm: true,
+
+      /*
+       * If there is no cover image, the first
+       * Project Detail image can be used by
+       * Open Graph as fallback.
+       */
+      media: {
+        where: {
+          type: "IMAGE",
+        },
+
+        orderBy: [
+          {
+            sortOrder: "asc",
+          },
+
+          {
+            createdAt: "asc",
+          },
+        ],
+
+        take: 1,
+
+        select: {
+          fileUrl: true,
+        },
+      },
     },
   });
 
-  /*
-   * If someone opens an invalid/unpublished
-   * project URL, do not let search engines index it.
-   */
   if (!project) {
     return {
       title: safeLocale === "km" ? "រកមិនឃើញគម្រោង" : "Project Not Found",
@@ -97,7 +128,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const khmerUrl = `${siteUrl}/km/projects/${project.slug}`;
 
-  const imageUrl = resolvePublicUrl(project.coverImage, siteUrl);
+  const socialImage = project.coverImage || project.media[0]?.fileUrl || null;
+
+  const imageUrl = resolvePublicUrl(socialImage, siteUrl);
 
   const organization = localized(
     safeLocale,
@@ -106,16 +139,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 
   return {
-    /*
-     * Because your root metadata uses:
-     *
-     * template: "%s | Chantha Portfolio"
-     *
-     * this becomes:
-     *
-     * Thnal BrorChum Event Management System
-     * | Chantha Portfolio
-     */
     title,
 
     description,
@@ -186,6 +209,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+/* =========================================================
+   PAGE
+   ========================================================= */
+
 export default async function ProjectDetailPage({ params }: Props) {
   const { locale, slug } = await params;
 
@@ -201,6 +228,40 @@ export default async function ProjectDetailPage({ params }: Props) {
     },
 
     include: {
+      /* ===============================================
+           PROJECT DETAIL IMAGES
+           =============================================== */
+
+      media: {
+        where: {
+          type: "IMAGE",
+        },
+
+        orderBy: [
+          {
+            sortOrder: "asc",
+          },
+
+          {
+            createdAt: "asc",
+          },
+        ],
+
+        select: {
+          id: true,
+
+          fileUrl: true,
+
+          captionEn: true,
+
+          captionKm: true,
+        },
+      },
+
+      /* ===============================================
+           COMMENTS
+           =============================================== */
+
       comments: {
         where: {
           isApproved: true,
@@ -214,11 +275,18 @@ export default async function ProjectDetailPage({ params }: Props) {
 
         select: {
           id: true,
+
           name: true,
+
           message: true,
+
           createdAt: true,
         },
       },
+
+      /* ===============================================
+           COUNTS
+           =============================================== */
 
       _count: {
         select: {
@@ -237,6 +305,10 @@ export default async function ProjectDetailPage({ params }: Props) {
   if (!project) {
     notFound();
   }
+
+  /* =====================================================
+     LOCALIZED CONTENT
+     ===================================================== */
 
   const title = localized(safeLocale, project.titleEn, project.titleKm);
 
@@ -269,7 +341,9 @@ export default async function ProjectDetailPage({ params }: Props) {
          ===================================================== */}
 
       <div className="mx-auto w-full max-w-[1180px] px-4 pb-24 pt-[120px] sm:px-6 lg:px-8 lg:pt-[128px]">
-        {/* BACK */}
+        {/* ===================================================
+            BACK
+           =================================================== */}
 
         <Link
           href="/#projects"
@@ -286,7 +360,9 @@ export default async function ProjectDetailPage({ params }: Props) {
 
         <section className="portfolio-panel portfolio-glow mt-6 overflow-hidden">
           <div className="grid lg:grid-cols-[1.02fr_0.98fr]">
-            {/* LEFT */}
+            {/* =============================================
+                LEFT
+               ============================================= */}
 
             <div className="flex flex-col justify-center p-6 md:p-8 lg:p-10">
               {/* BADGES */}
@@ -399,7 +475,9 @@ export default async function ProjectDetailPage({ params }: Props) {
               </div>
             </div>
 
-            {/* RIGHT PROJECT IMAGE */}
+            {/* =============================================
+                RIGHT PROJECT IMAGE
+               ============================================= */}
 
             <div className="relative min-h-[320px] overflow-hidden border-t border-[var(--portfolio-border)] lg:min-h-[480px] lg:border-l lg:border-t-0">
               {project.coverImage ? (
@@ -590,6 +668,16 @@ export default async function ProjectDetailPage({ params }: Props) {
             ) : null}
           </aside>
         </section>
+
+        {/* ===================================================
+            PROJECT DETAIL GALLERY
+           =================================================== */}
+
+        <ProjectImageGallery
+          locale={safeLocale}
+          title={title}
+          images={project.media}
+        />
       </div>
     </main>
   );
@@ -599,7 +687,14 @@ export default async function ProjectDetailPage({ params }: Props) {
    BADGE
    ========================================================= */
 
-function Badge({ label, className }: { label: string; className: string }) {
+function Badge({
+  label,
+  className,
+}: {
+  label: string;
+
+  className: string;
+}) {
   return (
     <span
       className={cn(
@@ -622,7 +717,9 @@ function HeroLink({
   primary = false,
 }: {
   href: string;
+
   label: string;
+
   primary?: boolean;
 }) {
   return (
@@ -687,7 +784,9 @@ function SideLink({
   primary = false,
 }: {
   href: string;
+
   label: string;
+
   primary?: boolean;
 }) {
   return (
@@ -728,6 +827,7 @@ function formatPeriod(
     locale === "km" ? "km-KH" : "en-US",
     {
       month: "short",
+
       year: "numeric",
     },
   );
@@ -752,10 +852,6 @@ function formatPeriod(
 function createMetaDescription(value: string) {
   const clean = value.replace(/\s+/g, " ").trim();
 
-  /*
-   * Search/social descriptions should
-   * stay reasonably compact.
-   */
   if (clean.length <= 160) {
     return clean;
   }
@@ -769,25 +865,14 @@ function resolvePublicUrl(value: string | null, siteUrl: string) {
   }
 
   /*
-   * Supabase / Cloudinary / external URL later.
+   * Later, when files are moved to
+   * Supabase Storage, absolute URLs
+   * will work automatically.
    */
   if (value.startsWith("https://") || value.startsWith("http://")) {
     return value;
   }
 
-  /*
-   * Current local files:
-   *
-   * /uploads/...
-   *
-   * become:
-   *
-   * http://localhost:3000/uploads/...
-   *
-   * and later:
-   *
-   * https://yourdomain.com/uploads/...
-   */
   try {
     return new URL(value, `${siteUrl}/`).toString();
   } catch {

@@ -33,6 +33,24 @@ export default async function ProjectsPage({ params }: Props) {
         sortOrder: "asc",
       },
     ],
+
+    include: {
+      media: {
+        where: {
+          type: "IMAGE",
+        },
+
+        orderBy: [
+          {
+            sortOrder: "asc",
+          },
+
+          {
+            createdAt: "asc",
+          },
+        ],
+      },
+    },
   });
 
   return (
