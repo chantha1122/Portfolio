@@ -1,13 +1,15 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
-
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
+
 import { prisma } from "@/lib/db";
+
+import {
+  deleteStorageFile,
+  uploadPortfolioImage,
+} from "@/lib/supabase-storage";
 
 export type SpecializedContentResult = {
   success: boolean;
@@ -23,8 +25,6 @@ type ContentType =
   | "PROJECT"
   | "CERTIFICATE";
 
-const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
-
 const MAX_GALLERY_FILES = 4;
 
 /*
@@ -36,13 +36,6 @@ const MAX_GALLERY_FILES = 4;
 const MAX_PROJECT_MEDIA_PER_UPLOAD = 3;
 
 const MAX_PROJECT_MEDIA_TOTAL = 8;
-
-const IMAGE_TYPES: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/jpg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
 
 /* =========================================================
    FORM HELPERS
@@ -118,57 +111,61 @@ async function requireAdmin() {
 }
 
 /* =========================================================
-   LOCAL FILE STORAGE
+   SUPABASE STORAGE
    ========================================================= */
 
-function uploadDirectory(kind: string) {
-  return path.join(process.cwd(), "public", "uploads", "content", kind);
+function getContentFolder(kind: ContentKind) {
+  if (kind === "project") {
+    return "projects";
+  }
+
+  if (kind === "certificate") {
+    return "certificates";
+  }
+
+  return "activities";
 }
 
-async function saveImage(file: File, kind: string) {
-  const extension = IMAGE_TYPES[file.type];
+async function saveContentImage(file: File, kind: ContentKind) {
+  const folder = getContentFolder(kind);
 
-  if (!extension) {
-    throw new Error("Please upload a JPG, PNG or WEBP image.");
-  }
+  return uploadPortfolioImage(file, folder, {
+    maxMb: 5,
 
-  if (file.size > IMAGE_MAX_BYTES) {
-    throw new Error("Image size must be 5 MB or smaller.");
-  }
-
-  const directory = uploadDirectory(kind);
-
-  await mkdir(directory, {
-    recursive: true,
+    prefix: kind,
   });
-
-  const filename = `${Date.now()}-${randomUUID().slice(0, 8)}.${extension}`;
-
-  const absolutePath = path.join(directory, filename);
-
-  const bytes = Buffer.from(await file.arrayBuffer());
-
-  await writeFile(absolutePath, bytes);
-
-  return `/uploads/content/${kind}/${filename}`;
 }
 
-async function removeLocalFile(filePath: string | null | undefined) {
-  if (!filePath || !filePath.startsWith("/uploads/content/")) {
-    return;
-  }
+async function saveProjectMediaImage(file: File) {
+  return uploadPortfolioImage(file, "project-media", {
+    maxMb: 5,
 
-  const relativePath = filePath.replace(/^\/+/, "");
+    prefix: "project-detail",
+  });
+}
 
-  const absolutePath = path.join(process.cwd(), "public", relativePath);
+async function saveGalleryImage(file: File) {
+  return uploadPortfolioImage(file, "gallery", {
+    maxMb: 5,
 
-  try {
-    await unlink(absolutePath);
-  } catch {
-    /*
-     * The file may already have been removed.
-     */
-  }
+    prefix: "gallery",
+  });
+}
+
+/*
+ * deleteStorageFile() only removes files that
+ * belong to our Supabase portfolio bucket.
+ *
+ * Existing old local URLs such as:
+ *
+ * /uploads/content/project/...
+ *
+ * are intentionally ignored for now.
+ *
+ * We will migrate those old files in a later step.
+ */
+async function removeStoredFile(fileUrl: string | null | undefined) {
+  await deleteStorageFile(fileUrl);
 }
 
 /* =========================================================
@@ -177,19 +174,24 @@ async function removeLocalFile(filePath: string | null | undefined) {
 
 function revalidatePortfolio(projectSlug?: string | null) {
   revalidatePath("/en/dashboard", "layout");
+
   revalidatePath("/km/dashboard", "layout");
 
   revalidatePath("/en/dashboard/projects");
+
   revalidatePath("/km/dashboard/projects");
 
   revalidatePath("/en/projects");
+
   revalidatePath("/km/projects");
 
   revalidatePath("/en");
+
   revalidatePath("/km");
 
   if (projectSlug) {
     revalidatePath(`/en/projects/${projectSlug}`);
+
     revalidatePath(`/km/projects/${projectSlug}`);
   }
 }
@@ -233,6 +235,7 @@ export async function saveSpecializedContentAction(
   if (!(await requireAdmin())) {
     return {
       success: false,
+
       message: "Unauthorized.",
     };
   }
@@ -242,6 +245,7 @@ export async function saveSpecializedContentAction(
   if (!["activity", "project", "certificate"].includes(kind)) {
     return {
       success: false,
+
       message: "Invalid content type.",
     };
   }
@@ -251,6 +255,7 @@ export async function saveSpecializedContentAction(
   if (!contentType) {
     return {
       success: false,
+
       message: "Please choose a valid activity type.",
     };
   }
@@ -264,6 +269,7 @@ export async function saveSpecializedContentAction(
   if (!titleEn) {
     return {
       success: false,
+
       message: "English title is required.",
     };
   }
@@ -271,6 +277,7 @@ export async function saveSpecializedContentAction(
   if (!activityDateValue) {
     return {
       success: false,
+
       message: "Date is required.",
     };
   }
@@ -314,17 +321,19 @@ export async function saveSpecializedContentAction(
   if (id && !existing) {
     return {
       success: false,
+
       message: "Content was not found.",
     };
   }
 
-  /*
-   * Protect specialized editors from accidentally
-   * editing the wrong activity type.
-   */
+  /* =====================================================
+     TYPE SAFETY
+     ===================================================== */
+
   if (existing && kind === "project" && existing.type !== "PROJECT") {
     return {
       success: false,
+
       message: "This record is not a project.",
     };
   }
@@ -332,6 +341,7 @@ export async function saveSpecializedContentAction(
   if (existing && kind === "certificate" && existing.type !== "CERTIFICATE") {
     return {
       success: false,
+
       message: "This record is not a certificate.",
     };
   }
@@ -343,6 +353,7 @@ export async function saveSpecializedContentAction(
   ) {
     return {
       success: false,
+
       message: "This record cannot be edited from Activities.",
     };
   }
@@ -375,6 +386,7 @@ export async function saveSpecializedContentAction(
   if (projectMediaFiles.length > MAX_PROJECT_MEDIA_PER_UPLOAD) {
     return {
       success: false,
+
       message: `Upload at most ${MAX_PROJECT_MEDIA_PER_UPLOAD} project detail images at one time.`,
     };
   }
@@ -382,7 +394,8 @@ export async function saveSpecializedContentAction(
   const existingProjectMedia = existing?.media ?? [];
 
   /*
-   * Only allow IDs belonging to this project.
+   * Only IDs that actually belong to
+   * the current project are accepted.
    */
   const existingMediaIdSet = new Set(
     existingProjectMedia.map((media) => media.id),
@@ -404,38 +417,39 @@ export async function saveSpecializedContentAction(
   ) {
     return {
       success: false,
+
       message: `A project can have up to ${MAX_PROJECT_MEDIA_TOTAL} detail images.`,
     };
   }
 
   /*
-   * Keep all newly-written image paths so we can
-   * remove them if database saving fails.
+   * New Supabase URLs are tracked so
+   * we can clean them if Prisma fails.
    */
-  const newProjectMediaPaths: string[] = [];
+  const newProjectMediaUrls: string[] = [];
 
   let savedSlug = existing?.slug ?? null;
 
   try {
     /* ===================================================
-       SAVE NEW COVER
+       UPLOAD NEW COVER TO SUPABASE
        =================================================== */
 
     if (coverFile) {
-      newCoverImage = await saveImage(coverFile, kind);
+      newCoverImage = await saveContentImage(coverFile, kind);
 
       coverImage = newCoverImage;
     }
 
     /* ===================================================
-       SAVE NEW PROJECT DETAIL IMAGES
+       UPLOAD PROJECT DETAIL IMAGES TO SUPABASE
        =================================================== */
 
     if (kind === "project") {
       for (const file of projectMediaFiles) {
-        const savedPath = await saveImage(file, "project-media");
+        const url = await saveProjectMediaImage(file);
 
-        newProjectMediaPaths.push(savedPath);
+        newProjectMediaUrls.push(url);
       }
     }
 
@@ -560,13 +574,15 @@ export async function saveSpecializedContentAction(
 
           data: {
             ...commonData,
+
             ...contextualData,
           },
         });
 
-        /*
-         * Delete selected project screenshots from DB.
-         */
+        /* =============================================
+             REMOVE PROJECT DETAIL RECORDS
+             ============================================= */
+
         if (kind === "project" && removeMediaIds.length > 0) {
           await tx.activityMedia.deleteMany({
             where: {
@@ -581,12 +597,13 @@ export async function saveSpecializedContentAction(
           });
         }
 
-        /*
-         * Add newly uploaded project screenshots.
-         */
-        if (kind === "project" && newProjectMediaPaths.length > 0) {
+        /* =============================================
+             CREATE NEW PROJECT DETAIL RECORDS
+             ============================================= */
+
+        if (kind === "project" && newProjectMediaUrls.length > 0) {
           await tx.activityMedia.createMany({
-            data: newProjectMediaPaths.map((fileUrl, index) => ({
+            data: newProjectMediaUrls.map((fileUrl, index) => ({
               activityId: id,
 
               fileUrl,
@@ -618,9 +635,9 @@ export async function saveSpecializedContentAction(
           },
         });
 
-        if (kind === "project" && newProjectMediaPaths.length > 0) {
+        if (kind === "project" && newProjectMediaUrls.length > 0) {
           await tx.activityMedia.createMany({
-            data: newProjectMediaPaths.map((fileUrl, index) => ({
+            data: newProjectMediaUrls.map((fileUrl, index) => ({
               activityId: activity.id,
 
               fileUrl,
@@ -639,15 +656,15 @@ export async function saveSpecializedContentAction(
     }
 
     /* ===================================================
-       CLEAN OLD COVER FILE
+       DELETE OLD COVER FROM SUPABASE
        =================================================== */
 
     if (existing?.coverImage && existing.coverImage !== coverImage) {
-      await removeLocalFile(existing.coverImage);
+      await removeStoredFile(existing.coverImage);
     }
 
     /* ===================================================
-       CLEAN REMOVED PROJECT MEDIA FILES
+       DELETE REMOVED PROJECT MEDIA FROM SUPABASE
        =================================================== */
 
     if (kind === "project" && removeMediaIds.length > 0) {
@@ -656,7 +673,7 @@ export async function saveSpecializedContentAction(
       );
 
       await Promise.all(
-        removedMedia.map((media) => removeLocalFile(media.fileUrl)),
+        removedMedia.map((media) => removeStoredFile(media.fileUrl)),
       );
     }
 
@@ -669,19 +686,19 @@ export async function saveSpecializedContentAction(
     };
   } catch (error) {
     /* ===================================================
-       CLEAN NEW COVER IF SAVE FAILED
+       CLEAN NEW COVER IF PRISMA SAVE FAILED
        =================================================== */
 
     if (newCoverImage) {
-      await removeLocalFile(newCoverImage);
+      await removeStoredFile(newCoverImage);
     }
 
     /* ===================================================
-       CLEAN NEW PROJECT IMAGES IF SAVE FAILED
+       CLEAN NEW PROJECT IMAGES IF PRISMA SAVE FAILED
        =================================================== */
 
     await Promise.all(
-      newProjectMediaPaths.map((filePath) => removeLocalFile(filePath)),
+      newProjectMediaUrls.map((fileUrl) => removeStoredFile(fileUrl)),
     );
 
     console.error("Specialized content save error:", error);
@@ -705,6 +722,7 @@ export async function saveGalleryItemAction(
   if (!(await requireAdmin())) {
     return {
       success: false,
+
       message: "Unauthorized.",
     };
   }
@@ -724,6 +742,7 @@ export async function saveGalleryItemAction(
   if (!activityDateValue) {
     return {
       success: false,
+
       message: "Date is required.",
     };
   }
@@ -733,6 +752,7 @@ export async function saveGalleryItemAction(
   if (files.length > MAX_GALLERY_FILES) {
     return {
       success: false,
+
       message: "Upload a maximum of 4 photos at one time.",
     };
   }
@@ -740,12 +760,13 @@ export async function saveGalleryItemAction(
   if (!id && files.length === 0) {
     return {
       success: false,
+
       message: "Choose at least one image.",
     };
   }
 
   /* =====================================================
-     EDIT
+     EDIT GALLERY ITEM
      ===================================================== */
 
   if (id) {
@@ -762,6 +783,7 @@ export async function saveGalleryItemAction(
     if (!existing) {
       return {
         success: false,
+
         message: "Gallery item was not found.",
       };
     }
@@ -772,7 +794,7 @@ export async function saveGalleryItemAction(
 
     try {
       if (files[0]) {
-        newImage = await saveImage(files[0], "gallery");
+        newImage = await saveGalleryImage(files[0]);
 
         coverImage = newImage;
       }
@@ -834,18 +856,19 @@ export async function saveGalleryItemAction(
       });
 
       if (existing.coverImage && existing.coverImage !== coverImage) {
-        await removeLocalFile(existing.coverImage);
+        await removeStoredFile(existing.coverImage);
       }
 
       revalidatePortfolio();
 
       return {
         success: true,
+
         message: "Gallery item updated successfully.",
       };
     } catch (error) {
       if (newImage) {
-        await removeLocalFile(newImage);
+        await removeStoredFile(newImage);
       }
 
       console.error("Gallery update error:", error);
@@ -862,16 +885,16 @@ export async function saveGalleryItemAction(
   }
 
   /* =====================================================
-     CREATE MULTIPLE
+     CREATE MULTIPLE GALLERY ITEMS
      ===================================================== */
 
   const savedFiles: string[] = [];
 
   try {
     for (const file of files) {
-      const savedPath = await saveImage(file, "gallery");
+      const url = await saveGalleryImage(file);
 
-      savedFiles.push(savedPath);
+      savedFiles.push(url);
     }
 
     const batchToken = Date.now().toString(36);
@@ -954,7 +977,7 @@ export async function saveGalleryItemAction(
           : "Photo added to the gallery.",
     };
   } catch (error) {
-    await Promise.all(savedFiles.map((filePath) => removeLocalFile(filePath)));
+    await Promise.all(savedFiles.map((fileUrl) => removeStoredFile(fileUrl)));
 
     console.error("Gallery create error:", error);
 
@@ -979,6 +1002,7 @@ export async function deleteSpecializedContentAction(
   if (!(await requireAdmin())) {
     return {
       success: false,
+
       message: "Unauthorized.",
     };
   }
@@ -1007,6 +1031,7 @@ export async function deleteSpecializedContentAction(
     if (!item) {
       return {
         success: false,
+
         message: "Content was not found.",
       };
     }
@@ -1017,16 +1042,25 @@ export async function deleteSpecializedContentAction(
       },
     });
 
-    await removeLocalFile(item.coverImage);
+    /* ===================================================
+       DELETE COVER FROM SUPABASE
+       =================================================== */
+
+    await removeStoredFile(item.coverImage);
+
+    /* ===================================================
+       DELETE PROJECT MEDIA FROM SUPABASE
+       =================================================== */
 
     await Promise.all(
-      item.media.map((media) => removeLocalFile(media.fileUrl)),
+      item.media.map((media) => removeStoredFile(media.fileUrl)),
     );
 
     revalidatePortfolio(item.type === "PROJECT" ? item.slug : undefined);
 
     return {
       success: true,
+
       message: "Deleted successfully.",
     };
   } catch (error) {
@@ -1034,6 +1068,7 @@ export async function deleteSpecializedContentAction(
 
     return {
       success: false,
+
       message: "Unable to delete content.",
     };
   }

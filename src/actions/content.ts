@@ -4,21 +4,23 @@ import { createHash } from "node:crypto";
 
 import { headers } from "next/headers";
 
-import {
-  sendContactNotificationEmail,
-  sendContactReplyEmail,
-} from "@/lib/mail";
-
-import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
-
 import { revalidatePath } from "next/cache";
 
 import { z } from "zod";
 
 import { auth } from "@/auth";
+
 import { prisma } from "@/lib/db";
+
+import {
+  sendContactNotificationEmail,
+  sendContactReplyEmail,
+} from "@/lib/mail";
+
+import {
+  deleteStorageFile,
+  uploadPortfolioImage,
+} from "@/lib/supabase-storage";
 
 export type ContentActionResult = {
   success: boolean;
@@ -352,18 +354,42 @@ export async function deleteActivityAction(
   }
 
   try {
+    const activity = await prisma.activity.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        coverImage: true,
+        media: {
+          select: {
+            fileUrl: true,
+          },
+        },
+      },
+    });
+
+    if (!activity) {
+      return {
+        success: false,
+        message: "Content was not found.",
+      };
+    }
+
     await prisma.activity.delete({
       where: {
         id,
       },
     });
 
+    await deleteStorageFile(activity.coverImage);
+
+    await Promise.all(
+      activity.media.map((media) => deleteStorageFile(media.fileUrl)),
+    );
+
     revalidatePath("/en/dashboard", "layout");
-
     revalidatePath("/km/dashboard", "layout");
-
     revalidatePath("/en");
-
     revalidatePath("/km");
 
     return {
@@ -386,12 +412,12 @@ export async function deleteActivityAction(
 
 const SKILL_TOOL_ICON_MAX_BYTES = 3 * 1024 * 1024;
 
-const SKILL_TOOL_ICON_TYPES: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/jpg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
+const SKILL_TOOL_ICON_TYPES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+]);
 
 function getFile(formData: FormData, key: string): File | null {
   const value = formData.get(key);
@@ -407,14 +433,8 @@ function shouldRemoveFile(formData: FormData, key: string) {
   return text(formData, key) === "1";
 }
 
-function skillToolIconDirectory() {
-  return path.join(process.cwd(), "public", "uploads", "skills-tools");
-}
-
 async function saveSkillToolIcon(file: File, prefix: "skill" | "tool") {
-  const extension = SKILL_TOOL_ICON_TYPES[file.type];
-
-  if (!extension) {
+  if (!SKILL_TOOL_ICON_TYPES.has(file.type)) {
     throw new Error("Please upload a JPG, PNG or WEBP image.");
   }
 
@@ -422,37 +442,14 @@ async function saveSkillToolIcon(file: File, prefix: "skill" | "tool") {
     throw new Error("Icon image size must be 3 MB or smaller.");
   }
 
-  const directory = skillToolIconDirectory();
-
-  await mkdir(directory, {
-    recursive: true,
+  return uploadPortfolioImage(file, "skills-tools", {
+    maxMb: 3,
+    prefix,
   });
-
-  const fileName = `${prefix}-${Date.now()}-${randomUUID().slice(0, 8)}.${extension}`;
-
-  const absolutePath = path.join(directory, fileName);
-
-  const bytes = Buffer.from(await file.arrayBuffer());
-
-  await writeFile(absolutePath, bytes);
-
-  return `/uploads/skills-tools/${fileName}`;
 }
 
-async function removeSkillToolIcon(filePath: string | null | undefined) {
-  if (!filePath || !filePath.startsWith("/uploads/skills-tools/")) {
-    return;
-  }
-
-  const fileName = path.basename(filePath);
-
-  const absolutePath = path.join(skillToolIconDirectory(), fileName);
-
-  try {
-    await unlink(absolutePath);
-  } catch {
-    // The old icon may already be deleted.
-  }
+async function removeSkillToolIcon(fileUrl: string | null | undefined) {
+  await deleteStorageFile(fileUrl);
 }
 
 function revalidateSkillsTools() {

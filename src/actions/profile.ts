@@ -1,13 +1,15 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import {
+  deleteStorageFile,
+  uploadPortfolioImage,
+  uploadPortfolioPdf,
+} from "@/lib/supabase-storage";
 
 const optionalText = z
   .string()
@@ -62,15 +64,14 @@ export type ProfileActionState = {
 };
 
 const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
-
 const CV_MAX_BYTES = 10 * 1024 * 1024;
 
-const IMAGE_EXTENSIONS: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/jpg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
+const ALLOWED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+]);
 
 class UploadValidationError extends Error {
   constructor(
@@ -101,47 +102,27 @@ function shouldRemove(formData: FormData, key: string) {
   return getString(formData, key) === "1";
 }
 
-function getUploadDirectory() {
-  return path.join(process.cwd(), "public", "uploads", "profile");
-}
-
 async function saveImageUpload(file: File, kind: "profile" | "badge") {
-  const extension = IMAGE_EXTENSIONS[file.type];
+  const field = kind === "profile" ? "profileImageFile" : "badgeImageFile";
 
-  if (!extension) {
+  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
     throw new UploadValidationError(
-      kind === "profile" ? "profileImageFile" : "badgeImageFile",
-
+      field,
       "Please upload a JPG, PNG or WEBP image.",
     );
   }
 
   if (file.size > IMAGE_MAX_BYTES) {
     throw new UploadValidationError(
-      kind === "profile" ? "profileImageFile" : "badgeImageFile",
-
+      field,
       "Image size must be 5 MB or smaller.",
     );
   }
 
-  const directory = getUploadDirectory();
-
-  await mkdir(directory, {
-    recursive: true,
+  return uploadPortfolioImage(file, "profile", {
+    maxMb: 5,
+    prefix: kind,
   });
-
-  const filename = `${kind}-${Date.now()}-${randomUUID().slice(
-    0,
-    8,
-  )}.${extension}`;
-
-  const absolutePath = path.join(directory, filename);
-
-  const bytes = Buffer.from(await file.arrayBuffer());
-
-  await writeFile(absolutePath, bytes);
-
-  return `/uploads/profile/${filename}`;
 }
 
 async function saveCvUpload(file: File) {
@@ -162,38 +143,18 @@ async function saveCvUpload(file: File) {
     );
   }
 
-  const directory = getUploadDirectory();
+  if (file.type !== "application/pdf") {
+    throw new UploadValidationError(
+      "cvFileUpload",
+      "Please upload a valid PDF file.",
+    );
+  }
 
-  await mkdir(directory, {
-    recursive: true,
-  });
-
-  const filename = `cv-${Date.now()}-${randomUUID().slice(0, 8)}.pdf`;
-
-  const absolutePath = path.join(directory, filename);
-
-  const bytes = Buffer.from(await file.arrayBuffer());
-
-  await writeFile(absolutePath, bytes);
-
-  return `/uploads/profile/${filename}`;
+  return uploadPortfolioPdf(file, "cv");
 }
 
-async function removeLocalProfileFile(filePath: string | null | undefined) {
-  if (!filePath || !filePath.startsWith("/uploads/profile/")) {
-    return;
-  }
-
-  const fileName = path.basename(filePath);
-
-  const absolutePath = path.join(getUploadDirectory(), fileName);
-
-  try {
-    await unlink(absolutePath);
-  } catch {
-    // Ignore if an old file was
-    // already removed.
-  }
+async function removeStoredProfileFile(fileUrl: string | null | undefined) {
+  await deleteStorageFile(fileUrl);
 }
 
 function revalidateProfile(locale: "en" | "km") {
@@ -277,7 +238,7 @@ export async function updateProfileImageAction(
     });
 
     if (existing?.profileImage && existing.profileImage !== newPath) {
-      await removeLocalProfileFile(existing.profileImage);
+      await removeStoredProfileFile(existing.profileImage);
     }
 
     revalidateProfile(locale);
@@ -300,7 +261,7 @@ export async function updateProfileImageAction(
     }
 
     if (newPath) {
-      await removeLocalProfileFile(newPath);
+      await removeStoredProfileFile(newPath);
     }
 
     console.error("Profile image save error:", error);
@@ -487,15 +448,15 @@ export async function saveProfileAction(
     });
 
     if (existing?.profileImage && existing.profileImage !== profileImage) {
-      await removeLocalProfileFile(existing.profileImage);
+      await removeStoredProfileFile(existing.profileImage);
     }
 
     if (existing?.badgeImage && existing.badgeImage !== badgeImage) {
-      await removeLocalProfileFile(existing.badgeImage);
+      await removeStoredProfileFile(existing.badgeImage);
     }
 
     if (existing?.cvFile && existing.cvFile !== cvFile) {
-      await removeLocalProfileFile(existing.cvFile);
+      await removeStoredProfileFile(existing.cvFile);
     }
 
     revalidateProfile(locale);
@@ -507,15 +468,15 @@ export async function saveProfileAction(
   } catch (error) {
     if (error instanceof UploadValidationError) {
       if (newProfileImage) {
-        await removeLocalProfileFile(newProfileImage);
+        await removeStoredProfileFile(newProfileImage);
       }
 
       if (newBadgeImage) {
-        await removeLocalProfileFile(newBadgeImage);
+        await removeStoredProfileFile(newBadgeImage);
       }
 
       if (newCvFile) {
-        await removeLocalProfileFile(newCvFile);
+        await removeStoredProfileFile(newCvFile);
       }
 
       return {
@@ -530,15 +491,15 @@ export async function saveProfileAction(
     }
 
     if (newProfileImage) {
-      await removeLocalProfileFile(newProfileImage);
+      await removeStoredProfileFile(newProfileImage);
     }
 
     if (newBadgeImage) {
-      await removeLocalProfileFile(newBadgeImage);
+      await removeStoredProfileFile(newBadgeImage);
     }
 
     if (newCvFile) {
-      await removeLocalProfileFile(newCvFile);
+      await removeStoredProfileFile(newCvFile);
     }
 
     console.error("Profile save error:", error);

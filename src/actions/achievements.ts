@@ -1,27 +1,24 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
-
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
+
 import { prisma } from "@/lib/db";
+
+import {
+  deleteStorageFile,
+  uploadPortfolioImage,
+} from "@/lib/supabase-storage";
 
 export type AchievementActionResult = {
   success: boolean;
   message: string;
 };
 
-const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
-
-const IMAGE_TYPES: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/jpg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
+/* =========================================================
+   FORM HELPERS
+   ========================================================= */
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -67,65 +64,19 @@ function slugify(value: string) {
   return slug || "achievement";
 }
 
+/* =========================================================
+   AUTH
+   ========================================================= */
+
 async function requireAdmin() {
   const session = await auth();
 
   return Boolean(session?.user);
 }
 
-function achievementDirectory() {
-  return path.join(
-    process.cwd(),
-    "public",
-    "uploads",
-    "content",
-    "achievement",
-  );
-}
-
-async function saveAchievementImage(file: File) {
-  const extension = IMAGE_TYPES[file.type];
-
-  if (!extension) {
-    throw new Error("Please upload a JPG, PNG or WEBP image.");
-  }
-
-  if (file.size > IMAGE_MAX_BYTES) {
-    throw new Error("Achievement image must be 5 MB or smaller.");
-  }
-
-  const directory = achievementDirectory();
-
-  await mkdir(directory, {
-    recursive: true,
-  });
-
-  const filename = `${Date.now()}-${randomUUID().slice(0, 8)}.${extension}`;
-
-  const absolutePath = path.join(directory, filename);
-
-  const bytes = Buffer.from(await file.arrayBuffer());
-
-  await writeFile(absolutePath, bytes);
-
-  return `/uploads/content/achievement/${filename}`;
-}
-
-async function removeAchievementImage(filePath: string | null | undefined) {
-  if (!filePath || !filePath.startsWith("/uploads/content/achievement/")) {
-    return;
-  }
-
-  const relativePath = filePath.replace(/^\/+/, "");
-
-  const absolutePath = path.join(process.cwd(), "public", relativePath);
-
-  try {
-    await unlink(absolutePath);
-  } catch {
-    // File may already be gone.
-  }
-}
+/* =========================================================
+   REVALIDATE
+   ========================================================= */
 
 function revalidateAchievements() {
   revalidatePath("/en");
@@ -140,6 +91,10 @@ function revalidateAchievements() {
 
   revalidatePath("/km/dashboard", "layout");
 }
+
+/* =========================================================
+   SAVE
+   ========================================================= */
 
 export async function saveAchievementAction(
   formData: FormData,
@@ -160,6 +115,7 @@ export async function saveAchievementAction(
   if (!titleEn) {
     return {
       success: false,
+
       message: "English achievement title is required.",
     };
   }
@@ -167,9 +123,14 @@ export async function saveAchievementAction(
   if (!activityDateValue) {
     return {
       success: false,
+
       message: "Achievement date is required.",
     };
   }
+
+  /* =====================================================
+     EXISTING ACHIEVEMENT
+     ===================================================== */
 
   const existing = id
     ? await prisma.activity.findUnique({
@@ -179,17 +140,30 @@ export async function saveAchievementAction(
 
         select: {
           type: true,
+
           coverImage: true,
         },
       })
     : null;
 
+  if (id && !existing) {
+    return {
+      success: false,
+      message: "Achievement not found.",
+    };
+  }
+
   if (existing && existing.type !== "ACHIEVEMENT") {
     return {
       success: false,
+
       message: "This record is not an achievement.",
     };
   }
+
+  /* =====================================================
+     COVER IMAGE
+     ===================================================== */
 
   let coverImage =
     text(formData, "currentCoverImage") || existing?.coverImage || "";
@@ -203,11 +177,23 @@ export async function saveAchievementAction(
   const coverFile = getFile(formData, "coverImageFile");
 
   try {
+    /* ===================================================
+       UPLOAD NEW IMAGE TO SUPABASE
+       =================================================== */
+
     if (coverFile) {
-      newCoverImage = await saveAchievementImage(coverFile);
+      newCoverImage = await uploadPortfolioImage(coverFile, "achievements", {
+        maxMb: 5,
+
+        prefix: "achievement",
+      });
 
       coverImage = newCoverImage;
     }
+
+    /* ===================================================
+       DATABASE DATA
+       =================================================== */
 
     const data = {
       type: "ACHIEVEMENT" as const,
@@ -259,6 +245,10 @@ export async function saveAchievementAction(
       sortOrder: numberValue(formData, "sortOrder"),
     };
 
+    /* ===================================================
+       UPDATE
+       =================================================== */
+
     if (id) {
       await prisma.activity.update({
         where: {
@@ -268,6 +258,10 @@ export async function saveAchievementAction(
         data,
       });
     } else {
+      /* =================================================
+         CREATE
+         ================================================= */
+
       await prisma.activity.create({
         data: {
           slug: `${slugify(titleEn)}-${Date.now().toString(36)}`,
@@ -277,8 +271,12 @@ export async function saveAchievementAction(
       });
     }
 
+    /* ===================================================
+       DELETE OLD SUPABASE IMAGE
+       =================================================== */
+
     if (existing?.coverImage && existing.coverImage !== coverImage) {
-      await removeAchievementImage(existing.coverImage);
+      await deleteStorageFile(existing.coverImage);
     }
 
     revalidateAchievements();
@@ -291,8 +289,12 @@ export async function saveAchievementAction(
         : "Achievement created successfully.",
     };
   } catch (error) {
+    /* ===================================================
+       CLEAN NEW IMAGE IF DATABASE SAVE FAILED
+       =================================================== */
+
     if (newCoverImage) {
-      await removeAchievementImage(newCoverImage);
+      await deleteStorageFile(newCoverImage);
     }
 
     console.error("Achievement save error:", error);
@@ -305,6 +307,10 @@ export async function saveAchievementAction(
     };
   }
 }
+
+/* =========================================================
+   DELETE
+   ========================================================= */
 
 export async function deleteAchievementAction(
   id: number,
@@ -324,6 +330,7 @@ export async function deleteAchievementAction(
 
       select: {
         type: true,
+
         coverImage: true,
       },
     });
@@ -331,6 +338,7 @@ export async function deleteAchievementAction(
     if (!existing || existing.type !== "ACHIEVEMENT") {
       return {
         success: false,
+
         message: "Achievement not found.",
       };
     }
@@ -341,12 +349,20 @@ export async function deleteAchievementAction(
       },
     });
 
-    await removeAchievementImage(existing.coverImage);
+    /*
+     * Delete image from Supabase.
+     *
+     * Existing /uploads/... local images
+     * are ignored by deleteStorageFile()
+     * until we migrate them later.
+     */
+    await deleteStorageFile(existing.coverImage);
 
     revalidateAchievements();
 
     return {
       success: true,
+
       message: "Achievement deleted successfully.",
     };
   } catch (error) {
@@ -354,6 +370,7 @@ export async function deleteAchievementAction(
 
     return {
       success: false,
+
       message: "Unable to delete achievement.",
     };
   }

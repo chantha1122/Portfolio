@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from "react";
 
 import { AlertCircle, Check, Send } from "lucide-react";
 
-import { sendContactMessageAction } from "@/actions/content";
+import { sendContactMessageAction } from "@/actions/contact-public";
 
 import { cn } from "@/lib/cn";
 
