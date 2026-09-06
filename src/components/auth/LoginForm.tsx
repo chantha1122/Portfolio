@@ -64,15 +64,17 @@ export default function LoginForm({ locale }: LoginFormProps) {
         />
       </div>
 
-      {state.error && (
+      {state.error ? (
         <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3">
           <p className="font-body text-sm text-red-600 dark:text-red-300">
             {state.error === "missing"
               ? t("missingFields")
-              : t("invalidCredentials")}
+              : state.error === "rate_limited"
+                ? t("tooManyAttempts")
+                : t("invalidCredentials")}
           </p>
         </div>
-      )}
+      ) : null}
 
       <button
         type="submit"

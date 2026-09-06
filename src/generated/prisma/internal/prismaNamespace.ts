@@ -398,6 +398,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   AdminUser: 'AdminUser',
+  LoginAttempt: 'LoginAttempt',
   Profile: 'Profile',
   Activity: 'Activity',
   ActivityMedia: 'ActivityMedia',
@@ -421,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "adminUser" | "profile" | "activity" | "activityMedia" | "skill" | "tool" | "contactMessage" | "comment" | "like"
+    modelProps: "adminUser" | "loginAttempt" | "profile" | "activity" | "activityMedia" | "skill" | "tool" | "contactMessage" | "comment" | "like"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -496,6 +497,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AdminUserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AdminUserCountAggregateOutputType> | number
+        }
+      }
+    }
+    LoginAttempt: {
+      payload: Prisma.$LoginAttemptPayload<ExtArgs>
+      fields: Prisma.LoginAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoginAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoginAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.LoginAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoginAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.LoginAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.LoginAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.LoginAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LoginAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.LoginAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        update: {
+          args: Prisma.LoginAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.LoginAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoginAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LoginAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.LoginAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.LoginAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoginAttempt>
+        }
+        groupBy: {
+          args: Prisma.LoginAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoginAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoginAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoginAttemptCountAggregateOutputType> | number
         }
       }
     }
@@ -1143,6 +1218,15 @@ export const AdminUserScalarFieldEnum = {
 export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
 
 
+export const LoginAttemptScalarFieldEnum = {
+  id: 'id',
+  keyHash: 'keyHash',
+  createdAt: 'createdAt'
+} as const
+
+export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
 export const ProfileScalarFieldEnum = {
   id: 'id',
   profileKey: 'profileKey',
@@ -1630,6 +1714,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   adminUser?: Prisma.AdminUserOmit
+  loginAttempt?: Prisma.LoginAttemptOmit
   profile?: Prisma.ProfileOmit
   activity?: Prisma.ActivityOmit
   activityMedia?: Prisma.ActivityMediaOmit

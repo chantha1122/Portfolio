@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/AdminUser'
+export type * from './models/LoginAttempt'
 export type * from './models/Profile'
 export type * from './models/Activity'
 export type * from './models/ActivityMedia'

@@ -50,7 +50,8 @@
     "signIn": "Sign In",
     "signingIn": "Signing In...",
     "missingFields": "Please enter a valid email and password.",
-    "invalidCredentials": "Invalid email or password."
+    "invalidCredentials": "Invalid email or password.",
+    "tooManyAttempts": "Too many failed login attempts. Please wait 15 minutes and try again."
   },
   "Dashboard": {
     "privateDashboard": "Private Portfolio Manager",

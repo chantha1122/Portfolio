@@ -84,6 +84,31 @@ model AdminUser {
 
 /**
  * =========================================================
+ * LOGIN ATTEMPTS / RATE LIMIT
+ * =========================================================
+ */
+
+model LoginAttempt {
+  id Int @id @default(autoincrement())
+
+  /**
+   * SHA-256 hash generated from:
+   *
+   * AUTH_SECRET + email + client IP
+   *
+   * We do NOT store the raw IP address.
+   */
+  keyHash String
+
+  createdAt DateTime @default(now())
+
+  @@index([keyHash, createdAt])
+  @@index([createdAt])
+  @@map("login_attempts")
+}
+
+/**
+ * =========================================================
  * PROFILE
  * =========================================================
  */
